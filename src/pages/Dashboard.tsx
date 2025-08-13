@@ -7,6 +7,7 @@ import { ContractHealthGrid } from "@/components/ContractHealthGrid";
 import { ThreatIntelFeed } from "@/components/ThreatIntelFeed";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
 import { CambrianAnalytics } from "@/components/CambrianAnalytics";
+import { ToolsIntegrationPanel } from "@/components/ToolsIntegrationPanel";
 import { useSeiData } from "@/hooks/useSeiData";
 
 export default function Dashboard() {
@@ -41,6 +42,7 @@ export default function Dashboard() {
           {/* Right Sidebar */}
           <div className="lg:col-span-3 space-y-6">
             <ThreatIntelFeed />
+            <ToolsIntegrationPanel />
           </div>
         </div>
 
