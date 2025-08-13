@@ -5,6 +5,7 @@ import { SeiMCPPlugin } from "@/components/SeiMCPPlugin";
 import { AIExploitSimulator } from "@/components/AIExploitSimulator";
 import { GasOptimizationEngine } from "@/components/GasOptimizationEngine";
 import { AIDNReporter } from "@/components/AIDNReporter";
+import { WebCrawlerAgent } from "@/components/WebCrawlerAgent";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -154,6 +155,15 @@ export default function Security() {
             <ThreatIntelFeed />
             <HumanInterventionPanel />
           </div>
+        </div>
+
+        {/* Web Crawler Threat Intelligence Section */}
+        <div className="mt-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-foreground mb-2">Threat Intelligence Crawler</h2>
+            <p className="text-muted-foreground">Multi-source threat monitoring including dark web, GitHub, forums, and news feeds</p>
+          </div>
+          <WebCrawlerAgent />
         </div>
 
         {/* Sei MCP Plugin Section */}
