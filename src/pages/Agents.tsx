@@ -6,6 +6,8 @@ import { AgenticWorkflow } from "@/components/AgenticWorkflow";
 import { MultiAgentOrchestrator } from "@/components/MultiAgentOrchestrator";
 import { Mem0MemorySystem } from "@/components/Mem0MemorySystem";
 import { HumanInTheLoopDashboard } from "@/components/HumanInTheLoopDashboard";
+import { OrchestrationEngine } from "@/components/OrchestrationEngine";
+import { HumanInterventionPanel } from "@/components/HumanInterventionPanel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,16 +45,21 @@ export default function Agents() {
           <p className="text-muted-foreground">Build, deploy, and manage AI agents on Sei Network</p>
         </div>
 
-        <Tabs defaultValue="orchestrator" className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="orchestrator">Orchestrator</TabsTrigger>
+        <Tabs defaultValue="orchestration" className="w-full">
+          <TabsList className="grid w-full grid-cols-8">
+            <TabsTrigger value="orchestration">Orchestration</TabsTrigger>
+            <TabsTrigger value="orchestrator">Multi-Agent</TabsTrigger>
             <TabsTrigger value="memory">Mem0 Memory</TabsTrigger>
             <TabsTrigger value="hitl">Human-in-Loop</TabsTrigger>
+            <TabsTrigger value="intervention">Intervention</TabsTrigger>
             <TabsTrigger value="development">Dev Studio</TabsTrigger>
             <TabsTrigger value="mcp">MCP Integration</TabsTrigger>
             <TabsTrigger value="workflow">Workflows</TabsTrigger>
-            <TabsTrigger value="management">Management</TabsTrigger>
           </TabsList>
+
+          <TabsContent value="orchestration" className="mt-6">
+            <OrchestrationEngine />
+          </TabsContent>
 
           <TabsContent value="orchestrator" className="mt-6">
             <MultiAgentOrchestrator />
@@ -64,6 +71,10 @@ export default function Agents() {
 
           <TabsContent value="hitl" className="mt-6">
             <HumanInTheLoopDashboard />
+          </TabsContent>
+
+          <TabsContent value="intervention" className="mt-6">
+            <HumanInterventionPanel />
           </TabsContent>
 
           <TabsContent value="development" className="mt-6">
