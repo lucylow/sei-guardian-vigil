@@ -1,5 +1,9 @@
 import { Navigation } from "@/components/Navigation";
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
+import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
+import { MCPIntegration } from "@/components/MCPIntegration";
+import { AgenticWorkflow } from "@/components/AgenticWorkflow";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,97 +36,123 @@ export default function Agents() {
       
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Agent Management</h1>
-          <p className="text-muted-foreground">Monitor and control multi-agent system</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">AI Agent Development</h1>
+          <p className="text-muted-foreground">Build, deploy, and manage AI agents on Sei Network</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Total Agents</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground">All systems operational</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Active Tasks</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">71</div>
-              <p className="text-xs text-muted-foreground">Currently processing</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">System Load</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">82%</div>
-              <p className="text-xs text-muted-foreground">Optimal performance</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Uptime</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">99.9%</div>
-              <p className="text-xs text-muted-foreground">24h availability</p>
-            </CardContent>
-          </Card>
-        </div>
+        <Tabs defaultValue="development" className="w-full">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="development">Development Studio</TabsTrigger>
+            <TabsTrigger value="mcp">MCP Integration</TabsTrigger>
+            <TabsTrigger value="workflow">Agentic Workflows</TabsTrigger>
+            <TabsTrigger value="management">Agent Management</TabsTrigger>
+            <TabsTrigger value="status">System Status</TabsTrigger>
+          </TabsList>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {agents.map((agent) => {
-            const IconComponent = agent.icon;
-            return (
-              <Card key={agent.id} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <IconComponent className="w-5 h-5 text-primary" />
-                      <CardTitle className="text-lg">{agent.name}</CardTitle>
-                    </div>
-                    <Badge variant={getStatusColor(agent.status)}>
-                      {agent.status}
-                    </Badge>
-                  </div>
-                  <CardDescription>{agent.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Active Tasks:</span>
-                      <span className="font-medium">{agent.tasks}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Memory Usage:</span>
-                      <span className="font-medium">{Math.floor(Math.random() * 40 + 30)}%</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">CPU Usage:</span>
-                      <span className="font-medium">{Math.floor(Math.random() * 50 + 20)}%</span>
-                    </div>
-                    <Button variant="outline" size="sm" className="w-full">
-                      <Activity className="w-4 h-4 mr-2" />
-                      View Details
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+          <TabsContent value="development" className="mt-6">
+            <AgentDevelopmentStudio />
+          </TabsContent>
 
-        <div className="mt-8">
-          <AgentStatusPanel />
-        </div>
+          <TabsContent value="mcp" className="mt-6">
+            <MCPIntegration />
+          </TabsContent>
+
+          <TabsContent value="workflow" className="mt-6">
+            <AgenticWorkflow />
+          </TabsContent>
+
+          <TabsContent value="management" className="mt-6">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">Total Agents</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">8</div>
+                    <p className="text-xs text-muted-foreground">All systems operational</p>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">Active Tasks</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">71</div>
+                    <p className="text-xs text-muted-foreground">Currently processing</p>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">System Load</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">82%</div>
+                    <p className="text-xs text-muted-foreground">Optimal performance</p>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium">Uptime</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">99.9%</div>
+                    <p className="text-xs text-muted-foreground">24h availability</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {agents.map((agent) => {
+                  const IconComponent = agent.icon;
+                  return (
+                    <Card key={agent.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <IconComponent className="w-5 h-5 text-primary" />
+                            <CardTitle className="text-lg">{agent.name}</CardTitle>
+                          </div>
+                          <Badge variant={getStatusColor(agent.status)}>
+                            {agent.status}
+                          </Badge>
+                        </div>
+                        <CardDescription>{agent.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Active Tasks:</span>
+                            <span className="font-medium">{agent.tasks}</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">Memory Usage:</span>
+                            <span className="font-medium">{Math.floor(Math.random() * 40 + 30)}%</span>
+                          </div>
+                          <div className="flex justify-between text-sm">
+                            <span className="text-muted-foreground">CPU Usage:</span>
+                            <span className="font-medium">{Math.floor(Math.random() * 50 + 20)}%</span>
+                          </div>
+                          <Button variant="outline" size="sm" className="w-full">
+                            <Activity className="w-4 h-4 mr-2" />
+                            View Details
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="status" className="mt-6">
+            <AgentStatusPanel />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
