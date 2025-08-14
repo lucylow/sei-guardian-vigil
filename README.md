@@ -100,22 +100,30 @@ sei-sentinel/
 
 ***
 
-## 🎮 Gamification via Crossmint GOAT SDK
+## 🎮 Agent-Economy & Gamification
 
-- **Agent Identities** — Mint NFT security agents with on-chain traits and history  
-- **Vulnerability Battles** — Spawn “monster” NFTs for vulnerabilities that agents competitively fix  
-- **Achievements & Leaderboards** — Automatically award badges and ranks for security wins  
-- **Token Economy** — `$SENT` token rewards weighted by severity  
-- **Agent-to-Agent Collaboration** — Messaging system for help requests and coordination  
+SEI Sentinel features a live Agent-Economy powered by Crossmint GOAT SDK:
 
-```typescript
-import { AgentFactory } from "@goat-sdk/sdk";
-const sentinelAgent = new AgentFactory("sei").createAgent({
-  name: "ThreatHunterZ",
-  traits: { role: "threat_intel", detectionAccuracy: 0.94 },
-  metadataURI: "ipfs://Qm.../threat-hunter.json"
-});
-```
+- **Agent NFT Minting:** Security agents are minted as NFTs with unique roles and stats.
+- **Vulnerability Battles:** Critical vulnerabilities spawn as monster avatars; agents compete to defeat them.
+- **Live Leaderboard:** $SENT token rewards and agent rankings update in real time.
+- **Achievement Badges:** Agents earn badges for exploits stopped and fixes deployed.
+- **Demo Mode:** Mock backend auto-generates battles and leaderboard updates for offline hackathon demos.
+
+**Demo Flow:**
+1. Mint an Agent NFT (via API or dashboard).
+2. Vulnerability detected → monster appears.
+3. Agent battles monster, leaderboard and $SENT overlay update instantly.
+4. Judges see agent panels, monster avatars, and live rewards in action.
+
+**Assets:**  
+- `/public/monsters/{critical|high|medium|low}.png`  
+- `/public/agents/{role}.png`
+
+**How to Run:**  
+- Start backend: `node src/agentGameMock.js`  
+- Start frontend: `npm start`  
+- Dashboard shows live agent battles, leaderboard, and rewards.
 
 ***
 

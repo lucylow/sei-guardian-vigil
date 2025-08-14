@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 import { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,6 +57,83 @@ interface OrchestrationMetrics {
   guardrailViolations: number;
   humanInterventions: number;
   systemLoad: number;
+}
+
+function AgentCard({ agent }) {
+  return (
+    <div className="bg-white shadow rounded p-3 flex flex-col items-center">
+      <img
+        src={`/agents/${agent.role}.png`}
+        alt={agent.role}
+        className="w-16 h-16 mb-2"
+      />
+      <h3 className="font-bold">{agent.name}</h3>
+      <p className="text-sm">Role: {agent.role}</p>
+      <p className="mt-1 text-xs text-gray-500">Monsters Defeated: {agent.monstersDefeated}</p>
+      <p className="text-xs text-yellow-600">$SENT Earned: {agent.sentEarned}</p>
+    </div>
+  );
+}
+
+function Leaderboard() {
+  const [leaders, setLeaders] = useState([]);
+  useEffect(() => {
+    fetch(process.env.REACT_APP_AGENT_GAME_API + "/leaderboard")
+      .then(res => res.json())
+      .then(setLeaders);
+  }, []);
+  return (
+    <div className="bg-gray-50 p-4 rounded shadow">
+      <h2 className="font-bold text-lg">🏆 Leaderboard</h2>
+      <ul className="mt-2">
+        {leaders.map((agent, idx) => (
+          <li key={agent.id} className="flex justify-between text-sm">
+            <span>{idx + 1}. {agent.name}</span>
+            <span>{agent.sentEarned} $SENT</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function BattleFeed() {
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    const socket = io(process.env.REACT_APP_AGENT_GAME_WS || "http://localhost:5010");
+    socket.on("battleEvent", (event) => {
+      setEvents(prev => [event, ...prev].slice(0, 5));
+    });
+    return () => socket.disconnect();
+  }, []);
+  return (
+    <div className="bg-white rounded shadow p-4">
+      <h2 className="font-bold mb-2">⚔️ Vulnerability Battles</h2>
+      {events.map((e, i) => (
+        <div key={i} className="flex items-center mb-2">
+          <img src={e.monsterAvatar} alt="monster" className="w-8 h-8 mr-2" />
+          <span className="text-sm">
+            {e.agent.name} defeated a {e.vulnSeverity} vulnerability monster, earned {e.reward} $SENT!
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RewardOverlay({ reward }) {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    if (reward) {
+      setShow(true);
+      setTimeout(() => setShow(false), 3000);
+    }
+  }, [reward]);
+  return show ? (
+    <div className="fixed bottom-4 right-4 bg-yellow-400 text-black px-4 py-2 rounded shadow-lg font-bold z-50">
+      +{reward} $SENT Reward!
+    </div>
+  ) : null;
 }
 
 export function OrchestrationEngine() {
@@ -133,6 +212,10 @@ export function OrchestrationEngine() {
     HUMAN_ESCALATION: 'orchestrator-001'
   });
 
+  // Agent Economy State
+  const [agentList, setAgentList] = useState([]);
+  const [latestReward, setLatestReward] = useState(0);
+
   // Simulate real-time task processing
   useEffect(() => {
     const interval = setInterval(() => {
@@ -182,6 +265,28 @@ export function OrchestrationEngine() {
     listenToMCP("contract_deployed", (contract) => {
       // setAgents or dispatch audit task
     });
+  }, []);
+
+  useEffect(() => {
+    fetch(process.env.REACT_APP_AGENT_GAME_API + "/leaderboard")
+      .then(res => res.json())
+      .then(setAgentList);
+
+    const socket = io(process.env.REACT_APP_AGENT_GAME_WS || "http://localhost:5010");
+    socket.on("battleEvent", (event) => {
+      setLatestReward(event.reward);
+      setAgentList(prev => {
+        // Update agent stats in leaderboard
+        const idx = prev.findIndex(a => a.id === event.agent.id);
+        if (idx !== -1) {
+          const updated = [...prev];
+          updated[idx] = event.agent;
+          return updated.sort((a, b) => b.sentEarned - a.sentEarned);
+        }
+        return prev;
+      });
+    });
+    return () => socket.disconnect();
   }, []);
 
   const createNewTask = useCallback(() => {
@@ -671,6 +776,21 @@ export function OrchestrationEngine() {
           </Alert>
         </TabsContent>
       </Tabs>
+
+      {/* Agent Economy & Gamification Panel */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+        <Leaderboard />
+        <BattleFeed />
+        <div className="bg-white rounded shadow p-4">
+          <h2 className="font-bold mb-2">Agent NFTs</h2>
+          <div className="grid grid-cols-1 gap-3">
+            {agentList.map(agent => (
+              <AgentCard key={agent.id} agent={agent} />
+            ))}
+          </div>
+        </div>
+      </div>
+      <RewardOverlay reward={latestReward} />
     </div>
   );
 }
