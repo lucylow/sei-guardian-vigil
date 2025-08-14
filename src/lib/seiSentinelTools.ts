@@ -135,175 +135,6 @@ export function estimateTransactionTime(gasPrice: number): number {
   return Math.max(400, 600 - (gasPrice * 5)); // 400ms base time
 }
 
-// Additional exports for tools integration
-export const seiTools = {
-  // Tool execution statistics
-  getToolExecutionStats: () => ({
-    totalExecutions: Math.floor(Math.random() * 1000) + 500,
-    avgExecutionTime: Math.floor(Math.random() * 1000) + 500,
-    successRate: 95 + Math.random() * 5
-  }),
-
-  // Security analysis tools
-  contractAnalyzer: async (contractAddress: string): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
-    
-    return {
-      success: true,
-      data: {
-        vulnerabilities: Math.floor(Math.random() * 5),
-        riskScore: Math.random() * 10,
-        gasOptimizations: Math.floor(Math.random() * 3)
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  hiveThreatDetection: async (indicators: string[]): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 800 + 300));
-    
-    return {
-      success: true,
-      data: {
-        threatsFound: Math.floor(Math.random() * 3),
-        confidence: Math.random() * 100,
-        sources: ['hive_intelligence', 'threat_feed']
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  slitherStaticAnalysis: async (contractCode: string): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 1500 + 800));
-    
-    return {
-      success: true,
-      data: {
-        vulnerabilities: ['reentrancy', 'unchecked-call'].slice(0, Math.floor(Math.random() * 2) + 1),
-        severity: ['high', 'medium', 'low'][Math.floor(Math.random() * 3)],
-        codeQuality: Math.random() * 100
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  formalVerification: async (contract: any, invariants: string[]): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
-    
-    return {
-      success: Math.random() > 0.05, // 95% success rate
-      data: {
-        proofValid: Math.random() > 0.1,
-        invariantsChecked: invariants.length,
-        formalProof: 'Z3 proof generated',
-        checkedInvariants: invariants
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  generateSecurityFix: async (vulnerability: any, context: any): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 1200 + 800));
-    
-    return {
-      success: Math.random() > 0.1, // 90% success rate
-      data: vulnerability ? {
-        patchCode: `// AI-generated fix for ${vulnerability.type || vulnerability}`,
-        gasImpact: Math.floor(Math.random() * 10000),
-        confidence: Math.random() * 100,
-        testCases: [`test_${vulnerability.type || 'security'}_fix`],
-        severity: vulnerability.severity || 'medium'
-      } : undefined,
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  // Sei-specific monitoring tools
-  getSeiNetworkMetrics: async (): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 200));
-    
-    return {
-      success: true,
-      data: {
-        blockTime: 400 + Math.random() * 100,
-        tps: Math.floor(Math.random() * 5000) + 8000,
-        gasPrice: Math.floor(Math.random() * 50) + 10,
-        parallelTx: Math.floor(Math.random() * 100) + 50
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  monitorContractAnomaly: async (contractAddress: string): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 600 + 300));
-    
-    return {
-      success: true,
-      data: {
-        anomalies: Math.floor(Math.random() * 3),
-        riskScore: Math.random() * 10,
-        patterns: ['unusual_gas_usage', 'state_change_spike'],
-        confidence: Math.random() * 100
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  batchHistoricalAnalysis: async (contractAddress: string, days: number): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 3000 + 2000));
-    
-    return {
-      success: true,
-      data: {
-        analyzedContract: contractAddress,
-        avgRiskScore: Math.random() * 10,
-        trendsDetected: Math.floor(Math.random() * 5),
-        timeRange: `${days} days`,
-        historicalEvents: Math.floor(Math.random() * 50) + 10
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-
-  threatScanner: async (indicators: string[]): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 800 + 300));
-    
-    return {
-      success: true,
-      data: {
-        threatsFound: Math.floor(Math.random() * 3),
-        confidence: Math.random() * 100,
-        sources: ['github', 'darkweb', 'forums']
-      },
-      executionTime: Date.now() - startTime
-    };
-  },
-  
-  patchGenerator: async (vulnerability: string): Promise<SeiToolResult> => {
-    const startTime = Date.now();
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 1200 + 800));
-    
-    return {
-      success: Math.random() > 0.1, // 90% success rate
-      data: vulnerability ? {
-        patchCode: `// Fix for ${vulnerability}`,
-        gasImpact: Math.floor(Math.random() * 10000),
-        confidence: Math.random() * 100
-      } : undefined,
-      executionTime: Date.now() - startTime
-    };
-  }
-};
-
 // Backend Fallback & Mock Data Integration
 const MOCK_FINDINGS = [
   {
@@ -344,10 +175,16 @@ async function simulateAIDNAction(agentId: string, action: string) {
 }
 
 export class SeiSentinelTools {
-  // ...existing code...
-
+  private static instance: SeiSentinelTools;
   private seiNetworkHealthy = true;
   private mockMode = false;
+
+  static getInstance(): SeiSentinelTools {
+    if (!SeiSentinelTools.instance) {
+      SeiSentinelTools.instance = new SeiSentinelTools();
+    }
+    return SeiSentinelTools.instance;
+  }
 
   // Backend fallback for contract scan
   async scanContractWithFallback(address: string): Promise<any> {
@@ -402,6 +239,173 @@ export class SeiSentinelTools {
     return scanResult;
   }
 
-  // ...existing code...
+  // Tool execution statistics
+  getToolExecutionStats() {
+    return {
+      totalExecutions: Math.floor(Math.random() * 1000) + 500,
+      avgExecutionTime: Math.floor(Math.random() * 1000) + 500,
+      successRate: 95 + Math.random() * 5
+    };
+  }
+
+  // Security analysis tools
+  async contractAnalyzer(contractAddress: string): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
+    
+    return {
+      success: true,
+      data: {
+        vulnerabilities: Math.floor(Math.random() * 5),
+        riskScore: Math.random() * 10,
+        gasOptimizations: Math.floor(Math.random() * 3)
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async hiveThreatDetection(indicators: string[]): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 800 + 300));
+    
+    return {
+      success: true,
+      data: {
+        threatsFound: Math.floor(Math.random() * 3),
+        confidence: Math.random() * 100,
+        sources: ['hive_intelligence', 'threat_feed']
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async slitherStaticAnalysis(contractCode: string): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 1500 + 800));
+    
+    return {
+      success: true,
+      data: {
+        vulnerabilities: ['reentrancy', 'unchecked-call'].slice(0, Math.floor(Math.random() * 2) + 1),
+        severity: ['high', 'medium', 'low'][Math.floor(Math.random() * 3)],
+        codeQuality: Math.random() * 100
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async formalVerification(contract: any, invariants: string[]): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 2000 + 1000));
+    
+    return {
+      success: Math.random() > 0.05, // 95% success rate
+      data: {
+        proofValid: Math.random() > 0.1,
+        invariantsChecked: invariants.length,
+        formalProof: 'Z3 proof generated',
+        checkedInvariants: invariants
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async generateSecurityFix(vulnerability: any, context: any): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 1200 + 800));
+    
+    return {
+      success: Math.random() > 0.1, // 90% success rate
+      data: vulnerability ? {
+        patchCode: `// AI-generated fix for ${vulnerability.type || vulnerability}`,
+        gasImpact: Math.floor(Math.random() * 10000),
+        confidence: Math.random() * 100,
+        testCases: [`test_${vulnerability.type || 'security'}_fix`],
+        severity: vulnerability.severity || 'medium'
+      } : undefined,
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  // Sei-specific monitoring tools
+  async getSeiNetworkMetrics(): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 500 + 200));
+    
+    return {
+      success: true,
+      data: {
+        blockTime: 400 + Math.random() * 100,
+        tps: Math.floor(Math.random() * 5000) + 8000,
+        gasPrice: Math.floor(Math.random() * 50) + 10,
+        parallelTx: Math.floor(Math.random() * 100) + 50
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async monitorContractAnomaly(contractAddress: string): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 600 + 300));
+    
+    return {
+      success: true,
+      data: {
+        anomalies: Math.floor(Math.random() * 3),
+        riskScore: Math.random() * 10,
+        patterns: ['unusual_gas_usage', 'state_change_spike'],
+        confidence: Math.random() * 100
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async batchHistoricalAnalysis(contractAddress: string, days: number): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 3000 + 2000));
+    
+    return {
+      success: true,
+      data: {
+        analyzedContract: contractAddress,
+        avgRiskScore: Math.random() * 10,
+        trendsDetected: Math.floor(Math.random() * 5),
+        timeRange: `${days} days`,
+        historicalEvents: Math.floor(Math.random() * 50) + 10
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+
+  async threatScanner(indicators: string[]): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 800 + 300));
+    
+    return {
+      success: true,
+      data: {
+        threatsFound: Math.floor(Math.random() * 3),
+        confidence: Math.random() * 100,
+        sources: ['github', 'darkweb', 'forums']
+      },
+      executionTime: Date.now() - startTime
+    };
+  }
+  
+  async patchGenerator(vulnerability: string): Promise<SeiToolResult> {
+    const startTime = Date.now();
+    await new Promise(resolve => setTimeout(resolve, Math.random() * 1200 + 800));
+    
+    return {
+      success: Math.random() > 0.1, // 90% success rate
+      data: vulnerability ? {
+        patchCode: `// Fix for ${vulnerability}`,
+        gasImpact: Math.floor(Math.random() * 10000),
+        confidence: Math.random() * 100
+      } : undefined,
+      executionTime: Date.now() - startTime
+    };
+  }
 }
+
 export const seiTools = SeiSentinelTools.getInstance();
