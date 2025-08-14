@@ -5,7 +5,6 @@ import { RealTimeMonitor } from "@/components/RealTimeMonitor";
 import { VulnerabilityRadar } from "@/components/VulnerabilityRadar";
 import { ContractHealthGrid } from "@/components/ContractHealthGrid";
 import { ThreatIntelFeed } from "@/components/ThreatIntelFeed";
-import { SentinelChatbot } from "@/components/SentinelChatbot";
 import { CambrianAnalytics } from "@/components/CambrianAnalytics";
 import { ToolsIntegrationPanel } from "@/components/ToolsIntegrationPanel";
 import { useSeiData } from "@/hooks/useSeiData";
@@ -51,8 +50,6 @@ export default function Dashboard() {
           <CambrianAnalytics />
         </div>
       </div>
-      
-      <SentinelChatbot />
     </div>
   );
 }
