@@ -10,7 +10,7 @@ import {
   listenToMCP,
   deployContract,
   configureParallelExecution
-} from "@elizaos/plugin-sei";
+} from "@/lib/seiSentinelTools";
 
 interface Alert {
   id: string;
