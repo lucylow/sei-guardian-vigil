@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { io } from "socket.io-client";
-import { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -100,11 +98,19 @@ function Leaderboard() {
 function BattleFeed() {
   const [events, setEvents] = useState([]);
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_AGENT_GAME_WS || "http://localhost:5010");
-    socket.on("battleEvent", (event) => {
-      setEvents(prev => [event, ...prev].slice(0, 5));
-    });
-    return () => socket.disconnect();
+    // Mock battle events instead of socket.io
+    const interval = setInterval(() => {
+      if (Math.random() > 0.6) {
+        const event = {
+          agent: { name: `Agent_${Math.floor(Math.random() * 100)}` },
+          vulnSeverity: 'critical',
+          reward: Math.floor(Math.random() * 50) + 10,
+          monsterAvatar: '/placeholder.svg'
+        };
+        setEvents(prev => [event, ...prev].slice(0, 5));
+      }
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
   return (
     <div className="bg-white rounded shadow p-4">
@@ -268,25 +274,26 @@ export function OrchestrationEngine() {
   }, []);
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_AGENT_GAME_API + "/leaderboard")
-      .then(res => res.json())
-      .then(setAgentList);
+    // Mock leaderboard data instead of API calls
+    setAgentList([
+      { id: '1', name: 'Agent Alpha', sentEarned: 1250, monstersDefeated: 12, role: 'security' },
+      { id: '2', name: 'Agent Beta', sentEarned: 980, monstersDefeated: 8, role: 'threat' },
+      { id: '3', name: 'Agent Gamma', sentEarned: 750, monstersDefeated: 6, role: 'remediation' }
+    ]);
 
-    const socket = io(process.env.REACT_APP_AGENT_GAME_WS || "http://localhost:5010");
-    socket.on("battleEvent", (event) => {
-      setLatestReward(event.reward);
-      setAgentList(prev => {
-        // Update agent stats in leaderboard
-        const idx = prev.findIndex(a => a.id === event.agent.id);
-        if (idx !== -1) {
-          const updated = [...prev];
-          updated[idx] = event.agent;
-          return updated.sort((a, b) => b.sentEarned - a.sentEarned);
-        }
-        return prev;
-      });
-    });
-    return () => socket.disconnect();
+    // Mock battle events with interval
+    const interval = setInterval(() => {
+      if (Math.random() > 0.8) {
+        const reward = Math.floor(Math.random() * 50) + 10;
+        setLatestReward(reward);
+        setAgentList(prev => prev.map(agent => ({
+          ...agent,
+          sentEarned: agent.sentEarned + (Math.random() > 0.7 ? reward : 0)
+        })).sort((a, b) => b.sentEarned - a.sentEarned));
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const createNewTask = useCallback(() => {
