@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Shield, AlertTriangle, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react';
 import { Contract } from '../hooks/useSeiData';
@@ -46,13 +45,28 @@ export const ContractHealthGrid: React.FC<ContractHealthGridProps> = ({ contract
     </div>
   );
 
+  // Highlight for SeiStake Pool
+  const highlightSeiStakePool = (contract: Contract) =>
+    contract.name === "SeiStake Pool" &&
+    contract.address.toLowerCase() === "0xa0b86a33e6441d87c7834c20001c48ffde12db1b".toLowerCase();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {contracts.map(contract => (
         <div 
           key={contract.address} 
-          className={`p-6 rounded-xl border transition-all hover:scale-105 cursor-pointer ${statusColors[contract.status]}`}
+          className={`p-6 rounded-xl border transition-all hover:scale-105 cursor-pointer ${statusColors[contract.status]} ${
+            highlightSeiStakePool(contract)
+              ? "border-4 border-fuchsia-500 bg-fuchsia-100/10 shadow-lg relative"
+              : ""
+          }`}
         >
+          {/* Highlight badge for SeiStake Pool */}
+          {highlightSeiStakePool(contract) && (
+            <span className="absolute top-2 right-2 px-3 py-1 rounded-full bg-fuchsia-500 text-white text-xs font-bold shadow">
+              SEI STAKE POOL
+            </span>
+          )}
           <div className="flex justify-between items-start mb-4">
             <div className="flex-1">
               <h3 className="font-semibold text-lg text-white mb-1">{contract.name}</h3>
