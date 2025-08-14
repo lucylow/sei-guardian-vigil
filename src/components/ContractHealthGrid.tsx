@@ -8,15 +8,15 @@ interface ContractHealthGridProps {
 
 export const ContractHealthGrid: React.FC<ContractHealthGridProps> = ({ contracts }) => {
   const statusColors = {
-    critical: 'bg-red-500/10 border-red-500/30 hover:bg-red-500/20',
-    warning: 'bg-amber-500/10 border-amber-500/30 hover:bg-amber-500/20',
-    safe: 'bg-green-500/10 border-green-500/30 hover:bg-green-500/20',
+    critical: 'bg-red-50 border-red-300 hover:bg-red-100',
+    warning: 'bg-amber-50 border-amber-300 hover:bg-amber-100',
+    safe: 'bg-green-50 border-green-300 hover:bg-green-100',
   };
   
   const statusIcons = {
-    critical: <AlertTriangle className="w-5 h-5 text-red-400" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-400" />,
-    safe: <CheckCircle className="w-5 h-5 text-green-400" />,
+    critical: <AlertTriangle className="w-5 h-5 text-red-500" />,
+    warning: <AlertTriangle className="w-5 h-5 text-amber-500" />,
+    safe: <CheckCircle className="w-5 h-5 text-green-500" />,
   };
 
   const StatCard: React.FC<{
@@ -27,19 +27,19 @@ export const ContractHealthGrid: React.FC<ContractHealthGridProps> = ({ contract
     trend?: 'up' | 'down';
   }> = ({ label, value, highlight, capitalize, trend }) => (
     <div className={`p-2 rounded-lg transition-colors ${
-      highlight ? 'bg-red-500/10 border border-red-500/20' : 'bg-slate-800/30'
+      highlight ? 'bg-red-100 border border-red-300' : 'bg-slate-50'
     }`}>
-      <div className="text-xs text-slate-400">{label}</div>
+      <div className="text-xs text-slate-500">{label}</div>
       <div className={`font-medium flex items-center space-x-1 ${
         capitalize ? 'capitalize' : ''
       } ${
-        highlight ? 'text-red-400' : 'text-slate-200'
+        highlight ? 'text-red-600' : 'text-slate-800'
       }`}>
         <span>{value}</span>
         {trend && (
           trend === 'up' ? 
-            <TrendingUp className="w-3 h-3 text-green-400" /> : 
-            <TrendingDown className="w-3 h-3 text-red-400" />
+            <TrendingUp className="w-3 h-3 text-green-500" /> : 
+            <TrendingDown className="w-3 h-3 text-red-500" />
         )}
       </div>
     </div>
@@ -123,10 +123,10 @@ export const ContractHealthGrid: React.FC<ContractHealthGridProps> = ({ contract
             )}
             <div className="flex justify-between items-start mb-4">
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-white mb-1">{contract.name}</h3>
-                <p className="text-sm text-slate-400 font-mono break-all">{contract.address}</p>
+                <h3 className="font-semibold text-lg text-slate-900 mb-1">{contract.name}</h3>
+                <p className="text-sm text-slate-500 font-mono break-all">{contract.address}</p>
               </div>
-              <div className="p-2 rounded-lg bg-slate-800/50 ml-3">
+              <div className="p-2 rounded-lg bg-slate-100 ml-3">
                 {statusIcons[contract.status]}
               </div>
             </div>
@@ -146,15 +146,15 @@ export const ContractHealthGrid: React.FC<ContractHealthGridProps> = ({ contract
               />
             </div>
 
-            <div className="flex items-center justify-between pt-3 border-t border-slate-700/50">
+            <div className="flex items-center justify-between pt-3 border-t border-slate-200">
               <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4 text-slate-400" />
-                <span className="text-xs text-slate-400">
+                <Shield className="w-4 h-4 text-slate-500" />
+                <span className="text-xs text-slate-500">
                   Gas Optimized: {contract.gasOptimized ? 'Yes' : 'No'}
                 </span>
               </div>
               <div className={`px-2 py-1 rounded text-xs font-medium ${
-                contract.gasOptimized ? 'bg-green-500/20 text-green-400' : 'bg-slate-700/50 text-slate-400'
+                contract.gasOptimized ? 'bg-green-100 text-green-700' : 'bg-slate-200 text-slate-500'
               }`}>
                 {contract.gasOptimized ? 'OPTIMIZED' : 'PENDING'}
               </div>
