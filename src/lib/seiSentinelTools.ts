@@ -44,6 +44,115 @@ export interface SecurityFix {
   testCoverage: number;
 }
 
+// Guardrail Types
+type GuardrailCheckResult = {
+  passed: boolean;
+  reason?: string;
+  flagged?: string[];
+};
+
+const SECURITY_KEYWORDS = ["vulnerability", "fix", "gas", "Sei", "contract", "audit"];
+const PROHIBITED_TERMS = ["hate", "violence", "harassment"];
+const ETHEREUM_ADDRESS_REGEX = /0x[a-fA-F0-9]{40}/g;
+const EMAIL_REGEX = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+
+// Tool Risk Matrix
+const TOOL_RISK_MATRIX: Record<string, { level: "low" | "medium" | "high"; autoAction: string; escalation: boolean }> = {
+  hive_threat_detection: { level: "low", autoAction: "read_only", escalation: false },
+  slither_analysis: { level: "medium", autoAction: "static_analysis", escalation: false },
+  formal_verification: { level: "high", autoAction: "require_approval", escalation: true },
+  generate_security_fix: { level: "high", autoAction: "pre_execution_simulation", escalation: true },
+  sentinel_admin_command: { level: "high", autoAction: "multi_sig", escalation: true },
+  get_network_metrics: { level: "low", autoAction: "read_only", escalation: false },
+  contract_monitoring: { level: "medium", autoAction: "monitor", escalation: false },
+  batch_analysis: { level: "medium", autoAction: "cross_agent_consensus", escalation: false }
+};
+
+// Guardrail Classifiers
+function relevanceClassifier(query: string, context: any): GuardrailCheckResult {
+  const topicMatch = SECURITY_KEYWORDS.some(kw => query.includes(kw));
+  if (!topicMatch && !(context?.is_cross_chain || query.includes("Sei"))) {
+    return { passed: false, reason: "Irrelevant query", flagged: ["irrelevant"] };
+  }
+  return { passed: true };
+}
+
+function safetyClassifier(input: string): GuardrailCheckResult {
+  // Simple anti-jailbreak: block prompt injection attempts
+  if (/role\s*play|system\s*instructions|jailbreak/i.test(input)) {
+    return { passed: false, reason: "Unsafe input detected", flagged: ["unsafe"] };
+  }
+  return { passed: true };
+}
+
+function piiFilter(output: string): GuardrailCheckResult {
+  const found = [];
+  if (ETHEREUM_ADDRESS_REGEX.test(output)) found.push("address");
+  if (EMAIL_REGEX.test(output)) found.push("email");
+  if (found.length > 0) {
+    return { passed: false, reason: "PII detected", flagged: found };
+  }
+  return { passed: true };
+}
+
+function moderationCheck(input: string): GuardrailCheckResult {
+  if (PROHIBITED_TERMS.some(term => input.toLowerCase().includes(term))) {
+    return { passed: false, reason: "Harmful content", flagged: ["harmful"] };
+  }
+  return { passed: true };
+}
+
+function rulesEngine(input: string): GuardrailCheckResult {
+  if (/selfdestruct\s*\(/.test(input)) {
+    return { passed: false, reason: "Blocked pattern: selfdestruct", flagged: ["selfdestruct"] };
+  }
+  if (/gas\s*limit\s*[:=]\s*(1[0-9]{7,})/.test(input)) {
+    return { passed: false, reason: "Gas limit too high", flagged: ["gas_limit"] };
+  }
+  return { passed: true };
+}
+
+function outputValidator(output: string, context: any): GuardrailCheckResult {
+  if (PROHIBITED_TERMS.some(term => output.toLowerCase().includes(term))) {
+    return { passed: false, reason: "Brand safety violation", flagged: ["brand_safety"] };
+  }
+  // Simulate technical accuracy/gas check
+  if (context?.output_type === "code_fix" && output.includes("selfdestruct")) {
+    return { passed: false, reason: "Technical violation", flagged: ["code_fix"] };
+  }
+  return { passed: true };
+}
+
+// Main Guardrail Check
+async function runGuardrails({ input, output, toolName, context }: { input: string; output?: string; toolName: string; context?: any }) {
+  // Relevance
+  const relevance = relevanceClassifier(input, context);
+  if (!relevance.passed) return relevance;
+  // Safety
+  const safety = safetyClassifier(input);
+  if (!safety.passed) return safety;
+  // Moderation
+  const moderation = moderationCheck(input);
+  if (!moderation.passed) return moderation;
+  // Rules
+  const rules = rulesEngine(input);
+  if (!rules.passed) return rules;
+  // Tool risk
+  const toolRisk = TOOL_RISK_MATRIX[toolName];
+  if (toolRisk?.level === "high" && toolRisk.escalation) {
+    // Simulate human escalation required
+    return { passed: false, reason: "High-risk tool, escalation required", flagged: ["tool_risk"] };
+  }
+  // Output validation (if output provided)
+  if (output) {
+    const pii = piiFilter(output);
+    if (!pii.passed) return pii;
+    const outVal = outputValidator(output, context);
+    if (!outVal.passed) return outVal;
+  }
+  return { passed: true };
+}
+
 export class SeiSentinelTools {
   private static instance: SeiSentinelTools;
   private guardrails: Map<string, GuardrailConfig>;
@@ -68,11 +177,24 @@ export class SeiSentinelTools {
   private async executeWithGuardrails<T>(
     toolName: string,
     operation: () => Promise<T>,
-    userRole: string = 'analyst'
+    userRole: string = 'analyst',
+    input?: string,
+    context?: any
   ): Promise<SeiToolResult<T>> {
     const startTime = Date.now();
     const config = this.guardrails.get(toolName);
-    
+
+    // Guardrail checks before execution
+    const guardrailResult = await runGuardrails({ input: input || toolName, toolName, context });
+    if (!guardrailResult.passed) {
+      return {
+        success: false,
+        error: `Guardrail blocked: ${guardrailResult.reason}`,
+        timestamp: new Date().toISOString(),
+        executionTime: Date.now() - startTime
+      };
+    }
+
     if (!config) {
       return {
         success: false,
@@ -113,6 +235,17 @@ export class SeiSentinelTools {
           setTimeout(() => reject(new Error('Operation timeout')), config.maxExecutionTime)
         )
       ]);
+
+      // Guardrail output validation
+      const outputCheck = await runGuardrails({ input: input || toolName, output: JSON.stringify(result), toolName, context });
+      if (!outputCheck.passed) {
+        return {
+          success: false,
+          error: `Guardrail blocked output: ${outputCheck.reason}`,
+          timestamp: new Date().toISOString(),
+          executionTime: Date.now() - startTime
+        };
+      }
 
       return {
         success: true,
