@@ -20,6 +20,51 @@ export interface ParallelExecutionConfig {
   dependencyResolver: string;
 }
 
+export interface SeiToolResult<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  executionTime: number;
+  timestamp?: string;
+}
+
+export interface ThreatDetectionResult {
+  threatScore: number;
+  vulnerabilities: Array<{
+    type: string;
+    severity: 'critical' | 'high' | 'medium' | 'low';
+    confidence: number;
+    description: string;
+  }>;
+  exploitPatterns: string[];
+  recommendations: string[];
+}
+
+export interface NetworkMetrics {
+  blockTime: number;
+  tps: number;
+  validators: number;
+  utilization: number;
+  gasPrice: number;
+  activeContracts: number;
+}
+
+export interface SecurityFix {
+  originalVulnerability: string;
+  fixedCode: string;
+  gasSavings: number;
+  confidence: number;
+  explanation: string;
+  testCoverage: number;
+}
+
+export interface GuardrailConfig {
+  riskLevel: 'low' | 'medium' | 'high';
+  humanApprovalRequired: boolean;
+  maxExecutionTime: number;
+  allowedRoles: string[];
+}
+
 // Mock agent authorization
 export async function authorizeAgent(config: {
   agentId: string;
@@ -91,13 +136,6 @@ export function estimateTransactionTime(gasPrice: number): number {
 }
 
 // Additional exports for tools integration
-export interface SeiToolResult {
-  success: boolean;
-  data?: any;
-  error?: string;
-  executionTime: number;
-}
-
 export const seiTools = {
   // Tool execution statistics
   getToolExecutionStats: () => ({

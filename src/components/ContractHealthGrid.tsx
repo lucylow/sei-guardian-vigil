@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Shield, AlertTriangle, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react';
-import { io } from "socket.io-client";
 import { Contract } from '../hooks/useSeiData';
 
 interface ContractHealthGridProps {
@@ -56,14 +55,24 @@ export const ContractHealthGrid: React.FC<ContractHealthGridProps> = ({ contract
   const [recentScans, setRecentScans] = useState<any[]>([]);
 
   useEffect(() => {
-    const socket = io(process.env.REACT_APP_BLOCK_FEED || "http://localhost:5001");
-    socket.on("blockStatus", setBlockStatus);
-    socket.on("scanEvent", scan => setRecentScans(prev => [scan, ...prev].slice(0, 3)));
-    return () => {
-      socket.off("blockStatus");
-      socket.off("scanEvent");
-      socket.disconnect();
-    };
+    // Mock real-time data instead of socket.io
+    const interval = setInterval(() => {
+      setBlockStatus({
+        blockHeight: Math.floor(Math.random() * 1000000) + 8000000,
+        latencyMs: Math.floor(Math.random() * 600) + 200
+      });
+      
+      if (Math.random() > 0.7) {
+        const scan = {
+          contract: `Contract_${Math.floor(Math.random() * 1000)}`,
+          scanTime: Math.floor(Math.random() * 1500) + 500,
+          latencyMs: Math.floor(Math.random() * 400) + 100
+        };
+        setRecentScans(prev => [scan, ...prev].slice(0, 3));
+      }
+    }, 3000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
