@@ -1,0 +1,12 @@
+{
+  "agent": "sentinel-auditor",
+  "permissions": {
+    "chain_read": true,
+    "contract_deploy": true,
+    "tx_simulate": true
+  },
+  "sei": {
+    "rpc_url": "https://sei-testnet.quicknode.com",
+    "chain_id": 713715
+  }
+}

@@ -1,0 +1,32 @@
+memory_domains:
+  task_context:
+    storage: redis
+    ttl: 2h
+    schema:
+      task_id: string
+      owner: agent_id
+      state: json
+      
+  security_knowledge:
+    storage: weaviate
+    schema:
+      vulnerability_type: string
+      detection_rules: text
+      historical_cases: json
+      last_updated: timestamp
+      
+  agent_coordination:
+    storage: redis
+    schema:
+      message_type: enum(alert,request,response)
+      sender: agent_id
+      recipients: list[agent_id]
+      payload: json
+      
+  human_decisions:
+    storage: sei_blockchain
+    schema:
+      task_id: string
+      auditor: eth_address
+      decision: json
+      signature: string

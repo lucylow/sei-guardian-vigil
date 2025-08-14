@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { AlertTriangle, Shield, Activity, Eye, Zap, Network } from 'lucide-react';
+import {
+  authorizeAgent,
+  listenToMCP,
+  deployContract,
+  configureParallelExecution
+} from "@elizaos/plugin-sei";
 
 interface Alert {
   id: string;
@@ -106,6 +112,36 @@ export function SeiMCPPlugin() {
 
     return () => clearInterval(interval);
   }, [isMonitoring, currentBlock]);
+
+  useEffect(() => {
+    // Agent authorization
+    authorizeAgent({
+      agentId: "sentinel-auditor",
+      permissions: ["read_chain", "deploy_contract", "simulate_tx"]
+    }).then((agentCredentials) => {
+      // Listen to Sei MCP events
+      listenToMCP("contract_deployed", (contract) => {
+        // Dispatch audit task to orchestrator
+        // orchestrator.dispatchTask('new_audit', { ...contract });
+      });
+
+      // Example: Configure parallel execution for Sei
+      configureParallelExecution({
+        maxConcurrent: 8,
+        dependencyResolver: "optimistic"
+      });
+    });
+  }, []);
+
+  const handleDeployFix = async (fixData: any) => {
+    await deployContract({
+      optimizedBytecode: fixData.bytecode,
+      gasLimit: "auto",
+      signer: "sentinel_safe_wallet",
+      requireHumanApproval: true,
+      approvalTimeout: 400
+    });
+  };
 
   const getSeverityColor = (severity: Alert['severity']) => {
     switch (severity) {

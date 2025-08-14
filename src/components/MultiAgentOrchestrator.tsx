@@ -6,6 +6,8 @@ import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Brain, Users, Zap, Shield, AlertTriangle, CheckCircle, Clock, Activity } from "lucide-react";
+import { routeTask, handleRoutingFailure, scoreAgent } from "@/lib/routingEngine";
+import { RAGAgentRole } from "@/lib/ragKnowledgeGraph";
 
 interface Agent {
   id: string;
@@ -182,6 +184,8 @@ export function MultiAgentOrchestrator() {
     policyViolations: 3
   });
 
+  const [routingLog, setRoutingLog] = useState<{taskId: string, agentName: string, score: number}[]>([]);
+
   useEffect(() => {
     // Simulate real-time updates
     const interval = setInterval(() => {
@@ -206,6 +210,25 @@ export function MultiAgentOrchestrator() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Routing optimization: assign tasks to agents
+  useEffect(() => {
+    // For demo: assign each task using routing engine
+    const newRoutingLog: {taskId: string, agentName: string, score: number}[] = [];
+    setTasks(prevTasks => prevTasks.map(task => {
+      const assignedAgent = routeTask(task, agents);
+      if (assignedAgent) {
+        newRoutingLog.push({
+          taskId: task.id,
+          agentName: assignedAgent.name,
+          score: scoreAgent(task, assignedAgent)
+        });
+        return { ...task, assignedAgent: assignedAgent.id };
+      }
+      return task;
+    }));
+    setRoutingLog(newRoutingLog);
+  }, [agents]);
 
   const getAgentIcon = (type: string) => {
     switch (type) {
@@ -250,6 +273,18 @@ export function MultiAgentOrchestrator() {
       default: return <Clock className="w-4 h-4 text-gray-400" />;
     }
   };
+
+  // Add RAG agents to agent list
+  const ragAgents = [
+    { id: "rag-router", name: "Query Router Agent", type: RAGAgentRole.QueryRouter, status: "active", capabilities: ["intent_classification", "sei_parallel_routing"], performance: { tasksCompleted: 120, avgResponseTime: 120, successRate: 99.1 }, load: 10 },
+    { id: "rag-navigator", name: "Knowledge Navigator Agent", type: RAGAgentRole.KnowledgeNavigator, status: "active", capabilities: ["graph_traversal", "path_optimization"], performance: { tasksCompleted: 98, avgResponseTime: 110, successRate: 98.7 }, load: 12 },
+    { id: "rag-context", name: "Context Enrichment Agent", type: RAGAgentRole.ContextEnrichment, status: "active", capabilities: ["semantic_search", "cross_chain_context"], performance: { tasksCompleted: 105, avgResponseTime: 130, successRate: 98.9 }, load: 8 },
+    { id: "rag-generator", name: "Response Generator Agent", type: RAGAgentRole.ResponseGenerator, status: "active", capabilities: ["answer_synthesis", "vulnerability_templating"], performance: { tasksCompleted: 112, avgResponseTime: 140, successRate: 99.0 }, load: 9 },
+    { id: "rag-fact", name: "Fact-Checker Agent", type: RAGAgentRole.FactChecker, status: "active", capabilities: ["accuracy_validation", "formal_verification"], performance: { tasksCompleted: 97, avgResponseTime: 150, successRate: 99.2 }, load: 7 },
+    { id: "rag-curator", name: "Knowledge Curator Agent", type: RAGAgentRole.KnowledgeCurator, status: "active", capabilities: ["graph_maintenance", "automated_pruning"], performance: { tasksCompleted: 88, avgResponseTime: 160, successRate: 98.8 }, load: 6 },
+  ];
+  // Merge ragAgents into agents for display
+  const allAgents = [...agents, ...ragAgents];
 
   return (
     <div className="space-y-6">
@@ -320,7 +355,7 @@ export function MultiAgentOrchestrator() {
 
         <TabsContent value="agents" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {agents.map((agent) => {
+            {allAgents.map((agent) => {
               const IconComponent = getAgentIcon(agent.type);
               return (
                 <Card key={agent.id} className="hover:shadow-lg transition-shadow">
@@ -560,6 +595,30 @@ export function MultiAgentOrchestrator() {
           </Alert>
         </TabsContent>
       </Tabs>
+
+      {/* Routing Optimization Log */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Routing Optimization Log</CardTitle>
+          <CardDescription>
+            Real-time task assignment using Sei-optimized routing engine
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2 text-xs">
+            {routingLog.length === 0 ? (
+              <span className="text-muted-foreground">No routing decisions yet.</span>
+            ) : (
+              routingLog.map(log => (
+                <div key={log.taskId} className="flex justify-between">
+                  <span>Task <span className="font-mono">{log.taskId}</span> → <span className="font-semibold">{log.agentName}</span></span>
+                  <span>Score: {log.score.toFixed(2)}</span>
+                </div>
+              ))
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

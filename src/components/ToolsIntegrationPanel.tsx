@@ -20,12 +20,14 @@ import {
 } from 'lucide-react';
 import { seiTools, SeiToolResult } from '@/lib/seiSentinelTools';
 import { useToast } from '@/hooks/use-toast';
+import { ragSystem, RAGQuery, RAGResponse } from "@/lib/ragKnowledgeGraph";
 
 export const ToolsIntegrationPanel = () => {
   const [activeExecution, setActiveExecution] = useState<string | null>(null);
   const [executionResults, setExecutionResults] = useState<{ [key: string]: SeiToolResult }>({});
   const [toolStats, setToolStats] = useState<any>({});
   const { toast } = useToast();
+  const [ragResponse, setRagResponse] = useState<RAGResponse | null>(null);
 
   useEffect(() => {
     setToolStats(seiTools.getToolExecutionStats());
@@ -89,6 +91,16 @@ export const ToolsIntegrationPanel = () => {
     } finally {
       setActiveExecution(null);
     }
+  };
+
+  const handleRAGQuery = async (queryText: string) => {
+    const query: RAGQuery = { query: queryText };
+    const routerMsg = ragSystem.routeQuery(query);
+    const nodes = ragSystem.traverseGraph("MATCH (v:Vulnerability)");
+    const context = ragSystem.enrichContext(query);
+    let response = ragSystem.generateResponse(nodes, context);
+    response = ragSystem.validateResponse(response);
+    setRagResponse(response);
   };
 
   const SecurityTools = () => (
@@ -398,6 +410,33 @@ export const ToolsIntegrationPanel = () => {
           
           <TabsContent value="ai" className="mt-4">
             <AITools />
+            {/* RAG Knowledge Graph Panel */}
+            <div className="mt-6 p-4 bg-muted rounded-lg">
+              <h4 className="font-medium mb-2">RAG Knowledge Graph Query</h4>
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  className="border rounded px-2 py-1 w-full"
+                  placeholder="Ask about Sei vulnerabilities, fixes, etc..."
+                  onKeyDown={e => {
+                    if (e.key === "Enter") handleRAGQuery((e.target as HTMLInputElement).value);
+                  }}
+                />
+                <Button size="sm" onClick={() => handleRAGQuery("How to fix reentrancy in Sei Vault contract?")}>
+                  Query
+                </Button>
+              </div>
+              {ragResponse && (
+                <div className="space-y-2 text-xs">
+                  <div><span className="font-bold">Answer:</span> {ragResponse.answer}</div>
+                  <div><span className="font-bold">Fix Code:</span> <pre>{ragResponse.fix_code}</pre></div>
+                  <div><span className="font-bold">Confidence:</span> {((ragResponse.confidence ?? 0) * 100).toFixed(0)}%</div>
+                  <div><span className="font-bold">Graph Path:</span> {ragResponse.graph_path}</div>
+                  <div><span className="font-bold">Semantic Matches:</span> {ragResponse.semantic_matches?.join(", ")}</div>
+                  <div><span className="font-bold">Validation:</span> {JSON.stringify(ragResponse.validation)}</div>
+                </div>
+              )}
+            </div>
           </TabsContent>
           
           <TabsContent value="monitoring" className="mt-4">

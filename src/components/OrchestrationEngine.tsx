@@ -19,6 +19,7 @@ import {
   Timer,
   Gauge
 } from "lucide-react";
+import { authorizeAgent, listenToMCP, deployContract } from "@elizaos/plugin-sei";
 
 interface Task {
   id: string;
@@ -172,6 +173,17 @@ export function OrchestrationEngine() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    authorizeAgent({
+      agentId: "sentinel-auditor",
+      permissions: ["read_chain", "deploy_contract", "simulate_tx"]
+    });
+
+    listenToMCP("contract_deployed", (contract) => {
+      // setAgents or dispatch audit task
+    });
+  }, []);
+
   const createNewTask = useCallback(() => {
     const taskTypes: Task['type'][] = [
       'CONTRACT_DEPLOY', 
@@ -256,6 +268,14 @@ export function OrchestrationEngine() {
     
     setMetrics(prev => ({ ...prev, humanInterventions: prev.humanInterventions + 1 }));
   }, []);
+
+  const handleRemediation = async (fixData: any) => {
+    await deployContract({
+      optimizedBytecode: fixData.bytecode,
+      gasLimit: "auto",
+      signer: "sentinel_safe_wallet"
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
