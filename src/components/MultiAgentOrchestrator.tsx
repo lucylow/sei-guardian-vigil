@@ -45,6 +45,8 @@ interface WorkflowStep {
   result?: any;
 }
 
+export type { Agent, Task };
+
 export function MultiAgentOrchestrator() {
   const [agents, setAgents] = useState<Agent[]>([
     {
@@ -274,14 +276,14 @@ export function MultiAgentOrchestrator() {
     }
   };
 
-  // Add RAG agents to agent list
-  const ragAgents = [
-    { id: "rag-router", name: "Query Router Agent", type: RAGAgentRole.QueryRouter, status: "active", capabilities: ["intent_classification", "sei_parallel_routing"], performance: { tasksCompleted: 120, avgResponseTime: 120, successRate: 99.1 }, load: 10 },
-    { id: "rag-navigator", name: "Knowledge Navigator Agent", type: RAGAgentRole.KnowledgeNavigator, status: "active", capabilities: ["graph_traversal", "path_optimization"], performance: { tasksCompleted: 98, avgResponseTime: 110, successRate: 98.7 }, load: 12 },
-    { id: "rag-context", name: "Context Enrichment Agent", type: RAGAgentRole.ContextEnrichment, status: "active", capabilities: ["semantic_search", "cross_chain_context"], performance: { tasksCompleted: 105, avgResponseTime: 130, successRate: 98.9 }, load: 8 },
-    { id: "rag-generator", name: "Response Generator Agent", type: RAGAgentRole.ResponseGenerator, status: "active", capabilities: ["answer_synthesis", "vulnerability_templating"], performance: { tasksCompleted: 112, avgResponseTime: 140, successRate: 99.0 }, load: 9 },
-    { id: "rag-fact", name: "Fact-Checker Agent", type: RAGAgentRole.FactChecker, status: "active", capabilities: ["accuracy_validation", "formal_verification"], performance: { tasksCompleted: 97, avgResponseTime: 150, successRate: 99.2 }, load: 7 },
-    { id: "rag-curator", name: "Knowledge Curator Agent", type: RAGAgentRole.KnowledgeCurator, status: "active", capabilities: ["graph_maintenance", "automated_pruning"], performance: { tasksCompleted: 88, avgResponseTime: 160, successRate: 98.8 }, load: 6 },
+  // Add RAG agents to agent list with proper typing
+  const ragAgents: Agent[] = [
+    { id: "rag-router", name: "Query Router Agent", type: "rag", status: "active", capabilities: ["intent_classification", "sei_parallel_routing"], performance: { tasksCompleted: 120, avgResponseTime: 120, successRate: 99.1 }, load: 10 },
+    { id: "rag-navigator", name: "Knowledge Navigator Agent", type: "rag", status: "active", capabilities: ["graph_traversal", "path_optimization"], performance: { tasksCompleted: 98, avgResponseTime: 110, successRate: 98.7 }, load: 12 },
+    { id: "rag-context", name: "Context Enrichment Agent", type: "rag", status: "active", capabilities: ["semantic_search", "cross_chain_context"], performance: { tasksCompleted: 105, avgResponseTime: 130, successRate: 98.9 }, load: 8 },
+    { id: "rag-generator", name: "Response Generator Agent", type: "rag", status: "active", capabilities: ["answer_synthesis", "vulnerability_templating"], performance: { tasksCompleted: 112, avgResponseTime: 140, successRate: 99.0 }, load: 9 },
+    { id: "rag-fact", name: "Fact-Checker Agent", type: "rag", status: "active", capabilities: ["accuracy_validation", "formal_verification"], performance: { tasksCompleted: 97, avgResponseTime: 150, successRate: 99.2 }, load: 7 },
+    { id: "rag-curator", name: "Knowledge Curator Agent", type: "rag", status: "active", capabilities: ["graph_maintenance", "automated_pruning"], performance: { tasksCompleted: 88, avgResponseTime: 160, successRate: 98.8 }, load: 6 },
   ];
   // Merge ragAgents into agents for display
   const allAgents = [...agents, ...ragAgents];

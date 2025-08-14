@@ -19,7 +19,7 @@ import {
   Timer,
   Gauge
 } from "lucide-react";
-import { authorizeAgent, listenToMCP, deployContract } from "@elizaos/plugin-sei";
+import { authorizeAgent, listenToMCP, deployContract, configureParallelExecution } from "@/lib/seiSentinelTools";
 
 interface Task {
   id: string;

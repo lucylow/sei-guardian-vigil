@@ -1,4 +1,4 @@
-import { Agent, Task } from "@/components/MultiAgentOrchestrator";
+import type { Agent, Task } from "@/components/MultiAgentOrchestrator";
 
 // Utility weights for scoring
 const WEIGHTS = {
