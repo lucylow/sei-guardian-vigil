@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { Contract } from '../hooks/useSeiData';
@@ -109,8 +108,20 @@ const ContractCard: React.FC<{ contract: Contract }> = ({ contract }) => {
     safe: '🟢',
   };
 
+  // Custom style for SeiStake Pool 0xA0b86a...db1b
+  const isSeiStakePool =
+    contract.name === 'SeiStake Pool' &&
+    contract.address?.startsWith('0xA0b86a') &&
+    contract.address?.endsWith('db1b');
+
   return (
-    <div className={`p-4 rounded-lg border transition-all hover:scale-105 ${statusColors[contract.status]}`}>
+    <div
+      className={`p-4 rounded-lg border transition-all hover:scale-105 ${statusColors[contract.status]} ${
+        isSeiStakePool
+          ? 'ring-2 ring-cyan-400 bg-gradient-to-br from-cyan-900/40 to-cyan-600/20 border-cyan-400'
+          : ''
+      }`}
+    >
       <div className="flex justify-between items-start mb-3">
         <div>
           <h3 className="font-semibold text-white">{contract.name}</h3>
