@@ -2,8 +2,9 @@
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Shield, Activity, Users, FileSearch } from "lucide-react";
+import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SentinelGameDashboard } from "@/components/SentinelGameDashboard";
 
 export default function Index() {
   return (
@@ -22,7 +23,7 @@ export default function Index() {
             SEI Sentinel
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Multi-Agent Security System for the Sei Network. Real-time vulnerability detection, automated auditing, and intelligent threat response.
+            Gamified Multi-Agent Security System for Sei Network. NFT-powered agents compete to protect $626M+ DeFi ecosystem.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild size="lg">
@@ -32,10 +33,18 @@ export default function Index() {
             </Button>
             <Button variant="outline" size="lg" asChild>
               <Link to="/agents">
-                Monitor Agents
+                <Gamepad2 className="w-4 h-4 mr-2" />
+                Enter Arena
               </Link>
             </Button>
           </div>
+        </div>
+      </section>
+
+      {/* Gamified Dashboard */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <SentinelGameDashboard />
         </div>
       </section>
 
