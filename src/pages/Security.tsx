@@ -6,7 +6,6 @@ import { AIExploitSimulator } from "@/components/AIExploitSimulator";
 import { GasOptimizationEngine } from "@/components/GasOptimizationEngine";
 import { AIDNReporter } from "@/components/AIDNReporter";
 import { WebCrawlerAgent } from "@/components/WebCrawlerAgent";
-import { HiveIntelligenceMCP } from "@/components/HiveIntelligenceMCP";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -201,15 +200,6 @@ export default function Security() {
             <p className="text-muted-foreground">AI-powered vulnerability reports in natural language for stakeholders</p>
           </div>
           <AIDNReporter />
-        </div>
-
-        {/* Hive Intelligence MCP Section */}
-        <div className="mt-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Hive Intelligence MCP</h2>
-            <p className="text-muted-foreground">Generate and manage API keys for Hive Intelligence MCP authentication</p>
-          </div>
-          <HiveIntelligenceMCP />
         </div>
 
         {/* Security Health Score */}
