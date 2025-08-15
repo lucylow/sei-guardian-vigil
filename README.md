@@ -603,3 +603,208 @@ server.listen(8080, () => {
 
 **Summary:**  
 SEI SENTINEL is a highly advanced, real-time blockchain security platform with full-stack, cross-chain, and AI/ML integration, gamified agent battles, and robust backend architecture. Building and maintaining this system requires expert-level engineering across multiple domains.
+
+---
+
+## 🧪 Test Coverage & QA Strategy
+
+### 1. Testing Goals
+- 400 ms Scan Engine produces consistent, accurate results across contract types.
+- AI/ML vulnerability detection is reliable (>99% detection on known benchmarks).
+- Continuous monitoring responds to live Sei blockchain events with low latency.
+- All integrations (CLI, API, GitHub Actions, Webhooks) work under real-world conditions.
+- Regression issues are caught early during rapid development.
+
+### 2. Test Types & Scope
+
+#### A. Unit Tests
+- Core Scan Engine: Static/dynamic analysis, <400 ms performance.
+- AI/ML Detector: Model inference, severity scoring, explainable output.
+- Blockchain Watcher: Event listeners, mocked Sei RPC/WebSocket feeds.
+
+#### B. Integration Tests
+- CLI tool end-to-end pipeline.
+- REST API request/response flows.
+- GitHub Action workflow simulation.
+- Webhook delivery to mock endpoints.
+
+#### C. Functional Tests
+- Dashboard contract upload → correct heatmap & vulnerability list.
+- Monitoring triggers immediate scan on on-chain events.
+- Historical scan archives retrievable with correct metadata.
+
+#### D. Performance Tests
+- Stress tests with 1,000+ concurrent scans.
+- Latency benchmarks for different contract sizes.
+- Monitoring uptime & re-audit trigger time under 500 ms.
+
+#### E. Security Tests
+- Input sanitization (CLI/API).
+- Sandboxing for untrusted code.
+- Webhook authentication/signature verification.
+
+#### F. Regression Tests
+- Automated nightly test run.
+- Known vulnerabilities re-tested after model updates.
+
+### 3. Coverage Metrics
+- Core Scan Engine: 90%+ line coverage
+- AI/ML Detector: 85%+ functional coverage
+- Blockchain Event Watcher: 95% code path coverage
+- Integration Interfaces: 90%+ endpoint/command coverage
+- Coverage tracked via GitHub Actions CI (Jest, pytest, cargo tarpaulin).
+
+### 4. Testing Workflow in CI/CD
+- **Pull Request:** Run unit/integration tests, fail PR if coverage drops.
+- **Merge to Main:** Trigger full functional/regression suite.
+- **Nightly Build:** Extended dataset tests, ML model re-validation.
+- **Monitoring QA:** Simulate contract deployment events hourly.
+
+### 5. Example Test Data Sources
+- SWC Registry, CWE Dataset, real-world exploit contracts.
+- Synthetic contracts for edge cases.
+- Live Sei testnet contracts for watcher validation.
+
+### 6. Example Test Snippets
+
+#### Unit Test (Scan Engine)
+```javascript
+// backend/ai/__tests__/scanEngine.test.js
+import { runScan } from "../scanEngine.js";
+describe("Core Scan Engine Unit Tests", () => {
+  test("Static analysis detects reentrancy", async () => {
+    const contractBytecode = "mocked bytecode string with reentrancy pattern";
+    const results = await runScan(contractBytecode);
+    expect(results.findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ type: "Reentrancy" })
+      ])
+    );
+  });
+  test("Scan completes under 400ms", async () => {
+    const contractBytecode = "simple valid bytecode";
+    const start = Date.now();
+    await runScan(contractBytecode);
+    const duration = Date.now() - start;
+    expect(duration).toBeLessThan(400);
+  });
+});
+```
+
+#### Integration Test (API)
+```javascript
+// backend/api/__tests__/api.integration.test.js
+import request from "supertest";
+import app from "../../api/server.js";
+describe("API Integration Tests", () => {
+  it("POST /api/scan returns results with valid contract", async () => {
+    const contractData = Buffer.from("fake contract data").toString("base64");
+    const response = await request(app)
+      .post("/api/scan")
+      .send({ contractBase64: contractData })
+      .set("Authorization", "Bearer testtoken");
+    expect(response.statusCode).toBe(200);
+    expect(response.body.status).toBe("success");
+    expect(Array.isArray(response.body.findings)).toBe(true);
+  });
+});
+```
+
+#### Functional Test (Blockchain Watcher)
+```javascript
+// blockchain-watch/__tests__/seiListener.test.js
+import WebSocket from "ws";
+import { startListener } from "../seiListener.js";
+jest.mock("ws");
+describe("Blockchain Watcher Functional Test", () => {
+  it("processes new contract deployment event", () => {
+    const wsMock = new WebSocket();
+    wsMock.onmessage({ data: JSON.stringify({ method: "new_block", params: { contractDeploy: true } }) });
+    // Verify correct backend scan triggered (mocked)
+  });
+});
+```
+
+#### Performance Test (Artillery)
+```yaml
+# performance-tests/scan-load.yml
+config:
+  target: "http://localhost:4000"
+  phases:
+    - duration: 60
+      arrivalRate: 50
+scenarios:
+  - flow:
+      - post:
+          url: "/api/scan"
+          json:
+            contractBase64: "mocked_large_contract_base64_data"
+          capture:
+            - json: "$.scan_time_ms"
+              as: "scanTime"
+      - log: "Scan time: {{ scanTime }} ms"
+```
+
+#### Security Test (Input/Webhook Auth)
+```javascript
+// backend/api/__tests__/security.test.js
+import request from "supertest";
+import app from "../../api/server.js";
+describe("Security Tests", () => {
+  it("rejects scan request with no contract", async () => {
+    const res = await request(app).post("/api/scan").send({});
+    expect(res.statusCode).toBe(400);
+  });
+  it("rejects invalid JWT tokens", async () => {
+    const res = await request(app)
+      .post("/api/scan")
+      .set("Authorization", "Bearer invalidtoken")
+      .send({ contractBase64: "dGVzdA==" });
+    expect(res.statusCode).toBe(403);
+  });
+  it("validates webhook signatures", async () => {
+    const validSig = "valid-signature";
+    const res = await request(app)
+      .post("/webhook")
+      .set("X-Signature", validSig)
+      .send({ event: "scan_completed" });
+    expect(res.statusCode).toBe(200);
+  });
+});
+```
+
+#### Regression Test (Known Vulnerabilities)
+```javascript
+// regression/__tests__/oldVulnerabilities.test.js
+import { runScan } from "../../backend/ai/scanEngine.js";
+import fs from "fs";
+import path from "path";
+describe("Regression Tests on Known Vulnerabilities", () => {
+  const contractsDir = path.resolve(__dirname, "../knownVulnerableContracts");
+  fs.readdirSync(contractsDir).forEach(file => {
+    test(`Detects vulnerabilities in ${file}`, async () => {
+      const bytecode = fs.readFileSync(path.join(contractsDir, file), "utf-8");
+      const results = await runScan(bytecode);
+      expect(results.findings.length).toBeGreaterThan(0);
+    });
+  });
+});
+```
+
+### 7. CI/CD Integration
+- Run tests and coverage reports on every PR.
+- Fail PRs if coverage drops below thresholds.
+- Nightly regression & performance tests.
+- Upload coverage badges and publish reports.
+
+---
+
+**Summary:**  
+SEI SENTINEL is backed by a comprehensive test coverage strategy spanning unit, integration, functional, performance, and security testing. Automated CI/CD workflows with strict coverage thresholds ensure every component — from lightning-fast scans to live monitoring and AI reporting — is validated before updates reach production. This ensures consistent speed, detection accuracy, and reliability on Sei’s high-speed blockchain.
+
+***
+## 📜 License
+
+MIT
+
+***
