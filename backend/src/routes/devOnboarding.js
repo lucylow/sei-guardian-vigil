@@ -6,6 +6,9 @@ const router = express.Router();
 const apiKeysDB = {};
 const webhooksDB = {};
 
+// Hive Intelligence MCP Key Management
+const hiveKeysDB = {};
+
 router.post("/generate-api-key", (req, res) => {
   const { userId, scope } = req.body;
   const apiKey = crypto.randomBytes(16).toString("hex");
@@ -32,6 +35,19 @@ router.post("/test-scan", async (req, res) => {
     ],
     scanTime: "325ms",
   });
+});
+
+// Generate new Hive MCP key
+router.post("/hive/generate-key", (req, res) => {
+  const { keyName = "dev", environment = "development" } = req.body;
+  const key = "dev_" + crypto.randomBytes(16).toString("hex");
+  hiveKeysDB[keyName] = { key, environment };
+  res.json({ key, environment, keyName });
+});
+
+// List all Hive MCP keys
+router.get("/hive/keys", (req, res) => {
+  res.json(hiveKeysDB);
 });
 
 export default router;
