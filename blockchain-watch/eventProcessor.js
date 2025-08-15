@@ -1,5 +1,10 @@
 import { Blockchain } from '../backend/src/SeiBlockchain';
 import axios from 'axios';
+import { Kafka } from "kafkajs";
+
+const KAFKA_BROKERS = process.env.KAFKA_BROKERS?.split(",") || ["localhost:9092"];
+const kafka = new Kafka({ clientId: "sei-sentinel", brokers: KAFKA_BROKERS });
+const consumer = kafka.consumer({ groupId: "event-processor" });
 
 export class EventProcessor {
   constructor() {
@@ -29,12 +34,15 @@ export class EventProcessor {
     }
   }
 
-  start() {
-    Blockchain.initWebSocketListener((event) => {
-      if (event.type === 'contract_deployment') {
-        this.handleNewContract(event);
-      } else if (event.type === 'contract_interaction') {
-        // Handle suspicious interactions
+  async start() {
+    await consumer.connect();
+    await consumer.subscribe({ topic: "contract-deployments", fromBeginning: false });
+    await consumer.run({
+      eachMessage: async ({ message }) => {
+        const event = JSON.parse(message.value.toString());
+        if (event.contract_address) {
+          await this.handleNewContract(event);
+        }
       }
     });
   }

@@ -490,6 +490,19 @@ This implementation ensures SEI Sentinel operates as the most responsible and tr
 
 ***
 
+## 🚀 Advanced Technical Features
+
+- **Distributed Blockchain Event Streaming:** Kafka-powered event pipeline for scalable, resilient contract monitoring.
+- **Transformer-based Vulnerability Detection:** Deep learning model for zero-day exploit prediction and semantic code analysis.
+- **Privacy-Preserving Scanning:** Homomorphic encryption support for confidential contract audits.
+- **Automated Remediation:** Auto-generates and submits security patch PRs to GitHub on critical findings.
+- **GPU-Accelerated AI Inference:** Batch scan contracts at scale with sub-400ms latency using GPU nodes.
+- **Developer Plugin System:** Multi-language scan module support for custom vulnerability detectors.
+
+See `backend/ai/transformerScan.js`, `blockchain-watch/eventProcessor.js`, and related files for implementation details.
+
+***
+
 ## 🧑‍💻 Technical Difficulty & Advanced Features
 
 **Technical Difficulty:**  
@@ -612,7 +625,7 @@ SEI SENTINEL is a highly advanced, real-time blockchain security platform with f
 - 400 ms Scan Engine produces consistent, accurate results across contract types.
 - AI/ML vulnerability detection is reliable (>99% detection on known benchmarks).
 - Continuous monitoring responds to live Sei blockchain events with low latency.
-- All integrations (CLI, API, GitHub Actions, Webhooks) work under real-world conditions.
+- All integrations (CLI, API, GitHub Actions, WebHooks) work under real-world conditions.
 - Regression issues are caught early during rapid development.
 
 ### 2. Test Types & Scope

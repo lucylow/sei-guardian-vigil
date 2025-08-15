@@ -1,11 +1,28 @@
 import axios from "axios";
 import { WebSocket } from "ws";
+import { Kafka } from "kafkajs";
 
 const MCP_SERVER = process.env.SEI_MCP_URL || "http://localhost:3001";
 const SEI_WS_URL = process.env.SEI_WS_URL || "wss://sei-testnet-rpc.polkachu.com/websocket";
 
+const KAFKA_BROKERS = process.env.KAFKA_BROKERS?.split(",") || ["localhost:9092"];
+const kafka = new Kafka({ clientId: "sei-sentinel", brokers: KAFKA_BROKERS });
+const kafkaProducer = kafka.producer();
+
 let isMock = false;
 let wsConnection = null;
+
+async function sendKafkaEvent(topic: string, payload: any) {
+  try {
+    await kafkaProducer.connect();
+    await kafkaProducer.send({
+      topic,
+      messages: [{ value: JSON.stringify(payload) }]
+    });
+  } catch (err) {
+    console.error("Kafka send error:", err.message);
+  }
+}
 
 export const Blockchain = {
   async callMcp(tool: string, params: any, mockResponse: any) {
@@ -59,11 +76,13 @@ export const Blockchain = {
         }));
       });
 
-      wsConnection.on("message", (data: any) => {
+      wsConnection.on("message", async (data: any) => {
         try {
           const msg = JSON.parse(data);
           if (msg.result?.data?.type === "tx" && eventHandler) {
             eventHandler(msg.result.data.value);
+            // Distributed event: push to Kafka for scalable processing
+            await sendKafkaEvent("contract-deployments", msg.result.data.value);
           }
         } catch (e) {
           console.error("Error processing WS message:", e);
