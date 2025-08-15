@@ -490,11 +490,11 @@ This implementation ensures SEI Sentinel operates as the most responsible and tr
 
 ***
 
-## 🧑‍💻 Backend Fallback, Mock Data, and Demo Stability
+## 📜 License
 
-SEI Sentinel's backend is production-ready for hackathon demos:
+MIT
 
-- **Mock Data + Fallback Mode:** If Sei testnet is down, backend auto-switches to local mock findings with realistic timings and AI reasoning.
+***
 - **Visible Error States:** Frontend shows a yellow "Offline Mode" banner and retry button if backend is in fallback.
 - **Retry & Force-Scan:** One-click "Retry Live Mode" resets backend to try Sei RPC again.
 - **Integration Stubs:** Cambrian/AIDN agent SDKs are simulated so logs and UI show "Integration Successful" even offline.
