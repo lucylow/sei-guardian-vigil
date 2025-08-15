@@ -1,10 +1,10 @@
 import express from "express";
 import http from "http";
 import { Server as SocketIO } from "socket.io";
+import { Blockchain } from "./SeiBlockchain";
 import AgentManager from "./AgentManager";
 import BattleEngine from "./BattleEngine";
 import RewardSystem from "./RewardSystem";
-import { SeiBlockchain } from "./SeiBlockchain";
 import seiMcpRouter from "./seiMcpIntegration";
 
 const app = express();
@@ -18,64 +18,85 @@ const io = new SocketIO(server, { cors: { origin: "*" } });
 const agentManager = new AgentManager();
 const battleEngine = new BattleEngine(agentManager, io);
 const rewardSystem = new RewardSystem(agentManager, io);
-const blockchain = new SeiBlockchain();
 
-// REST endpoint: Start battle
-app.post("/api/battle/start", async (req, res) => {
-  const { agentId, vulnType, severity } = req.body;
-  const battle = battleEngine.createBattle(agentId, vulnType, severity);
-  io.emit("battle:new", battle);
-  res.json(battle);
-});
+// Real-time vulnerability battle system
+const activeBattles = new Map();
 
-// REST endpoint: Claim SENT reward
-app.post("/api/reward/claim", async (req, res) => {
-  const { agentId, amount } = req.body;
-  const agent = agentManager.getAgent(agentId);
-  const tx = await blockchain.sendSENT(agent.wallet, amount);
-  rewardSystem.recordReward(agentId, amount, tx.txHash);
-  res.json({ agentId, amount, txHash: tx.txHash });
-});
-
-// REST endpoint: Mint NFT for agent
-app.post("/api/agent/mint-nft", async (req, res) => {
-  const agent = agentManager.getAgent(req.body.agentId);
-  const nftTx = await blockchain.mintAgentNFT(agent.wallet, agent.metadataURI);
-  agent.nftTokenId = nftTx.tokenId;
-  res.json(nftTx);
-});
-
-// REST endpoint: Get agent NFT metadata
-app.get("/api/agent/nft/:tokenId", async (req, res) => {
-  const { tokenId } = req.params;
-  const meta = await blockchain.getNFTMetadata(tokenId);
-  res.json(meta);
-});
-
-// REST endpoint: Get transaction info
-app.get("/api/tx/:txHash", async (req, res) => {
-  const { txHash } = req.params;
-  const tx = await blockchain.getTransaction(txHash);
-  res.json(tx);
-});
-
-// REST endpoint: Status (mock/live)
-app.get("/api/status", (req, res) => {
-  res.json({ seiMockMode: blockchain.isMockMode?.() });
-});
-
-// REST endpoint: Reset mock mode
-app.post("/api/reset-mock", (req, res) => {
-  blockchain.resetMock?.();
-  res.json({ msg: "Reset to live mode; will try real MCP again." });
-});
-
-// WebSocket for real-time UI
 io.on("connection", (socket) => {
   socket.emit("agents:update", agentManager.list());
   socket.emit("leaderboard:update", agentManager.getLeaderboard());
   socket.on("battle:action", data => battleEngine.handleAction(data));
+  socket.on("join-battle", (battleId) => {
+    socket.join(`battle-${battleId}`);
+    socket.emit("battle-update", activeBattles.get(battleId));
+  });
+
+  socket.on("attack-vulnerability", ({ battleId, agentId, vulnerabilityId }) => {
+    const battle = activeBattles.get(battleId);
+    if (!battle) return;
+    battle.attacks.push({
+      agentId,
+      vulnerabilityId,
+      timestamp: Date.now()
+    });
+    io.to(`battle-${battleId}`).emit("battle-update", battle);
+  });
 });
 
-const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => console.log(`Sentinel backend running on port ${PORT}`));
+// Blockchain event listener for contract interactions
+Blockchain.initWebSocketListener((txData) => {
+  console.log("New contract interaction detected:", txData);
+  io.emit("blockchain-event", txData);
+});
+
+// API Endpoints
+app.get("/api/status", (req, res) => {
+  res.json({
+    status: "operational",
+    mockMode: Blockchain.isMockActive(),
+    version: "1.2.0"
+  });
+});
+
+app.post("/api/scan", async (req, res) => {
+  // ...simulate scan logic...
+  const { contract, metadata } = req.body;
+  try {
+    const start = Date.now();
+    // Replace with your scan logic
+    const result = { findings: [], scanTime: 0 };
+    result.scanTime = Date.now() - start;
+    // Create vulnerability battle if findings exist
+    if (result.findings.length > 0) {
+      const battleId = `battle-${Date.now()}`;
+      activeBattles.set(battleId, {
+        contract: metadata,
+        findings: result.findings,
+        attacks: [],
+        createdAt: Date.now()
+      });
+      result.battleId = battleId;
+    }
+    res.json(result);
+    io.emit("scan-completed", { metadata, result });
+  } catch (error) {
+    res.status(500).json({ error: "Scan failed", details: error.message });
+  }
+});
+
+app.post("/api/battle/reward", async (req, res) => {
+  const { agentId, vulnerabilityId } = req.body;
+  try {
+    const reward = await Blockchain.transferSent(agentId, 100);
+    res.json({ reward });
+    io.emit("reward-distributed", { agentId, vulnerabilityId, reward });
+  } catch (error) {
+    res.status(500).json({ error: "Reward failed", details: error.message });
+  }
+});
+
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+  console.log(`SEI SENTINEL API running on port ${PORT}`);
+  console.log(`Mode: ${Blockchain.isMockActive() ? "MOCK" : "LIVE"}`);
+});

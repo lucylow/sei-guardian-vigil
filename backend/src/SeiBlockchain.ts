@@ -1,87 +1,95 @@
 import axios from "axios";
+import { WebSocket } from "ws";
 
 const MCP_SERVER = process.env.SEI_MCP_URL || "http://localhost:3001";
-const MOCK_MODE = { active: false };
+const SEI_WS_URL = process.env.SEI_WS_URL || "wss://sei-testnet-rpc.polkachu.com/websocket";
 
-async function safeMCP(tool, params, mockResp) {
-  if (MOCK_MODE.active) return mockResp;
-  try {
-    const r = await axios.post(`${MCP_SERVER}/tool`, { tool, params });
-    return r.data;
-  } catch (e) {
-    MOCK_MODE.active = true;
-    console.warn(`[Fallback] MCP Server offline, switching to mock mode`);
-    return mockResp;
-  }
-}
+let isMock = false;
+let wsConnection = null;
 
-export class SeiBlockchain {
-  async sendSENT(toAddress, amount) {
-    return await safeMCP(
-      "transfer-sei",
-      { to: toAddress, amount, network: "sei" },
-      {
-        txHash: "MOCK_TX_" + Math.floor(Math.random() * 1000000),
-        mode: "MOCK",
-        to: toAddress,
-        amount,
-        network: "sei"
-      }
-    );
-  }
-  async mintAgentNFT(agentWallet, metadataURI) {
-    return await safeMCP(
+export const Blockchain = {
+  async callMcp(tool: string, params: any, mockResponse: any) {
+    if (isMock) return mockResponse;
+    try {
+      const resp = await axios.post(`${MCP_SERVER}/tool`, { tool, params });
+      return resp.data;
+    } catch (err) {
+      console.error("MCP call failed, switching to mock mode", err.message);
+      isMock = true;
+      return mockResponse;
+    }
+  },
+
+  async mintAgentNFT(wallet: string, metadataURI: string) {
+    return this.callMcp(
       "write-contract",
       {
         contractAddress: process.env.AGENT_NFT_CONTRACT,
         abi: "[ERC721 ABI]",
         functionName: "mint",
-        args: [agentWallet, metadataURI],
-        network: "sei"
+        args: [wallet, metadataURI],
+        network: "sei",
       },
       {
-        txHash: "MOCK_MINT_" + Math.floor(Math.random() * 1000000),
-        mode: "MOCK",
-        tokenId: String(Math.floor(Math.random() * 10000)),
-        agentWallet,
-        metadataURI
+        txHash: `MOCK_TX_MINT_${Date.now()}`,
+        tokenId: `mock-${Math.random().toString(36).substring(2, 9)}`
       }
     );
-  }
-  async getNFTMetadata(tokenId) {
-    return await safeMCP(
-      "get-nft-info",
-      {
-        tokenAddress: process.env.AGENT_NFT_CONTRACT,
-        tokenId,
-        network: "sei"
-      },
-      {
-        tokenId,
-        agentName: "MockGuardian",
-        winStreak: Math.floor(Math.random() * 5),
-        badges: ["Critical Slayer", "Speed Demon"],
-        mode: "MOCK"
-      }
+  },
+
+  async transferSent(to: string, amount: number) {
+    return this.callMcp(
+      "transfer-sei",
+      { to, amount, network: "sei" },
+      { txHash: `MOCK_TX_TRANSFER_${Date.now()}` }
     );
-  }
-  async getTransaction(txHash) {
-    return await safeMCP(
-      "get-chain-info",
-      { txHash, network: "sei" },
-      {
-        txHash,
-        status: "confirmed",
-        block: Math.floor(Math.random() * 10000),
-        timestamp: Date.now() - Math.floor(Math.random() * 3600000),
-        mode: "MOCK"
-      }
-    );
-  }
-  isMockMode() {
-    return MOCK_MODE.active;
-  }
+  },
+
+  initWebSocketListener(eventHandler?: (txData: any) => void) {
+    const connect = () => {
+      wsConnection = new WebSocket(SEI_WS_URL);
+
+      wsConnection.on("open", () => {
+        console.log("Connected to Sei WebSocket");
+        wsConnection.send(JSON.stringify({
+          jsonrpc: "2.0",
+          method: "subscribe",
+          params: { query: "tm.event = 'Tx' AND message.action='/cosmwasm.wasm.v1.MsgExecuteContract'" },
+          id: 1
+        }));
+      });
+
+      wsConnection.on("message", (data: any) => {
+        try {
+          const msg = JSON.parse(data);
+          if (msg.result?.data?.type === "tx" && eventHandler) {
+            eventHandler(msg.result.data.value);
+          }
+        } catch (e) {
+          console.error("Error processing WS message:", e);
+        }
+      });
+
+      wsConnection.on("close", () => {
+        console.log("Disconnected. Reconnecting in 3s...");
+        setTimeout(connect, 3000);
+      });
+
+      wsConnection.on("error", (err: any) => {
+        console.error("WebSocket error:", err.message);
+      });
+    };
+
+    connect();
+  },
+
   resetMock() {
-    MOCK_MODE.active = false;
+    isMock = false;
+    if (wsConnection) wsConnection.close();
+    this.initWebSocketListener();
+  },
+
+  isMockActive() {
+    return isMock;
   }
-}
+};
