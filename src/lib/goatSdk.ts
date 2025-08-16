@@ -15,6 +15,12 @@ export const GOAT_CONFIG = {
   contractAddress: "sei1sentinel123...",
 };
 
+// Crossmint API Configuration
+export const CROSSMINT_CONFIG = {
+  clientApiKey: "ck_production_6BL8XzCTzAEHywjN3nSnppjb1Gmr2GLA9HkZr3nCZbHyVuKuux6NEvjEUMkF41fABkyjExQKdeWLtw6QT4cJtmvAcjiwvYNep2eCWCo1611GxDyFM8TQd8vkVT6mWfvZJPp6icx7i5bbrXAsHD66oCEvXqjXFrXkqoWKV4tfHDokrUkxDZ2zzCgPNAq8RjNoZJ5QPgWtsycjMtnxAk88wahv",
+  apiEndpoint: "https://www.crossmint.com/api/2022-06-09",
+};
+
 // Agent Types
 export interface SentinelAgent {
   id: string;
