@@ -17,7 +17,7 @@ import {
   DollarSign,
   Activity
 } from "lucide-react";
-import { AgentArena } from "@/components/AgentArena";
+import EnhancedAgentArena from "@/components/EnhancedAgentArena";
 import { AchievementSystem } from "@/components/AchievementSystem";
 import { sentinelEvents, SENTINEL_AGENTS } from "@/lib/goatSdk";
 
@@ -332,7 +332,7 @@ export const SentinelGameDashboard: React.FC<SentinelGameDashboardProps> = ({ cl
 
       {/* Agent Arena Tab */}
       {activeTab === "arena" && (
-        <AgentArena />
+        <EnhancedAgentArena />
       )}
 
       {/* Achievements Tab */}
