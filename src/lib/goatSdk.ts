@@ -312,28 +312,10 @@ export const sentinelEvents = new SentinelEventEmitter();
 // Install: npm install @goat-sdk/goat @goat-sdk/wallet-cosmos
 
 // Create a Cosmos wallet (for Sei)
-import { createWallet } from "@goat-sdk/wallet-cosmos";
-// Usage example (async context):
-// const wallet = await createWallet({ network: "sei-testnet" });
-// Returns: { address, mnemonic, ... }
-
-// Mint an Agent NFT on Sei
-import { mintNFT, updateNFTMetadata } from "@goat-sdk/goat";
-// Usage example (async context):
-// const agentMetadata = {
-//   name: "SentinelZ",
-//   traits: { specialization: "code_audit", win_streak: 4, detection_accuracy: 0.98 },
-//   image: "ipfs://Qm.../sentinelnft.png"
-// };
-// const nft = await mintNFT({
-//   wallet, // wallet for signing
-//   metadata: agentMetadata,
-//   chain: "sei"
-// });
-// Returns tx hash, NFT ID
-
-// 2️⃣ Vulnerability Battle Logic + $SENT Rewards (Cosmos Bank Plugin)
-import { sendTokens } from "@goat-sdk/plugin-cosmosbank";
+// Temporarily commenting out until @goat-sdk packages are properly available
+// import { createWallet } from "@goat-sdk/wallet-cosmos";
+// import { GOAT } from "@goat-sdk/goat";
+// import { sendTokens } from "@goat-sdk/plugin-cosmosbank";
 // Usage example (async context):
 // async function rewardAgentForBattle(agentWallet, battleDetails) {
 //   const rewardAmount = battleDetails.severity === "critical" ? 50 : 15;
