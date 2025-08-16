@@ -76,9 +76,14 @@ function AgentCard({ agent }) {
 function Leaderboard() {
   const [leaders, setLeaders] = useState([]);
   useEffect(() => {
-    fetch(process.env.REACT_APP_AGENT_GAME_API + "/leaderboard")
-      .then(res => res.json())
-      .then(setLeaders);
+    // Using mock data instead of API call for now
+    // In a real implementation, you would use: import.meta.env.VITE_AGENT_GAME_API
+    const mockLeaders = [
+      { id: '1', name: 'CyberGuard', sentEarned: 2850 },
+      { id: '2', name: 'CodeSentinel', sentEarned: 2340 },
+      { id: '3', name: 'VulnHunter', sentEarned: 3420 }
+    ];
+    setLeaders(mockLeaders);
   }, []);
   return (
     <div className="bg-gray-50 p-4 rounded shadow">
