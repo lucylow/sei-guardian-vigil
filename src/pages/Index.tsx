@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SentinelGameDashboard } from "@/components/SentinelGameDashboard";
 import EnhancedAgentArena from "@/components/EnhancedAgentArena";
 
 export default function Index() {
@@ -41,8 +42,15 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Gamified Agent Arena */}
+      {/* Gamified Dashboard */}
       <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <SentinelGameDashboard />
+        </div>
+      </section>
+
+      {/* Enhanced Agent Arena */}
+      <section className="py-16 px-4 bg-muted/20">
         <div className="container mx-auto">
           <EnhancedAgentArena />
         </div>
