@@ -12,6 +12,7 @@ export function Navigation() {
     { to: "/agents", label: "Agents", icon: Users },
     { to: "/audits", label: "Audits", icon: FileSearch },
     { to: "/security", label: "Security", icon: ShieldCheck },
+    { to: "/no-code-studio", label: "No-Code Studio", icon: FileSearch },
   ];
 
   return (
