@@ -1,8 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import VisualAgentBuilder from '../components/AgentBuilder/VisualAgentBuilder';
 
 export default function AgentsPage() {
   const [showBuilder, setShowBuilder] = useState(false);
+  const builderRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to builder section when builder is shown
+  useEffect(() => {
+    if (showBuilder && builderRef.current) {
+      setTimeout(() => {
+        builderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [showBuilder]);
+
+  // Handler for Browse Templates
+  const handleBrowseTemplates = () => {
+    setShowBuilder(true);
+    setTimeout(() => {
+      builderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  };
+
+  // Handler for Get AI Help
+  const handleGetAIHelp = () => {
+    setShowBuilder(true);
+    setTimeout(() => {
+      window.alert('AI Assistant coming soon!');
+    }, 300);
+  };
+
+  // Handler for Deploy Agent
+  const handleDeployAgent = () => {
+    setShowBuilder(true);
+    setTimeout(() => {
+      builderRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -23,7 +57,7 @@ export default function AgentsPage() {
                 </p>
                 <button
                   className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  onClick={handleBrowseTemplates}
                 >
                   Browse Templates
                 </button>
@@ -49,7 +83,7 @@ export default function AgentsPage() {
                 </p>
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  onClick={() => window.alert('AI Assistant coming soon!')}
+                  onClick={handleGetAIHelp}
                 >
                   Get AI Help
                 </button>
@@ -62,7 +96,7 @@ export default function AgentsPage() {
                 </p>
                 <button
                   className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-                  onClick={() => setShowBuilder(true)}
+                  onClick={handleDeployAgent}
                 >
                   Deploy Agent
                 </button>
@@ -85,7 +119,7 @@ export default function AgentsPage() {
             {/* Existing agent gallery can go here */}
           </div>
         ) : (
-          <div>
+          <div ref={builderRef}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-2xl font-bold">Visual Agent Builder</h2>
               <button
