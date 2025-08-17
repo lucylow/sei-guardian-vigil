@@ -6,10 +6,12 @@ import AgentManager from "./AgentManager";
 import BattleEngine from "./BattleEngine";
 import RewardSystem from "./RewardSystem";
 import seiMcpRouter from "./seiMcpIntegration";
+import visualAgentRouter from "../api/visualAgent.js";
 
 const app = express();
 app.use(express.json());
 app.use("/api/sei", seiMcpRouter);
+app.use("/api/visual-agent", visualAgentRouter);
 
 const server = http.createServer(app);
 const io = new SocketIO(server, { cors: { origin: "*" } });
