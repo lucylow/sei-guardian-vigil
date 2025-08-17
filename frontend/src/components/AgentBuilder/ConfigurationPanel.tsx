@@ -37,6 +37,7 @@ export default function ConfigurationPanel({
           '🚀 Deploy Agent to Sei Blockchain'
         )}
       </motion.button>
+      {/* On deploy, agent graph is sent to backend for codegen and Sei deployment */}
       {/* ...existing code... */}
     </div>
   );

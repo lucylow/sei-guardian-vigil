@@ -1,6 +1,14 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
+// Node types map to agent runtime logic:
+// agentPersonality → Eliza OS character
+// skill → scan engine method
+// trigger → blockchain event subscription
+// action → GOAT SDK/Crossmint call
+// seiIntegration → CosmJS/GOAT plugin setup
+// output → webhook/notification formatting
+
 const nodeTemplates = [
 	{
 		type: 'agentPersonality',

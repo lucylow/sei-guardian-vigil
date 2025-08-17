@@ -37,6 +37,21 @@ const curatedTemplates = [
   // ...add more templates as needed
 ];
 
+// Collaborative editing (CRDT/Yjs integration placeholder)
+// import * as Y from 'yjs';
+// import { WebrtcProvider } from 'y-webrtc';
+// const ydoc = new Y.Doc();
+// const provider = new WebrtcProvider('sei-agent-room', ydoc);
+// Use ydoc/map for nodes/edges state for real-time sync
+
+// Node type mapping to agent runtime logic (see README for full mapping)
+// agentPersonality → Eliza OS character
+// skill → scan engine method
+// trigger → blockchain event subscription
+// action → GOAT SDK/Crossmint call
+// seiIntegration → CosmJS/GOAT plugin setup
+// output → webhook/notification formatting
+
 function templateToFlow(template) {
   const nodes = [];
   let x = 100, y = 100;
@@ -115,9 +130,22 @@ export default function VisualAgentBuilder() {
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
 
+  // Deploy agent: serialize graph and send to backend for codegen + deployment
   const deployAgent = useCallback(async () => {
     setIsDeploying(true);
-    // ...deployment logic...
+    try {
+      // Serialize graph to JSON
+      const agentGraph = { nodes, edges, config: agentConfig };
+      // POST to backend for codegen/deployment
+      await fetch("/api/agents/deploy", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ flow: agentGraph, seiConfig: agentConfig.sei }),
+      });
+      // Optionally handle response, show status, etc.
+    } catch (err) {
+      // Handle error
+    }
     setIsDeploying(false);
   }, [nodes, edges, agentConfig]);
 
