@@ -23,6 +23,9 @@ export default function NoCodeStudio() {
                   <p className="text-muted-foreground">
                     Choose from pre-built smart contract templates to get started quickly.
                   </p>
+                  <Button className="mt-4" variant="outline">
+                    📋 Browse Templates
+                  </Button>
                 </div>
                 <div className="p-6 border rounded-lg bg-card">
                   <h2 className="text-xl font-semibold mb-4">Visual Builder</h2>
@@ -40,12 +43,18 @@ export default function NoCodeStudio() {
                   <p className="text-muted-foreground">
                     Get help from AI to generate and optimize your smart contracts.
                   </p>
+                  <Button className="mt-4" variant="outline">
+                    🤖 Get AI Help
+                  </Button>
                 </div>
                 <div className="p-6 border rounded-lg bg-card">
                   <h2 className="text-xl font-semibold mb-4">Deploy & Test</h2>
                   <p className="text-muted-foreground">
                     Test your agents on testnet and deploy to mainnet with one click.
                   </p>
+                  <Button className="mt-4" variant="outline">
+                    🚀 Deploy Agent
+                  </Button>
                 </div>
               </div>
             </div>
