@@ -12,51 +12,74 @@ export default function NoCodeStudio() {
       <div className="container mx-auto px-4 py-6">
         {!showBuilder ? (
           <div>
-            <div className="mb-6">
-              <h1 className="text-3xl font-bold text-foreground mb-2">No-Code Studio</h1>
-              <p className="text-muted-foreground">Build and deploy smart contract agents on Sei with drag-and-drop vibe coding</p>
+            <div className="mb-6 text-center">
+              <h1 className="text-4xl font-bold text-foreground mb-2">No-Code Studio</h1>
+              <p className="text-lg text-muted-foreground mb-4">
+                Build and deploy smart contract agents on Sei with drag-and-drop vibe coding
+              </p>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="space-y-6">
-                <div className="p-6 border rounded-lg bg-card">
-                  <h2 className="text-xl font-semibold mb-4">Contract Templates</h2>
-                  <p className="text-muted-foreground">
-                    Choose from pre-built smart contract templates to get started quickly.
-                  </p>
-                  <Button className="mt-4" variant="outline">
-                    📋 Browse Templates
-                  </Button>
-                </div>
-                <div className="p-6 border rounded-lg bg-card">
-                  <h2 className="text-xl font-semibold mb-4">Visual Builder</h2>
-                  <p className="text-muted-foreground">
-                    Drag and drop components to build your agent logic visually.
-                  </p>
-                  <Button className="mt-4" onClick={() => setShowBuilder(true)}>
-                    🚀 Start Vibe Coding
-                  </Button>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <span className="text-3xl mb-2">📋</span>
+                <h3 className="font-bold mb-1">Contract Templates</h3>
+                <p className="text-sm text-gray-500 mb-3 text-center">
+                  Choose from pre-built smart contract templates to get started quickly.
+                </p>
+                <Button
+                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  onClick={() => setShowBuilder(true)}
+                >
+                  Browse Templates
+                </Button>
               </div>
-              <div className="space-y-6">
-                <div className="p-6 border rounded-lg bg-card">
-                  <h2 className="text-xl font-semibold mb-4">AI Assistant</h2>
-                  <p className="text-muted-foreground">
-                    Get help from AI to generate and optimize your smart contracts.
-                  </p>
-                  <Button className="mt-4" variant="outline">
-                    🤖 Get AI Help
-                  </Button>
-                </div>
-                <div className="p-6 border rounded-lg bg-card">
-                  <h2 className="text-xl font-semibold mb-4">Deploy & Test</h2>
-                  <p className="text-muted-foreground">
-                    Test your agents on testnet and deploy to mainnet with one click.
-                  </p>
-                  <Button className="mt-4" variant="outline">
-                    🚀 Deploy Agent
-                  </Button>
-                </div>
+              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <span className="text-3xl mb-2">🛠️</span>
+                <h3 className="font-bold mb-1">Visual Builder</h3>
+                <p className="text-sm text-gray-500 mb-3 text-center">
+                  Drag and drop components to build your agent logic visually.
+                </p>
+                <Button
+                  className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
+                  onClick={() => setShowBuilder(true)}
+                >
+                  Start Vibe Coding
+                </Button>
               </div>
+              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <span className="text-3xl mb-2">🤖</span>
+                <h3 className="font-bold mb-1">AI Assistant</h3>
+                <p className="text-sm text-gray-500 mb-3 text-center">
+                  Get help from AI to generate and optimize your smart contracts.
+                </p>
+                <Button
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                  onClick={() => window.alert('AI Assistant coming soon!')}
+                >
+                  Get AI Help
+                </Button>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
+                <span className="text-3xl mb-2">🚀</span>
+                <h3 className="font-bold mb-1">Deploy & Test</h3>
+                <p className="text-sm text-gray-500 mb-3 text-center">
+                  Test your agents on testnet and deploy to mainnet with one click.
+                </p>
+                <Button
+                  className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
+                  onClick={() => setShowBuilder(true)}
+                >
+                  Deploy Agent
+                </Button>
+              </div>
+            </div>
+            <div className="text-center mt-8">
+              <h2 className="text-2xl font-bold mb-2">How It Works</h2>
+              <ol className="list-decimal list-inside text-muted-foreground text-lg mx-auto max-w-2xl">
+                <li>Pick a contract template or start from scratch.</li>
+                <li>Drag and drop agent components onto the canvas.</li>
+                <li>Configure triggers, actions, and blockchain integrations.</li>
+                <li>Preview, test, and deploy your agent to Sei.</li>
+              </ol>
             </div>
           </div>
         ) : (
