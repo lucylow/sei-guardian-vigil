@@ -408,7 +408,7 @@ export class SeiSentinelTools {
   }
 
   // Hive Intelligence integration for threat analysis
-  export async function hiveThreatAnalysis(contractCode: string, apiKey: string): Promise<any> {
+  async hiveThreatAnalysis(contractCode: string, apiKey: string): Promise<any> {
     try {
       const response = await fetch("https://api.hiveintelligence.xyz/v1/search", {
         method: "POST",
