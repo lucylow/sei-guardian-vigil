@@ -1,6 +1,3 @@
-import { getOnChainTools } from "@goat-sdk/adapter-vercel-ai";
-import { sendETH } from "@goat-sdk/wallet-evm";
-import { erc721 } from "@goat-sdk/plugin-erc721";
 const { SigningCosmWasmClient } = require('@cosmjs/cosmwasm-stargate');
 const { DirectSecp256k1HdWallet } = require('@cosmjs/proto-signing');
 const { GasPrice } = require('@cosmjs/stargate');
@@ -15,17 +12,14 @@ class SeiBlockchainIntegration {
 
   async initialize() {
     try {
-      // Initialize wallet from mnemonic
       this.wallet = await DirectSecp256k1HdWallet.fromMnemonic(
         process.env.SEI_MNEMONIC,
         { prefix: 'sei' }
       );
 
-      // Get first account
       const [firstAccount] = await this.wallet.getAccounts();
       console.log('Sei wallet address:', firstAccount.address);
 
-      // Initialize signing client
       this.client = await SigningCosmWasmClient.connectWithSigner(
         this.rpcEndpoint,
         this.wallet,
@@ -104,7 +98,6 @@ class SeiBlockchainIntegration {
         `Reward: ${reason}`
       );
 
-      // Record on-chain event
       await this.recordRewardEvent(agentAddress, amount, reason, result.transactionHash);
 
       return {
@@ -200,13 +193,10 @@ class SeiBlockchainIntegration {
   }
 
   async listenForContractEvents() {
-    // WebSocket connection for real-time events
     const ws = new WebSocket(`wss://sei-testnet-rpc.polkachu.com/websocket`);
     
     ws.on('open', () => {
       console.log('Connected to Sei WebSocket');
-      
-      // Subscribe to contract events
       ws.send(JSON.stringify({
         jsonrpc: '2.0',
         method: 'subscribe',
@@ -232,31 +222,22 @@ class SeiBlockchainIntegration {
   }
 
   handleContractEvent(eventData) {
-    // Process contract deployment, reward distribution, etc.
     console.log('Contract event received:', eventData);
-    
-    // Trigger vulnerability scan for new contracts
     if (eventData.type === 'contract_instantiated') {
       this.triggerVulnerabilityScan(eventData.contract_address);
     }
   }
 
   async triggerVulnerabilityScan(contractAddress) {
-    // Integration with vulnerability scanner
     const VulnerabilityScanner = require('./scanEngine');
     const scanner = new VulnerabilityScanner();
     
     try {
-      // Get contract code
       const contractInfo = await this.client.getContract(contractAddress);
-      
-      // Scan for vulnerabilities
       const scanResult = await scanner.scanContract(contractInfo.code_info, contractAddress);
       
       if (scanResult.findings.length > 0) {
-        // Create vulnerability battles for critical findings
         const criticalFindings = scanResult.findings.filter(f => f.severity >= 8);
-        
         for (const finding of criticalFindings) {
           await this.createVulnerabilityBattle({
             name: finding.type,
@@ -272,10 +253,7 @@ class SeiBlockchainIntegration {
   }
 
   async createVulnerabilityBattle(vulnData) {
-    // This would integrate with the BattleEngine
     console.log('Creating vulnerability battle:', vulnData);
-    
-    // Emit event for frontend
     if (global.battleEngine) {
       global.battleEngine.createVulnerability(vulnData);
     }

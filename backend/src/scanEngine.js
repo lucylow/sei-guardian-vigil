@@ -1,5 +1,5 @@
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { analyze } from '@solidity-parser/parser';
+const { CosmWasmClient } = require('@cosmjs/cosmwasm-stargate');
+const { analyze } = require('@solidity-parser/parser');
 
 class VulnerabilityScanner {
   constructor() {
