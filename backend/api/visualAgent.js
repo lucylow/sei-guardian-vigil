@@ -24,13 +24,23 @@ router.post("/build", async (req, res) => {
 // Deploy agent to Sei testnet
 router.post("/deploy", async (req, res) => {
   try {
-    const { nodes, edges } = req.body;
+    const { nodes, edges, network } = req.body;
     const code = generateAgentCode(nodes, edges);
 
-    // Boot agent, deploy on Sei, mint NFT via Crossmint
-    const { txHash, agentNft } = await bootAgentWithSei(code);
+    // DEMO MODE: return instantly with mock data
+    if (network === "demo") {
+      return res.json({
+        status: "ok",
+        txHash: "0xDEMO_TX_123",
+        agentNft: "sei1demoagent000",
+        network: "demo",
+      });
+    }
 
-    res.json({ status: "ok", txHash, agentNft });
+    // Real deployment (testnet/mainnet)
+    const { txHash, agentNft } = await bootAgentWithSei(code, network);
+
+    res.json({ status: "ok", txHash, agentNft, network });
   } catch (e) {
     console.error("Deploy error:", e);
     res.status(500).json({ status: "error", error: e.message });

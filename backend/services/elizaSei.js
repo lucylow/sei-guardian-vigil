@@ -15,7 +15,7 @@ const llm = new ChatOpenAI({
   openAIApiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function bootAgentWithSei(code) {
+export async function bootAgentWithSei(code, network = "testnet") {
   // Save generated agent code
   const filePath = path.join("/tmp", `Agent_${Date.now()}.ts`);
   fs.writeFileSync(filePath, code);
@@ -32,11 +32,21 @@ export async function bootAgentWithSei(code) {
     permissions: ["read_chain", "deploy_contract", "simulate_tx"],
   });
 
-  // Deploy contract/agent
-  const result = await deployContract({
-    optimizedBytecode: fs.readFileSync(filePath, "utf8"),
-    gasLimit: "auto",
-    signer: process.env.SEI_PRIVATE_KEY,
+  const goat = new GOAT({
+    network: network === "mainnet" ? "sei-mainnet" : "sei-testnet",
+    rpcUrl:
+      network === "mainnet"
+        ? process.env.SEI_MAINNET_RPC
+        : process.env.SEI_TESTNET_RPC,
+    privateKey:
+      network === "mainnet"
+        ? process.env.SEI_MAINNET_PRIVATE_KEY
+        : process.env.SEI_TESTNET_PRIVATE_KEY,
+    crossmintApiKey: process.env.CROSSMINT_API_KEY,
+  });
+
+  const result = await goat.deployAgent({
+    sourceFile: saveTempAgentFile(code),
     nftIdentity: true,
   });
 

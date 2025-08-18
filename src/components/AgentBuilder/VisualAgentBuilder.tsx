@@ -42,10 +42,17 @@ const nodeTypes = {
   ),
 };
 
+const networkOptions = [
+  { value: "mainnet", label: "🌐 Sei Mainnet" },
+  { value: "testnet", label: "🧪 Sei Testnet" },
+  { value: "demo", label: "🎭 Demo Mode (mock data)" },
+];
+
 export default function VisualAgentBuilder() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isDeploying, setIsDeploying] = useState(false);
+  const [network, setNetwork] = useState("demo");
   const { toast } = useToast();
 
   const onConnect = useCallback(
@@ -77,10 +84,9 @@ export default function VisualAgentBuilder() {
     }
 
     setIsDeploying(true);
-    
+
     try {
-      const flowJson = { nodes, edges };
-      
+      const flowJson = { nodes, edges, network };
       const response = await fetch("/api/visual-agent/deploy", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -88,10 +94,10 @@ export default function VisualAgentBuilder() {
       });
 
       const data = await response.json();
-      
+
       if (data.status === "ok") {
         toast({
-          title: "🚀 Agent Deployed!",
+          title: `🚀 Agent Deployed on ${network.toUpperCase()}!`,
           description: `NFT: ${data.agentNft?.slice(0, 10)}... | Tx: ${data.txHash?.slice(0, 10)}...`,
         });
       } else {
@@ -117,20 +123,35 @@ export default function VisualAgentBuilder() {
             Drag nodes from the palette to build your agent
           </p>
         </div>
-        <Button 
-          onClick={handleDeploy} 
-          disabled={isDeploying || nodes.length === 0}
-          className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
-        >
-          {isDeploying ? (
-            <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-              Deploying to Sei...
-            </>
-          ) : (
-            '🚀 Deploy Agent'
-          )}
-        </Button>
+        <div className="flex items-center gap-4">
+          {/* Network Selector */}
+          <div>
+            <label className="text-xs font-semibold block mb-1">Select Network</label>
+            <select
+              value={network}
+              onChange={e => setNetwork(e.target.value)}
+              className="border rounded p-2 text-sm"
+            >
+              {networkOptions.map(n => (
+                <option key={n.value} value={n.value}>{n.label}</option>
+              ))}
+            </select>
+          </div>
+          <Button
+            onClick={handleDeploy}
+            disabled={isDeploying || nodes.length === 0}
+            className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+          >
+            {isDeploying ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                Deploying to Sei...
+              </>
+            ) : (
+              '🚀 Deploy Agent'
+            )}
+          </Button>
+        </div>
       </div>
       
       <div className="h-[600px] w-full flex border rounded-lg bg-background">
