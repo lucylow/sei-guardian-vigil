@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ConnectWalletButton from "@/components/ConnectWalletButton";
 
 export default function AgentDeployDemo() {
   const [flowJson, setFlowJson] = useState("");
@@ -30,6 +31,7 @@ export default function AgentDeployDemo() {
 
   return (
     <div className="max-w-3xl mx-auto p-4">
+      <ConnectWalletButton />
       <h1 className="text-2xl font-bold mb-4">SEI SENTINEL Agent Deployment Demo</h1>
       <form onSubmit={handleSubmit}>
         <label className="block mb-2 font-semibold">Paste Visual Agent Flow JSON:</label>
