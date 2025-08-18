@@ -37,7 +37,7 @@ const BlockchainStatus = () => {
   return (
     <div className={`p-4 rounded-lg shadow-md ${
       status.mockMode ? 'bg-yellow-100 border-yellow-500' : 'bg-green-100 border-green-500'
-    } border-l-4`}>
+    } border-l-4 transition-all duration-300`}>
       <div className="flex justify-between items-center">
         <div>
           <h3 className="font-bold text-lg">
@@ -53,14 +53,14 @@ const BlockchainStatus = () => {
         {status.mockMode && (
           <button 
             onClick={resetMock}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition"
+            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded transition font-semibold shadow"
           >
             Connect Live
           </button>
         )}
       </div>
       {status.error && (
-        <p className="text-red-500 mt-2">
+        <p className="text-red-500 mt-2 font-semibold">
           Connection error. Please check network settings.
         </p>
       )}

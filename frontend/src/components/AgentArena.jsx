@@ -123,25 +123,24 @@ const AgentArena = ({ battles }) => {
   );
 
   return (
-    <div className="agent-arena-container bg-gray-900 text-white p-6 rounded-xl">
+    <div className="agent-arena-container bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 text-white p-6 rounded-xl shadow-lg">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold flex items-center">
-          <span className="mr-2">⚔️</span> Agent Arena
+        <h2 className="text-3xl font-extrabold flex items-center gap-2">
+          <span>⚔️</span> Agent Arena
         </h2>
-        <div className="bg-purple-800 px-3 py-1 rounded-full text-sm">
+        <div className="bg-purple-800 px-3 py-1 rounded-full text-sm font-semibold shadow">
           Live Battle Feed
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Battle Arena */}
-        <div className="bg-gray-800 p-4 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4">Active Battles</h3>
-          <div className="grid grid-cols-1 gap-4">
+        <div className="bg-gradient-to-br from-gray-800 via-purple-800 to-blue-800 p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-bold mb-4">Active Battles</h3>
+          <div className="grid grid-cols-1 gap-6">
             {activeBattles.map((battle) => (
               <div 
                 key={battle.id}
-                className={`relative p-4 rounded-lg border-2 ${
+                className={`relative p-4 rounded-lg border-2 shadow-lg ${
                   battle.status === 'victory' 
                     ? 'border-green-500 bg-green-900/20' 
                     : 'border-red-500 bg-red-900/20'
@@ -215,11 +214,10 @@ const AgentArena = ({ battles }) => {
             ))}
           </div>
         </div>
-
         {/* Leaderboard */}
-        <div className="bg-gray-800 p-4 rounded-xl">
-          <h3 className="text-lg font-semibold mb-4">Leaderboard</h3>
-          <div className="space-y-3">
+        <div className="bg-gradient-to-br from-gray-800 via-purple-800 to-blue-800 p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-bold mb-4">Leaderboard</h3>
+          <div className="space-y-4">
             {leaderboard
               .sort((a, b) => b.victories - a.victories || b.rewards - a.rewards)
               .slice(0, 5)
@@ -228,12 +226,12 @@ const AgentArena = ({ battles }) => {
                   key={agent.id}
                   className={`flex items-center p-3 rounded-lg ${
                     index === 0 ? 'bg-yellow-900/30 border-yellow-500' : 'bg-gray-700'
-                  } border`}
+                  } border shadow`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center mr-3 text-xl">
                     {index === 0 ? '👑' : `#${index + 1}`}
                   </div>
                   <div className="flex-1">
@@ -249,21 +247,20 @@ const AgentArena = ({ battles }) => {
                 </motion.div>
               ))}
           </div>
-          
-          <div className="mt-6">
+          <div className="mt-8">
             <h4 className="font-semibold mb-2">Battle Statistics</h4>
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-gray-700 p-3 rounded-lg text-center">
+              <div className="bg-gray-700 p-3 rounded-lg text-center shadow">
                 <div className="text-2xl">{battles.length}</div>
                 <div className="text-xs text-gray-400">Total Battles</div>
               </div>
-              <div className="bg-gray-700 p-3 rounded-lg text-center">
+              <div className="bg-gray-700 p-3 rounded-lg text-center shadow">
                 <div className="text-2xl text-green-400">
                   {leaderboard.reduce((acc, agent) => acc + agent.victories, 0)}
                 </div>
                 <div className="text-xs text-gray-400">Vulnerabilities Fixed</div>
               </div>
-              <div className="bg-gray-700 p-3 rounded-lg text-center">
+              <div className="bg-gray-700 p-3 rounded-lg text-center shadow">
                 <div className="text-2xl text-yellow-400">
                   {leaderboard.reduce((acc, agent) => acc + agent.rewards, 0)}
                 </div>
@@ -273,9 +270,8 @@ const AgentArena = ({ battles }) => {
           </div>
         </div>
       </div>
-
       {/* Battle Visualization Canvas */}
-      <div className="mt-6 bg-black/50 rounded-xl overflow-hidden">
+      <div className="mt-8 bg-black/60 rounded-xl overflow-hidden shadow-lg">
         <Stage width={800} height={300} options={{ backgroundColor: 0x0a0a15 }}>
           {activeBattles.map((battle, index) => (
             <React.Fragment key={battle.id}>

@@ -109,34 +109,32 @@ const BattleSystem = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Connection Status */}
-      <div className="flex items-center space-x-2">
-        <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} />
-        <span className="text-sm text-gray-400">
+      <div className="flex items-center space-x-2 mb-4">
+        <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'} transition-all`} />
+        <span className="text-sm text-gray-400 font-semibold">
           {isConnected ? 'Connected to Battle System' : 'Disconnected'}
         </span>
       </div>
-
       {/* Available Vulnerabilities */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">Available Vulnerabilities</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <h2 className="text-2xl font-bold text-white mb-6">Available Vulnerabilities</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {vulnerabilities.filter(v => v.status === 'active').map(vuln => (
-            <div key={vuln.id} className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-              <h3 className="text-lg font-semibold text-white mb-2">{vuln.name}</h3>
-              <div className="text-sm text-gray-400 mb-3">
+            <div key={vuln.id} className="bg-gradient-to-br from-gray-800 via-purple-800 to-blue-800 rounded-lg p-6 border border-purple-600 shadow-lg">
+              <h3 className="text-lg font-bold text-white mb-2">{vuln.name}</h3>
+              <div className="text-sm text-gray-300 mb-3">
                 <div>Type: {vuln.type}</div>
                 <div>Severity: {vuln.severity}/10</div>
                 <div>Health: {vuln.health}%</div>
               </div>
-              
               <div className="space-y-2">
                 {agents.map(agent => (
                   <button
                     key={agent.id}
                     onClick={() => startBattle(agent.id, vuln.id)}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded text-sm transition-colors"
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-2 px-4 rounded text-sm font-bold shadow transition-colors"
                     disabled={!isConnected}
                   >
                     Send {agent.name}
@@ -147,11 +145,10 @@ const BattleSystem = () => {
           ))}
         </div>
       </div>
-
       {/* Active Battles */}
       <div>
-        <h2 className="text-xl font-bold text-white mb-4">Active Battles</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h2 className="text-2xl font-bold text-white mb-6">Active Battles</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {battles.map(battle => (
             <BattleCard key={battle.id} battle={battle} />
           ))}
@@ -159,6 +156,9 @@ const BattleSystem = () => {
       </div>
     </div>
   );
+};
+
+export default BattleSystem;
 };
 
 export default BattleSystem;
