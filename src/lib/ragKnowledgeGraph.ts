@@ -139,3 +139,18 @@ export class AgenticRAGSystem {
 }
 
 export const ragSystem = new AgenticRAGSystem();
+
+// Hive Intelligence enrichment for RAG context
+export async function enrichWithHiveInsights(contractCode: string, apiKey: string): Promise<any> {
+  // Use Hive API to get cross-chain exploit context
+  try {
+    const response = await fetch("https://api.hiveintelligence.xyz/v1/search", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: `Provide cross-chain context for vulnerabilities in: ${contractCode}` })
+    });
+    return await response.json();
+  } catch (err) {
+    return { error: err.message };
+  }
+}

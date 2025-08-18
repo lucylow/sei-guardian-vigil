@@ -406,6 +406,20 @@ export class SeiSentinelTools {
       executionTime: Date.now() - startTime
     };
   }
+
+  // Hive Intelligence integration for threat analysis
+  export async function hiveThreatAnalysis(contractCode: string, apiKey: string): Promise<any> {
+    try {
+      const response = await fetch("https://api.hiveintelligence.xyz/v1/search", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: `Identify exploit patterns in this contract: ${contractCode}` })
+      });
+      return await response.json();
+    } catch (err) {
+      return { error: err.message };
+    }
+  }
 }
 
 export const seiTools = SeiSentinelTools.getInstance();

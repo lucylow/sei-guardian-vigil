@@ -33,3 +33,11 @@ def sei_memory_optimize():
         latency_budget=300,  # ms
         priority="high_throughput"
     )
+
+def monitor_contract_with_hive(contract_address, hive_api_key):
+    import time
+    while True:
+        activity = analyze_transaction_patterns(contract_address, hive_api_key)
+        if detect_anomalies(activity):
+            send_alert(f"Suspicious activity: {activity}")
+        time.sleep(300)  # Check every 5 minutes

@@ -50,4 +50,27 @@ router.get("/hive/keys", (req, res) => {
   res.json(hiveKeysDB);
 });
 
+// Add Hive API key registration and test endpoint
+router.post("/hive/register-api-key", (req, res) => {
+  const { userId, apiKey } = req.body;
+  hiveKeysDB[userId] = { apiKey, registeredAt: Date.now() };
+  res.json({ success: true, apiKey });
+});
+
+router.post("/hive/test-query", async (req, res) => {
+  const { apiKey, contractCode } = req.body;
+  // Simulate Hive API call
+  try {
+    const response = await fetch("https://api.hiveintelligence.xyz/v1/search", {
+      method: "POST",
+      headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: `Identify exploit patterns in this contract: ${contractCode}` })
+    });
+    const result = await response.json();
+    res.json({ result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;

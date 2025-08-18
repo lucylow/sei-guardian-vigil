@@ -1,6 +1,6 @@
 import express from "express";
 import { generateAgentCode } from "../services/codegen.js";
-import { deployToSei } from "../services/seiDeploy.js";
+import { bootAgentWithSei } from "../services/elizaSei.js";
 
 const router = express.Router();
 
@@ -25,17 +25,15 @@ router.post("/build", async (req, res) => {
 router.post("/deploy", async (req, res) => {
   try {
     const { nodes, edges } = req.body;
-
-    // Step 1: Generate agent code
     const code = generateAgentCode(nodes, edges);
 
-    // Step 2: Deploy to Sei via GOAT SDK
-    const { txHash, agentNft } = await deployToSei(code);
+    // Boot agent, deploy on Sei, mint NFT via Crossmint
+    const { txHash, agentNft } = await bootAgentWithSei(code);
 
-    res.json({ status: "ok", txHash, agentNft, code });
-  } catch (err) {
-    console.error("[DEBUG] Deploy error:", err);
-    res.status(500).json({ status: "error", error: err.message });
+    res.json({ status: "ok", txHash, agentNft });
+  } catch (e) {
+    console.error("Deploy error:", e);
+    res.status(500).json({ status: "error", error: e.message });
   }
 });
 
