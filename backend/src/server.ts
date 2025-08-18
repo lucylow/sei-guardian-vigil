@@ -9,7 +9,7 @@ import seiMcpRouter from "./seiMcpIntegration";
 import visualAgentRouter from "../api/visualAgent.js";
 
 const app = express();
-app.use(express.json());
+app.use(express.json()); // <-- Ensure body parser is enabled
 app.use("/api/sei", seiMcpRouter);
 app.use("/api/visual-agent", visualAgentRouter);
 
