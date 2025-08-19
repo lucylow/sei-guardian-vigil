@@ -1,30 +1,30 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import VulnerabilityItem from "../components/VulnerabilityItemWithExplainability";
 
 export default function ScanResult() {
   const { scanId } = useParams();
-
-  // Rich fake findings for demo purposes
   const findings = [
-    {
-      severity: "critical",
-      type: "Reentrancy",
-      description: "Function withdraw() can be re-entered without state update.",
-      cwe: "CWE-841",
-      owasp: "A1_2017-Injection",
-      aiReasoning:
-        "Reentrancy enables attackers to exploit contract calls to repeatedly drain Ether before the balance is updated.",
-      fixRecommendation:
-        "Apply the Checks-Effects-Interactions pattern and use OpenZeppelin’s ReentrancyGuard modifier.",
-      confidence: 0.97
-    },
-    {
-      severity: "high",
-      type: "Integer Overflow",
-      description: "calcReward() function at line 89 does not check overflow.",
-      cwe: "CWE-190",
-      owasp: "A5_2021-Security_Misconfiguration",
+    { severity: "critical", type: "Reentrancy", desc: "Function withdraw() can be re-entered", cwe: "CWE-841" },
+    { severity: "high", type: "Integer Overflow", desc: "Unsafe arithmetic in calcReward()", cwe: "CWE-190" },
+  ];
+
+  const colors = { critical: "bg-red-600", high: "bg-orange-500", medium: "bg-yellow-400", low: "bg-green-500" };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-xl font-bold mb-4">Scan Results – {scanId}</h1>
+      <div className="grid grid-cols-4 gap-2 mb-4">
+        {findings.map((f, i) => (
+          <div key={i} className={`p-2 text-white ${colors[f.severity]}`}>
+            <strong>{f.severity.toUpperCase()}</strong> – {f.type}
+            <p className="text-xs">{f.desc} ({f.cwe})</p>
+          </div>
+        ))}
+      </div>
+      <button className="bg-gray-700 text-white py-2 px-4 rounded">Download PDF</button>
+    </div>
+  );
+}
       aiReasoning:
         "Unchecked arithmetic can overflow and lead to miscalculated reward values, impacting tokenomics.",
       fixRecommendation:
