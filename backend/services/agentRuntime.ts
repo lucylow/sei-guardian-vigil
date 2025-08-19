@@ -2,6 +2,7 @@ import { tokenActivityMonitor } from "../templates/tokenMonitor.js";
 import { aiWalletBalance, createScheduledReporter } from "../templates/aiWalletBalance.js";
 import { getSeiPrice, createPriceMonitor } from "../services/marketData.js";
 import { readContract, writeContract, deployContract } from "../services/contractInteraction.js";
+import { env } from "../config/environment.js";
 
 export interface FlowNode {
   id: string;
@@ -109,7 +110,7 @@ class AgentRuntime {
     switch (node.type) {
       case "tokenActivityMonitor":
         return tokenActivityMonitor({
-          wallet: node.config.wallet || process.env.TEST_WALLET || "sei1test...",
+          wallet: node.config.wallet || env.testWallet || "sei1test...",
           threshold: node.config.threshold || 500,
           email: node.config.email || "demo@example.com",
           alertTypes: node.config.alertTypes || ["incoming", "outgoing"],
@@ -119,7 +120,7 @@ class AgentRuntime {
       case "aiWalletBalance":
         if (node.config.scheduled) {
           return createScheduledReporter({
-            wallet: node.config.wallet || process.env.TEST_WALLET || "sei1test...",
+            wallet: node.config.wallet || env.testWallet || "sei1test...",
             email: node.config.email || "demo@example.com",
             reportFrequency: node.config.reportFrequency || "daily",
             includeAIInsights: node.config.includeAIInsights !== false,
@@ -127,7 +128,7 @@ class AgentRuntime {
           });
         } else {
           return aiWalletBalance({
-            wallet: node.config.wallet || process.env.TEST_WALLET || "sei1test...",
+            wallet: node.config.wallet || env.testWallet || "sei1test...",
             email: node.config.email || "demo@example.com",
             includeAIInsights: node.config.includeAIInsights !== false,
             customPrompt: node.config.customPrompt

@@ -10,7 +10,10 @@
     "build": "tsc",
     "test": "jest",
     "lint": "eslint src/**/*.ts",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "validate": "node scripts/validateEnv.js",
+    "validate:env": "node scripts/validateEnv.js",
+    "predev": "npm run validate:env"
   },
   "keywords": [
     "sei",

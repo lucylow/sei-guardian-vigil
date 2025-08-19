@@ -1,8 +1,9 @@
 import WebSocket from "ws";
+import { getSeiWsUrl } from "../config/environment.js";
 
 // Example: listen to incoming SEI token transfers
 export function listenForSEITransfers(walletAddr: string, callback: Function) {
-  const ws = new WebSocket(process.env.SEI_WS || "wss://sei-testnet-rpc.polkachu.com/websocket");
+  const ws = new WebSocket(getSeiWsUrl());
 
   ws.on("open", () => {
     console.log("🔌 Connected to Sei WebSocket");
@@ -38,7 +39,7 @@ export function listenForSEITransfers(walletAddr: string, callback: Function) {
 
 // Listen for smart contract events
 export function listenForContractEvents(contractAddr: string, eventType: string, callback: Function) {
-  const ws = new WebSocket(process.env.SEI_WS || "wss://sei-testnet-rpc.polkachu.com/websocket");
+  const ws = new WebSocket(getSeiWsUrl());
 
   ws.on("open", () => {
     console.log(`🔌 Connected to Sei WebSocket for contract ${contractAddr}`);
@@ -65,7 +66,7 @@ export function listenForContractEvents(contractAddr: string, eventType: string,
 
 // Listen for block events
 export function listenForBlocks(callback: Function) {
-  const ws = new WebSocket(process.env.SEI_WS || "wss://sei-testnet-rpc.polkachu.com/websocket");
+  const ws = new WebSocket(getSeiWsUrl());
 
   ws.on("open", () => {
     console.log("🔌 Connected to Sei WebSocket for block events");

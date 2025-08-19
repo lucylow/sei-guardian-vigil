@@ -18,6 +18,7 @@ export function generateAgentCode(nodes, edges) {
 
 import { Agent } from "@elizaos/sdk";
 import { GOAT } from "@goat-sdk/sei";
+import { env } from "../config/environment.js";
 
 const agent = new Agent({
   name: "${personality.label || "Sei Agent"}",
@@ -85,8 +86,8 @@ if (process.env.AUTO_DEPLOY === "true") {
   (async () => {
     try {
       const goat = new GOAT({ 
-        network: process.env.GOAT_NETWORK || "sei-testnet",
-        privateKey: process.env.WALLET_PRIVATE_KEY
+        network: env.goatNetwork,
+        privateKey: env.seiTestnetPrivateKey || env.seiMainnetPrivateKey
       });
       
       const result = await goat.deploy(agent);

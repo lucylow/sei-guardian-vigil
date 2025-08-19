@@ -1,8 +1,9 @@
 import { cubist } from "@cubist-labs/sdk";
+import { env, getSeiRpcUrl } from "../config/environment.js";
 
 export async function readContract(contractAddr: string, queryMsg: any) {
   try {
-    const client = await cubist.getCosmWasmClient(process.env.SEI_RPC);
+    const client = await cubist.getCosmWasmClient(getSeiRpcUrl());
     return await client.queryContractSmart(contractAddr, queryMsg);
   } catch (error) {
     console.error("Error reading contract:", error);
@@ -13,7 +14,7 @@ export async function readContract(contractAddr: string, queryMsg: any) {
 export async function writeContract(contractAddr: string, execMsg: any) {
   try {
     const signer = await cubist.getSigner(); // Cubist manages keys & gas
-    const client = await cubist.getSigningCosmWasmClient(process.env.SEI_RPC, signer);
+    const client = await cubist.getSigningCosmWasmClient(getSeiRpcUrl(), signer);
 
     const tx = await client.execute(signer.address, contractAddr, execMsg, "auto");
     return tx.transactionHash;
@@ -26,7 +27,7 @@ export async function writeContract(contractAddr: string, execMsg: any) {
 // Get contract balance
 export async function getContractBalance(contractAddr: string) {
   try {
-    const client = await cubist.getCosmWasmClient(process.env.SEI_RPC);
+    const client = await cubist.getCosmWasmClient(getSeiRpcUrl());
     const balance = await client.getBalance(contractAddr, "usei");
     return balance;
   } catch (error) {
@@ -38,7 +39,7 @@ export async function getContractBalance(contractAddr: string) {
 // Get wallet balance
 export async function getWalletBalance(walletAddr: string) {
   try {
-    const client = await cubist.getCosmWasmClient(process.env.SEI_RPC);
+    const client = await cubist.getCosmWasmClient(getSeiRpcUrl());
     const balance = await client.getBalance(walletAddr, "usei");
     return balance;
   } catch (error) {
@@ -51,7 +52,7 @@ export async function getWalletBalance(walletAddr: string) {
 export async function deployContract(wasmByteCode: Buffer, initMsg: any) {
   try {
     const signer = await cubist.getSigner();
-    const client = await cubist.getSigningCosmWasmClient(process.env.SEI_RPC, signer);
+    const client = await cubist.getSigningCosmWasmClient(getSeiRpcUrl(), signer);
     
     const uploadResult = await client.upload(signer.address, wasmByteCode, "auto");
     const contractAddr = await client.instantiate(
@@ -76,7 +77,7 @@ export async function deployContract(wasmByteCode: Buffer, initMsg: any) {
 // Query contract state
 export async function queryContractState(contractAddr: string) {
   try {
-    const client = await cubist.getCosmWasmClient(process.env.SEI_RPC);
+    const client = await cubist.getCosmWasmClient(getSeiRpcUrl());
     const contractInfo = await client.getContract(contractAddr);
     return contractInfo;
   } catch (error) {

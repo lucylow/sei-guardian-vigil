@@ -1,5 +1,6 @@
 import { listenForSEITransfers } from "../services/eventTriggers.js";
 import nodemailer from "nodemailer";
+import { env } from "../config/environment.js";
 
 export interface TokenMonitorConfig {
   wallet: string;

@@ -19,6 +19,14 @@ import ScanResult from "./pages/ScanResult";
 import Monitoring from "./pages/Monitoring";
 import Integrations from "./pages/Integrations";
 import Alerts from "./pages/Alerts";
+import EnhancedAgentsPage from "./components/agents/EnhancedAgentsPage";
+import AgentsDemo from "./components/agents/AgentsDemo";
+
+// No-Code Studio Pages
+import ContractTemplates from "./pages/ContractTemplates";
+import AIAssistant from "./pages/AIAssistant";
+import DeployAgent from "./pages/DeployAgent";
+import VisualBuilder from "./pages/VisualBuilder";
 
 const queryClient = new QueryClient();
 
@@ -33,11 +41,19 @@ const App = () => (
             {/* SEI SENTINEL Frontend Routes */}
             <Route path="/" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/agents" element={<EnhancedAgentsPage />} />
+            <Route path="/agents/demo" element={<AgentsDemo />} />
             <Route path="/upload" element={<UploadScan />} />
             <Route path="/result/:scanId" element={<ScanResult />} />
             <Route path="/monitoring" element={<Monitoring />} />
             <Route path="/integrations" element={<Integrations />} />
             <Route path="/alerts" element={<Alerts />} />
+            
+            {/* No-Code Studio Routes */}
+            <Route path="/contract-templates" element={<ContractTemplates />} />
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="/deploy-agent" element={<DeployAgent />} />
+            <Route path="/visual-builder" element={<VisualBuilder />} />
             
             {/* Existing SEI Guardian Vigil Routes */}
             <Route path="/guardian" element={<Index />} />

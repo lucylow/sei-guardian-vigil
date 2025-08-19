@@ -1,3 +1,5 @@
+import { frontendEnv, getApiUrl } from "../config/environment.js";
+
 // Mock implementations for Sei Sentinel Tools
 // These replace the missing @elizaos/plugin-sei exports
 
@@ -422,4 +424,36 @@ export class SeiSentinelTools {
   }
 }
 
-export const seiTools = SeiSentinelTools.getInstance();
+// Create instance for export
+const seiToolsInstance = SeiSentinelTools.getInstance();
+
+export const seiSentinelTools = {
+  // Backend fallback for contract scan
+  scanContractWithFallback: seiToolsInstance.scanContractWithFallback.bind(seiToolsInstance),
+  // Retry/force-scan: reset to live mode
+  forceScanMode: seiToolsInstance.forceScanMode.bind(seiToolsInstance),
+  // Status endpoint logic
+  getBackendStatus: seiToolsInstance.getBackendStatus.bind(seiToolsInstance),
+  // Example: Integration stub usage in scan
+  scanAndIntegrate: seiToolsInstance.scanAndIntegrate.bind(seiToolsInstance),
+  // Tool execution statistics
+  getToolExecutionStats: seiToolsInstance.getToolExecutionStats.bind(seiToolsInstance),
+  // Security analysis tools
+  contractAnalyzer: seiToolsInstance.contractAnalyzer.bind(seiToolsInstance),
+  hiveThreatDetection: seiToolsInstance.hiveThreatDetection.bind(seiToolsInstance),
+  slitherStaticAnalysis: seiToolsInstance.slitherStaticAnalysis.bind(seiToolsInstance),
+  formalVerification: seiToolsInstance.formalVerification.bind(seiToolsInstance),
+  generateSecurityFix: seiToolsInstance.generateSecurityFix.bind(seiToolsInstance),
+  // Sei-specific monitoring tools
+  getSeiNetworkMetrics: seiToolsInstance.getSeiNetworkMetrics.bind(seiToolsInstance),
+  monitorContractAnomaly: seiToolsInstance.monitorContractAnomaly.bind(seiToolsInstance),
+  batchHistoricalAnalysis: seiToolsInstance.batchHistoricalAnalysis.bind(seiToolsInstance),
+  threatScanner: seiToolsInstance.threatScanner.bind(seiToolsInstance),
+  patchGenerator: seiToolsInstance.patchGenerator.bind(seiToolsInstance),
+  // Hive Intelligence integration for threat analysis
+  hiveThreatAnalysis: seiToolsInstance.hiveThreatAnalysis.bind(seiToolsInstance),
+  
+  // Updated to use environment config
+  seiRpc: frontendEnv.seiRpc,
+  seiNetwork: frontendEnv.seiNetwork,
+};

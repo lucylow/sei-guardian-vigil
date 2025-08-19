@@ -1,6 +1,7 @@
 import { readContract, getWalletBalance } from "../services/contractInteraction.js";
 import { getSeiPrice } from "../services/marketData.js";
 import nodemailer from "nodemailer";
+import { env } from "../config/environment.js";
 
 export interface AIWalletBalanceConfig {
   wallet: string;
@@ -23,7 +24,7 @@ export async function aiWalletBalance(config: AIWalletBalanceConfig) {
     const seiBalance = parseFloat(balance.amount) / 1e6;
     
     // Get current SEI price
-    const seiPrice = await getSeiBalance();
+    const seiPrice = await getSeiPrice();
     const usdValue = seiBalance * seiPrice;
     
     // Get additional token balances if available
