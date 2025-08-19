@@ -12,6 +12,14 @@ import NoCodeStudio from "./pages/NoCodeStudio";
 import NotFound from "./pages/NotFound";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
 
+// SEI SENTINEL Frontend Pages
+import Login from "./pages/Login";
+import UploadScan from "./pages/UploadScan";
+import ScanResult from "./pages/ScanResult";
+import Monitoring from "./pages/Monitoring";
+import Integrations from "./pages/Integrations";
+import Alerts from "./pages/Alerts";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -22,13 +30,24 @@ const App = () => (
       <BrowserRouter>
         <>
           <Routes>
-            <Route path="/" element={<Index />} />
+            {/* SEI SENTINEL Frontend Routes */}
+            <Route path="/" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/agents" element={<Agents />} />
-            <Route path="/audits" element={<Audits />} />
-            <Route path="/security" element={<Security />} />
-            <Route path="/no-code-studio" element={<NoCodeStudio />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/upload" element={<UploadScan />} />
+            <Route path="/result/:scanId" element={<ScanResult />} />
+            <Route path="/monitoring" element={<Monitoring />} />
+            <Route path="/integrations" element={<Integrations />} />
+            <Route path="/alerts" element={<Alerts />} />
+            
+            {/* Existing SEI Guardian Vigil Routes */}
+            <Route path="/guardian" element={<Index />} />
+            <Route path="/guardian/dashboard" element={<Dashboard />} />
+            <Route path="/guardian/agents" element={<Agents />} />
+            <Route path="/guardian/audits" element={<Audits />} />
+            <Route path="/guardian/security" element={<Security />} />
+            <Route path="/guardian/no-code-studio" element={<NoCodeStudio />} />
+            
+            {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           {/* Place this outside your page routing/components so it's always present */}
