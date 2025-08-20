@@ -258,36 +258,38 @@ export function NodePalette({ onAddNode }: NodePaletteProps) {
   }, {} as Record<string, typeof nodeDefinitions>);
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-foreground">Node Palette</h3>
+    <div className="h-full flex flex-col">
+      <h3 className="text-lg font-semibold text-foreground mb-4">Node Palette</h3>
       
-      {Object.entries(groupedNodes).map(([category, nodes]) => (
-        <div key={category} className="space-y-2">
-          <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-            {category}
-          </h4>
-          <div className="space-y-2">
-            {nodes.map((node) => (
-              <Card key={node.type} className="p-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow">
-                <div
-                  draggable
-                  onDragStart={(e) => handleDragStart(e, node.type)}
-                  onClick={() => handleAddNode(node.type)}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-lg">{node.icon}</span>
-                    <span className="font-medium text-sm">{node.label}</span>
+      <div className="flex-1 overflow-y-auto pr-2 space-y-4">
+        {Object.entries(groupedNodes).map(([category, nodes]) => (
+          <div key={category} className="space-y-2">
+            <h4 className="text-sm font-medium text-muted-foreground uppercase tracking-wide sticky top-0 bg-card py-1 z-10">
+              {category}
+            </h4>
+            <div className="space-y-2">
+              {nodes.map((node) => (
+                <Card key={node.type} className="p-3 cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow">
+                  <div
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, node.type)}
+                    onClick={() => handleAddNode(node.type)}
+                    className="space-y-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg">{node.icon}</span>
+                      <span className="font-medium text-sm">{node.label}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">{node.description}</p>
                   </div>
-                  <p className="text-xs text-muted-foreground">{node.description}</p>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
       
-      <div className="pt-4 border-t">
+      <div className="pt-4 border-t border-gray-200 mt-4">
         <p className="text-xs text-muted-foreground">
           Drag nodes to the canvas or click to add them randomly
         </p>
