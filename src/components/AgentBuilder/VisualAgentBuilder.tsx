@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   ReactFlow,
   addEdge,
@@ -14,6 +14,221 @@ import '@xyflow/react/dist/style.css';
 import { NodePalette } from './NodePalette';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+
+// Template definitions for different agent types
+const agentTemplates = {
+  'defi-arbitrage': {
+    name: 'DeFi Arbitrage Agent',
+    description: 'High-frequency arbitrage trading across Sei DEXs',
+    nodes: [
+      {
+        id: 'trigger-block',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'New Block Trigger', config: { event: 'NewBlock', interval: '400ms' } }
+      },
+      {
+        id: 'fetch-prices',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Fetch DEX Prices', config: { dexes: ['SeiSwap', 'Astroport'], pairs: ['SEI/USDC', 'ATOM/USDC'] } }
+      },
+      {
+        id: 'compute-arbitrage',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Compute Arbitrage', config: { minProfit: '0.5%', gasOptimization: true } }
+      },
+      {
+        id: 'execute-trades',
+        type: 'action',
+        position: { x: 700, y: 100 },
+        data: { label: 'Execute Trades', config: { slippage: '0.1%', maxGas: '100000' } }
+      },
+      {
+        id: 'notify-dashboard',
+        type: 'output',
+        position: { x: 900, y: 100 },
+        data: { label: 'Notify Dashboard', config: { channel: 'Dashboard', format: 'JSON' } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-block', target: 'fetch-prices' },
+      { id: 'e2', source: 'fetch-prices', target: 'compute-arbitrage' },
+      { id: 'e3', source: 'compute-arbitrage', target: 'execute-trades' },
+      { id: 'e4', source: 'execute-trades', target: 'notify-dashboard' }
+    ]
+  },
+  'security-scanner': {
+    name: 'Security Scanner Agent',
+    description: 'Automated vulnerability detection and fix generation',
+    nodes: [
+      {
+        id: 'trigger-deploy',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'Contract Deployed', config: { event: 'ContractDeployed', networks: ['Sei'] } }
+      },
+      {
+        id: 'fetch-bytecode',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Fetch Bytecode', config: { source: 'Blockchain', format: 'Hex' } }
+      },
+      {
+        id: 'ai-scan',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'AI Vulnerability Scan', config: { model: 'GPT-4', checks: ['Reentrancy', 'Overflow', 'Access Control'] } }
+      },
+      {
+        id: 'generate-fix',
+        type: 'skill',
+        position: { x: 700, y: 100 },
+        data: { label: 'Generate Fix', config: { language: 'Solidity', testing: true } }
+      },
+      {
+        id: 'deploy-fix',
+        type: 'action',
+        position: { x: 900, y: 100 },
+        data: { label: 'Deploy Fix', config: { gasLimit: '500000', verification: true } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-deploy', target: 'fetch-bytecode' },
+      { id: 'e2', source: 'fetch-bytecode', target: 'ai-scan' },
+      { id: 'e3', source: 'ai-scan', target: 'generate-fix' },
+      { id: 'e4', source: 'generate-fix', target: 'deploy-fix' }
+    ]
+  },
+  'portfolio-manager': {
+    name: 'AI Portfolio Manager',
+    description: 'Autonomous portfolio optimization with risk management',
+    nodes: [
+      {
+        id: 'trigger-daily',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'Daily Timer', config: { event: 'DailyTimer', time: '00:00 UTC' } }
+      },
+      {
+        id: 'fetch-positions',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Fetch Positions', config: { wallets: ['User Wallet'], protocols: ['Sei', 'Cosmos'] } }
+      },
+      {
+        id: 'compute-optimal',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Compute Optimal Portfolio', config: { riskTolerance: 'Medium', rebalanceThreshold: '5%' } }
+      },
+      {
+        id: 'execute-trades',
+        type: 'action',
+        position: { x: 700, y: 100 },
+        data: { label: 'Execute Rebalance', config: { maxSlippage: '0.5%', gasOptimization: true } }
+      },
+      {
+        id: 'update-dashboard',
+        type: 'output',
+        position: { x: 900, y: 100 },
+        data: { label: 'Update Dashboard', config: { metrics: ['Performance', 'Risk', 'Allocation'] } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-daily', target: 'fetch-positions' },
+      { id: 'e2', source: 'fetch-positions', target: 'compute-optimal' },
+      { id: 'e3', source: 'compute-optimal', target: 'execute-trades' },
+      { id: 'e4', source: 'execute-trades', target: 'update-dashboard' }
+    ]
+  },
+  'data-aggregator': {
+    name: 'Cross-Chain Data Agent',
+    description: 'Real-time data aggregation from multiple blockchain sources',
+    nodes: [
+      {
+        id: 'trigger-block',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'New Block Trigger', config: { event: 'NewBlock', chains: ['Sei', 'Cosmos', 'Ethereum'] } }
+      },
+      {
+        id: 'fetch-defi-data',
+        type: 'skill',
+        position: { x: 300, y: 50 },
+        data: { label: 'Fetch DeFi Data', config: { protocols: ['SeiSwap', 'Osmosis', 'Uniswap'] } }
+      },
+      {
+        id: 'fetch-market-prices',
+        type: 'skill',
+        position: { x: 300, y: 150 },
+        data: { label: 'Fetch Market Prices', config: { sources: ['CoinGecko', 'Binance', 'Coinbase'] } }
+      },
+      {
+        id: 'combine-data',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Combine & Process', config: { format: 'JSON', aggregation: 'Weighted Average' } }
+      },
+      {
+        id: 'output-api',
+        type: 'output',
+        position: { x: 700, y: 100 },
+        data: { label: 'REST API Output', config: { endpoint: '/api/data', rateLimit: '1000/min' } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-block', target: 'fetch-defi-data' },
+      { id: 'e2', source: 'trigger-block', target: 'fetch-market-prices' },
+      { id: 'e3', source: 'fetch-defi-data', target: 'combine-data' },
+      { id: 'e4', source: 'fetch-market-prices', target: 'combine-data' },
+      { id: 'e5', source: 'combine-data', target: 'output-api' }
+    ]
+  },
+  'yield-optimizer': {
+    name: 'Yield Farming Optimizer',
+    description: 'Automated yield farming optimization across multiple protocols',
+    nodes: [
+      {
+        id: 'trigger-block',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'New Block Trigger', config: { event: 'NewBlock', interval: '1min' } }
+      },
+      {
+        id: 'fetch-yield-farms',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Fetch Yield Farms', config: { protocols: ['Sei', 'Osmosis', 'Juno'], minAPY: '10%' } }
+      },
+      {
+        id: 'compute-strategy',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Compute Optimal Strategy', config: { riskModel: 'Sharpe Ratio', maxImpermanentLoss: '2%' } }
+      },
+      {
+        id: 'execute-strategy',
+        type: 'action',
+        position: { x: 700, y: 100 },
+        data: { label: 'Execute Strategy', config: { gasOptimization: true, slippage: '0.3%' } }
+      },
+      {
+        id: 'notify-dashboard',
+        type: 'output',
+        position: { x: 900, y: 100 },
+        data: { label: 'Notify Dashboard', config: { metrics: ['APY', 'Risk', 'Allocation'] } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-block', target: 'fetch-yield-farms' },
+      { id: 'e2', source: 'fetch-yield-farms', target: 'compute-strategy' },
+      { id: 'e3', source: 'compute-strategy', target: 'execute-strategy' },
+      { id: 'e4', source: 'execute-strategy', target: 'notify-dashboard' }
+    ]
+  }
+};
 
 const nodeTypes = {
   agentPersonality: ({ data }: { data: any }) => (
@@ -40,6 +255,12 @@ const nodeTypes = {
       <div className="text-sm">{data.label}</div>
     </div>
   ),
+  output: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-green-600 text-white rounded-lg">
+      <div className="font-semibold">Output</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
 };
 
 const networkOptions = [
@@ -48,12 +269,38 @@ const networkOptions = [
   { value: "demo", label: "🎭 Demo Mode (mock data)" },
 ];
 
-export default function VisualAgentBuilder() {
+interface VisualAgentBuilderProps {
+  selectedTemplate?: string;
+}
+
+export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuilderProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isDeploying, setIsDeploying] = useState(false);
   const [network, setNetwork] = useState("demo");
+  const [currentTemplate, setCurrentTemplate] = useState<string | null>(null);
   const { toast } = useToast();
+
+  // Load template when selectedTemplate prop changes
+  useEffect(() => {
+    if (selectedTemplate && agentTemplates[selectedTemplate]) {
+      loadTemplate(selectedTemplate);
+    }
+  }, [selectedTemplate]);
+
+  const loadTemplate = useCallback((templateId: string) => {
+    const template = agentTemplates[templateId];
+    if (template) {
+      setNodes(template.nodes);
+      setEdges(template.edges);
+      setCurrentTemplate(templateId);
+      
+      toast({
+        title: `📋 Template Loaded: ${template.name}`,
+        description: template.description,
+      });
+    }
+  }, [setNodes, setEdges, toast]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
@@ -72,6 +319,16 @@ export default function VisualAgentBuilder() {
     };
     setNodes((nds) => [...nds, newNode]);
   }, [setNodes]);
+
+  const clearCanvas = useCallback(() => {
+    setNodes([]);
+    setEdges([]);
+    setCurrentTemplate(null);
+    toast({
+      title: "🧹 Canvas Cleared",
+      description: "Ready for a new agent design",
+    });
+  }, [setNodes, setEdges, toast]);
 
   const handleDeploy = async () => {
     if (nodes.length === 0) {
@@ -120,10 +377,21 @@ export default function VisualAgentBuilder() {
         <div>
           <h3 className="text-lg font-semibold">Agent Canvas</h3>
           <p className="text-sm text-muted-foreground">
-            Drag nodes from the palette to build your agent
+            {currentTemplate ? `Template: ${agentTemplates[currentTemplate]?.name}` : 'Drag nodes from the palette to build your agent'}
           </p>
         </div>
         <div className="flex items-center gap-4">
+          {/* Template Actions */}
+          {currentTemplate && (
+            <Button
+              onClick={clearCanvas}
+              variant="outline"
+              size="sm"
+            >
+              🧹 Clear Template
+            </Button>
+          )}
+          
           {/* Network Selector */}
           <div>
             <label className="text-xs font-semibold block mb-1">Select Network</label>

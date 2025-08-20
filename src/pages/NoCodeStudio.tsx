@@ -309,6 +309,7 @@ export default function NoCodeStudio() {
                       className="flex-1 bg-blue-600 hover:bg-blue-700" 
                       onClick={(e) => {
                         e.stopPropagation();
+                        setSelectedTemplate(template.id);
                         setActiveTab('build');
                       }}
                     >
@@ -319,6 +320,7 @@ export default function NoCodeStudio() {
                       className="flex-1"
                       onClick={(e) => {
                         e.stopPropagation();
+                        setSelectedTemplate(template.id);
                         setActiveTab('build');
                       }}
                     >
@@ -365,7 +367,7 @@ export default function NoCodeStudio() {
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
-              <VisualAgentBuilder />
+              <VisualAgentBuilder selectedTemplate={selectedTemplate} />
             </div>
           </TabsContent>
 
