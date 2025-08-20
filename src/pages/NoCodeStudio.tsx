@@ -4,167 +4,350 @@ import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ArrowRight, Play, Code, Zap, Rocket, Brain, Shield, TrendingUp } from "lucide-react";
 
 export default function NoCodeStudio() {
-  const [showBuilder, setShowBuilder] = useState(false);
+  const [activeTab, setActiveTab] = useState('get-started');
 
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
       <div className="container mx-auto px-4 py-6">
-        <div className="mb-6 text-center">
-          <h1 className="text-4xl font-bold text-foreground mb-2">No-Code Studio</h1>
-          <p className="text-lg text-muted-foreground mb-4">
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-bold text-foreground mb-3">No-Code Studio</h1>
+          <p className="text-xl text-muted-foreground mb-6">
             Build and deploy smart contract agents on Sei with drag-and-drop vibe coding
           </p>
+          <div className="flex justify-center space-x-4">
+            <Button 
+              size="lg" 
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              onClick={() => setActiveTab('get-started')}
+            >
+              <Play className="w-5 h-5 mr-2" />
+              Get Started
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline"
+              onClick={() => setActiveTab('templates')}
+            >
+              <Code className="w-5 h-5 mr-2" />
+              Browse Templates
+            </Button>
+          </div>
         </div>
 
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="dev-studio">Dev Studio</TabsTrigger>
-            <TabsTrigger value="visual-builder">Visual Builder</TabsTrigger>
-            <TabsTrigger value="templates">Templates</TabsTrigger>
+        {/* Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
+            <TabsTrigger value="get-started" className="flex items-center">
+              <Rocket className="w-4 h-4 mr-2" />
+              1. Get Started
+            </TabsTrigger>
+            <TabsTrigger value="templates" className="flex items-center">
+              <Code className="w-4 h-4 mr-2" />
+              2. Choose Template
+            </TabsTrigger>
+            <TabsTrigger value="build" className="flex items-center">
+              <Zap className="w-4 h-4 mr-2" />
+              3. Build Agent
+            </TabsTrigger>
+            <TabsTrigger value="deploy" className="flex items-center">
+              <Shield className="w-4 h-4 mr-2" />
+              4. Deploy & Test
+            </TabsTrigger>
+            <TabsTrigger value="manage" className="flex items-center">
+              <TrendingUp className="w-4 h-4 mr-2" />
+              5. Manage
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="overview" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <span className="text-3xl mb-2">📋</span>
-                <h3 className="font-bold mb-1">Contract Templates</h3>
-                <p className="text-sm text-gray-500 mb-3 text-center">
-                  Choose from pre-built smart contract templates to get started quickly.
-                </p>
-                <Button
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                  onClick={() => setShowBuilder(true)}
-                >
-                  Browse Templates
-                </Button>
-              </div>
-              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <span className="text-3xl mb-2">🛠️</span>
-                <h3 className="font-bold mb-1">Visual Builder</h3>
-                <p className="text-sm text-gray-500 mb-3 text-center">
-                  Drag and drop components to build your agent logic visually.
-                </p>
-                <Button
-                  className="bg-purple-500 text-white px-4 py-2 rounded hover:bg-purple-600"
-                  onClick={() => setShowBuilder(true)}
-                >
-                  Start Vibe Coding
-                </Button>
-              </div>
-              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <span className="text-3xl mb-2">🤖</span>
-                <h3 className="font-bold mb-1">AI Assistant</h3>
-                <p className="text-sm text-gray-500 mb-3 text-center">
-                  Get help from AI to generate and optimize your smart contracts.
-                </p>
-                <Button
-                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                  onClick={() => window.alert('AI Assistant coming soon!')}
-                >
-                  Get AI Help
-                </Button>
-              </div>
-              <div className="bg-white rounded-lg shadow p-6 flex flex-col items-center">
-                <span className="text-3xl mb-2">🚀</span>
-                <h3 className="font-bold mb-1">Deploy & Test</h3>
-                <p className="text-sm text-gray-500 mb-3 text-center">
-                  Test your agents on testnet and deploy to mainnet with one click.
-                </p>
-                <Button
-                  className="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600"
-                  onClick={() => setShowBuilder(true)}
-                >
-                  Deploy Agent
-                </Button>
-              </div>
+          {/* Step 1: Get Started */}
+          <TabsContent value="get-started" className="space-y-8">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold mb-4">Welcome to SEI No-Code Studio</h2>
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                Create powerful AI agents for the Sei blockchain without writing a single line of code. 
+                Follow our simple 5-step process to build, deploy, and manage your agents.
+              </p>
             </div>
-            <div className="text-center mt-8">
-              <h2 className="text-2xl font-bold mb-2">How It Works</h2>
-              <ol className="list-decimal list-inside text-muted-foreground text-lg mx-auto max-w-2xl">
-                <li>Pick a contract template or start from scratch.</li>
-                <li>Drag and drop agent components onto the canvas.</li>
-                <li>Configure triggers, actions, and blockchain integrations.</li>
-                <li>Preview, test, and deploy your agent to Sei.</li>
-              </ol>
-            </div>
-          </TabsContent>
 
-          <TabsContent value="dev-studio" className="mt-6">
-            <AgentDevelopmentStudio />
-          </TabsContent>
-
-          <TabsContent value="visual-builder" className="mt-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">Visual Agent Builder</h2>
-              <Button variant="outline" onClick={() => setShowBuilder(false)}>
-                ← Back to Studio
-              </Button>
-            </div>
-            <VisualAgentBuilder />
-          </TabsContent>
-
-          <TabsContent value="templates" className="mt-6">
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold mb-4">Smart Contract Templates</h2>
-                <p className="text-muted-foreground mb-6">
-                  Pre-built templates for common DeFi, security, and data processing use cases
+            {/* Feature Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border border-blue-200">
+                <div className="text-4xl mb-4">🚀</div>
+                <h3 className="text-xl font-bold mb-2 text-blue-900">Fast Development</h3>
+                <p className="text-blue-700">
+                  Build agents in minutes, not days. Our visual builder makes complex logic simple.
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="font-bold mb-2">DeFi Arbitrage</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    High-frequency arbitrage trading across Sei DEXs with sub-400ms execution
-                  </p>
-                  <Button className="w-full">Use Template</Button>
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border border-purple-200">
+                <div className="text-4xl mb-4">⚡</div>
+                <h3 className="text-xl font-bold mb-2 text-purple-900">Sei Optimized</h3>
+                <p className="text-purple-700">
+                  Built specifically for Sei's sub-400ms finality and parallel execution.
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                <div className="text-4xl mb-4">🤖</div>
+                <h3 className="text-xl font-bold mb-2 text-green-900">AI Powered</h3>
+                <p className="text-green-700">
+                  Get AI assistance for optimization, security, and best practices.
+                </p>
+              </div>
+            </div>
+
+            {/* How It Works */}
+            <div className="bg-white rounded-xl shadow-lg p-8">
+              <h3 className="text-2xl font-bold mb-6 text-center">How It Works</h3>
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">1</div>
+                  <h4 className="font-semibold mb-2">Get Started</h4>
+                  <p className="text-sm text-gray-600">Learn the basics and choose your path</p>
                 </div>
-                
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="font-bold mb-2">Security Scanner</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Automated vulnerability detection and fix generation for smart contracts
-                  </p>
-                  <Button className="w-full">Use Template</Button>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-purple-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">2</div>
+                  <h4 className="font-semibold mb-2">Choose Template</h4>
+                  <p className="text-sm text-gray-600">Pick from pre-built agent templates</p>
                 </div>
-                
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="font-bold mb-2">Portfolio Manager</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Autonomous portfolio optimization with risk management
-                  </p>
-                  <Button className="w-full">Use Template</Button>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">3</div>
+                  <h4 className="font-semibold mb-2">Build Agent</h4>
+                  <p className="text-sm text-gray-600">Customize with visual builder</p>
                 </div>
-                
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="font-bold mb-2">Data Aggregator</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Real-time data aggregation from multiple blockchain sources
-                  </p>
-                  <Button className="w-full">Use Template</Button>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-orange-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">4</div>
+                  <h4 className="font-semibold mb-2">Deploy & Test</h4>
+                  <p className="text-sm text-gray-600">Test on testnet, deploy to mainnet</p>
                 </div>
-                
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="font-bold mb-2">Yield Optimizer</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Automated yield farming optimization across multiple protocols
-                  </p>
-                  <Button className="w-full">Use Template</Button>
-                </div>
-                
-                <div className="bg-white rounded-lg shadow p-6">
-                  <h3 className="font-bold mb-2">Cross-Chain Bridge</h3>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Monitor and optimize cross-chain asset transfers
-                  </p>
-                  <Button className="w-full">Use Template</Button>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">5</div>
+                  <h4 className="font-semibold mb-2">Manage</h4>
+                  <p className="text-sm text-gray-600">Monitor performance and optimize</p>
                 </div>
               </div>
+              
+              <div className="text-center mt-8">
+                <Button 
+                  size="lg" 
+                  onClick={() => setActiveTab('templates')}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+                >
+                  Start Building
+                  <ArrowRight className="w-5 h-5 ml-2" />
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Step 2: Choose Template */}
+          <TabsContent value="templates" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold mb-4">Choose Your Agent Template</h2>
+              <p className="text-lg text-muted-foreground">
+                Start with a proven template or create from scratch. All templates are Sei-optimized for maximum performance.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">📈</div>
+                <h3 className="text-xl font-bold mb-2">DeFi Arbitrage</h3>
+                <p className="text-gray-600 mb-4">
+                  High-frequency arbitrage trading across Sei DEXs with sub-400ms execution
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">95% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">🔒</div>
+                <h3 className="text-xl font-bold mb-2">Security Scanner</h3>
+                <p className="text-gray-600 mb-4">
+                  Automated vulnerability detection and fix generation for smart contracts
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">88% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">💼</div>
+                <h3 className="text-xl font-bold mb-2">Portfolio Manager</h3>
+                <p className="text-gray-600 mb-4">
+                  Autonomous portfolio optimization with risk management
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">92% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">📊</div>
+                <h3 className="text-xl font-bold mb-2">Data Aggregator</h3>
+                <p className="text-gray-600 mb-4">
+                  Real-time data aggregation from multiple blockchain sources
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Multi-Chain</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">76% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">🌾</div>
+                <h3 className="text-xl font-bold mb-2">Yield Optimizer</h3>
+                <p className="text-gray-600 mb-4">
+                  Automated yield farming optimization across multiple protocols
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">89% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">🌉</div>
+                <h3 className="text-xl font-bold mb-2">Cross-Chain Bridge</h3>
+                <p className="text-gray-600 mb-4">
+                  Monitor and optimize cross-chain asset transfers
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Multi-Chain</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">82% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Step 3: Build Agent */}
+          <TabsContent value="build" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold mb-4">Build Your Agent</h2>
+              <p className="text-lg text-muted-foreground">
+                Use our visual builder to customize your agent. Drag and drop components, configure logic, and preview your creation.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-2xl font-bold">Visual Agent Builder</h3>
+                <Button variant="outline" onClick={() => setActiveTab('deploy')}>
+                  Next: Deploy & Test
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
+              <VisualAgentBuilder />
+            </div>
+          </TabsContent>
+
+          {/* Step 4: Deploy & Test */}
+          <TabsContent value="deploy" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold mb-4">Deploy & Test Your Agent</h2>
+              <p className="text-lg text-muted-foreground">
+                Test your agent on testnet first, then deploy to mainnet with confidence.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-6 border border-yellow-200">
+                <div className="text-4xl mb-4">🧪</div>
+                <h3 className="text-xl font-bold mb-3 text-yellow-900">Testnet Testing</h3>
+                <ul className="text-yellow-800 space-y-2 mb-4">
+                  <li>• Deploy to Sei testnet</li>
+                  <li>• Test all functionality</li>
+                  <li>• Validate gas efficiency</li>
+                  <li>• Debug any issues</li>
+                </ul>
+                <Button variant="outline" className="border-yellow-300 text-yellow-800 hover:bg-yellow-200">
+                  Deploy to Testnet
+                </Button>
+              </div>
+              
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border border-green-200">
+                <div className="text-4xl mb-4">🚀</div>
+                <h3 className="text-xl font-bold mb-3 text-green-900">Mainnet Deployment</h3>
+                <ul className="text-green-800 space-y-2 mb-4">
+                  <li>• Deploy to Sei mainnet</li>
+                  <li>• Monitor performance</li>
+                  <li>• Track gas usage</li>
+                  <li>• Optimize as needed</li>
+                </ul>
+                <Button variant="outline" className="border-green-300 text-green-800 hover:bg-green-200">
+                  Deploy to Mainnet
+                </Button>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <Button 
+                size="lg" 
+                onClick={() => setActiveTab('manage')}
+                className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700"
+              >
+                Next: Manage Your Agent
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+            </div>
+          </TabsContent>
+
+          {/* Step 5: Manage */}
+          <TabsContent value="manage" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold mb-4">Manage Your Agents</h2>
+              <p className="text-lg text-muted-foreground">
+                Monitor performance, optimize settings, and scale your deployed agents.
+              </p>
+            </div>
+            
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <AgentDevelopmentStudio />
             </div>
           </TabsContent>
         </Tabs>
