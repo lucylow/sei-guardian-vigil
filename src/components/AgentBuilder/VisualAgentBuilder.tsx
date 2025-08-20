@@ -227,6 +227,48 @@ const agentTemplates = {
       { id: 'e3', source: 'compute-strategy', target: 'execute-strategy' },
       { id: 'e4', source: 'execute-strategy', target: 'notify-dashboard' }
     ]
+  },
+  'cross-chain-bridge': {
+    name: 'Cross-Chain Bridge Monitor',
+    description: 'Monitor and optimize cross-chain asset transfers',
+    nodes: [
+      {
+        id: 'trigger-transfer',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'Cross-Chain Transfer', config: { event: 'TransferInitiated', chains: ['Sei', 'Cosmos', 'Ethereum'] } }
+      },
+      {
+        id: 'fetch-liquidity',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Fetch Liquidity Status', config: { protocols: ['IBC', 'Axelar', 'LayerZero'], minLiquidity: '1000 USDC' } }
+      },
+      {
+        id: 'compute-route',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Compute Optimal Route', config: { gasOptimization: true, slippage: '0.1%', maxTime: '5min' } }
+      },
+      {
+        id: 'execute-bridge',
+        type: 'action',
+        position: { x: 700, y: 100 },
+        data: { label: 'Execute Bridge', config: { gasLimit: '300000', verification: true, retryAttempts: 3 } }
+      },
+      {
+        id: 'monitor-status',
+        type: 'output',
+        position: { x: 900, y: 100 },
+        data: { label: 'Monitor Transfer Status', config: { updates: 'Real-time', alerts: ['Success', 'Failure', 'Pending'] } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-transfer', target: 'fetch-liquidity' },
+      { id: 'e2', source: 'fetch-liquidity', target: 'compute-route' },
+      { id: 'e3', source: 'compute-route', target: 'execute-bridge' },
+      { id: 'e4', source: 'execute-bridge', target: 'monitor-status' }
+    ]
   }
 };
 
@@ -283,14 +325,18 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
 
   // Load template when selectedTemplate prop changes
   useEffect(() => {
+    console.log('VisualAgentBuilder: selectedTemplate changed to:', selectedTemplate);
     if (selectedTemplate && agentTemplates[selectedTemplate]) {
+      console.log('VisualAgentBuilder: Loading template:', agentTemplates[selectedTemplate]);
       loadTemplate(selectedTemplate);
     }
   }, [selectedTemplate]);
 
   const loadTemplate = useCallback((templateId: string) => {
+    console.log('VisualAgentBuilder: loadTemplate called with:', templateId);
     const template = agentTemplates[templateId];
     if (template) {
+      console.log('VisualAgentBuilder: Setting nodes and edges for template:', template.name);
       setNodes(template.nodes);
       setEdges(template.edges);
       setCurrentTemplate(templateId);
@@ -299,6 +345,8 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
         title: `📋 Template Loaded: ${template.name}`,
         description: template.description,
       });
+    } else {
+      console.error('VisualAgentBuilder: Template not found for ID:', templateId);
     }
   }, [setNodes, setEdges, toast]);
 

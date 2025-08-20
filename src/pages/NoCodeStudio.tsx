@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Navigation } from "@/components/Navigation";
 import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
@@ -8,6 +8,7 @@ import { ArrowRight, Play, Code, Zap, Rocket, Brain, Shield, TrendingUp } from "
 
 export default function NoCodeStudio() {
   const [activeTab, setActiveTab] = useState('get-started');
+  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
@@ -167,7 +168,10 @@ export default function NoCodeStudio() {
                 </div>
                 <Button 
                   className="w-full" 
-                  onClick={() => setActiveTab('build')}
+                  onClick={() => {
+                    setSelectedTemplate('defi-arbitrage');
+                    setActiveTab('build');
+                  }}
                 >
                   Use This Template
                 </Button>
@@ -185,7 +189,10 @@ export default function NoCodeStudio() {
                 </div>
                 <Button 
                   className="w-full" 
-                  onClick={() => setActiveTab('build')}
+                  onClick={() => {
+                    setSelectedTemplate('security-scanner');
+                    setActiveTab('build');
+                  }}
                 >
                   Use This Template
                 </Button>
@@ -203,7 +210,10 @@ export default function NoCodeStudio() {
                 </div>
                 <Button 
                   className="w-full" 
-                  onClick={() => setActiveTab('build')}
+                  onClick={() => {
+                    setSelectedTemplate('portfolio-manager');
+                    setActiveTab('build');
+                  }}
                 >
                   Use This Template
                 </Button>
@@ -221,7 +231,10 @@ export default function NoCodeStudio() {
                 </div>
                 <Button 
                   className="w-full" 
-                  onClick={() => setActiveTab('build')}
+                  onClick={() => {
+                    setSelectedTemplate('data-aggregator');
+                    setActiveTab('build');
+                  }}
                 >
                   Use This Template
                 </Button>
@@ -239,7 +252,10 @@ export default function NoCodeStudio() {
                 </div>
                 <Button 
                   className="w-full" 
-                  onClick={() => setActiveTab('build')}
+                  onClick={() => {
+                    setSelectedTemplate('yield-optimizer');
+                    setActiveTab('build');
+                  }}
                 >
                   Use This Template
                 </Button>
@@ -257,7 +273,10 @@ export default function NoCodeStudio() {
                 </div>
                 <Button 
                   className="w-full" 
-                  onClick={() => setActiveTab('build')}
+                  onClick={() => {
+                    setSelectedTemplate('cross-chain-bridge');
+                    setActiveTab('build');
+                  }}
                 >
                   Use This Template
                 </Button>
@@ -272,6 +291,36 @@ export default function NoCodeStudio() {
               <p className="text-lg text-muted-foreground">
                 Use our visual builder to customize your agent. Drag and drop components, configure logic, and preview your creation.
               </p>
+              
+              {/* Template Info Display */}
+              {selectedTemplate && (
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="text-2xl">📋</div>
+                      <div>
+                        <p className="font-semibold text-blue-900">Template Loaded</p>
+                        <p className="text-sm text-blue-700">
+                          {selectedTemplate === 'defi-arbitrage' && 'DeFi Arbitrage Agent'}
+                          {selectedTemplate === 'security-scanner' && 'Security Scanner Agent'}
+                          {selectedTemplate === 'portfolio-manager' && 'AI Portfolio Manager'}
+                          {selectedTemplate === 'data-aggregator' && 'Cross-Chain Data Agent'}
+                          {selectedTemplate === 'yield-optimizer' && 'Yield Farming Optimizer'}
+                          {selectedTemplate === 'cross-chain-bridge' && 'Cross-Chain Bridge Monitor'}
+                        </p>
+                      </div>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSelectedTemplate(null)}
+                      className="text-blue-700 border-blue-300 hover:bg-blue-100"
+                    >
+                      Clear Template
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
             
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -282,7 +331,7 @@ export default function NoCodeStudio() {
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
-              <VisualAgentBuilder />
+              <VisualAgentBuilder selectedTemplate={selectedTemplate} />
             </div>
           </TabsContent>
 
