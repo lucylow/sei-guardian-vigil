@@ -21,8 +21,7 @@ export default defineConfig(({ mode }) => ({
     jsxImportSource: 'react',
   },
   optimizeDeps: {
-    include: ['date-fns', 'framer-motion'],
-    exclude: ['@swc/core'],
+    exclude: ['@swc/core', 'date-fns'],
   },
   build: {
     outDir: 'dist',
