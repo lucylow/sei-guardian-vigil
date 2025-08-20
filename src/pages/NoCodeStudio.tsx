@@ -190,72 +190,70 @@ export default function NoCodeStudio() {
                   Use This Template
                 </Button>
               </div>
-            </div>
-            
-            {/* Templates Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredTemplates.map((template) => (
-                <div 
-                  key={template.id} 
-                  className={`bg-white rounded-lg shadow-lg p-6 border-2 transition-all hover:shadow-xl cursor-pointer ${
-                    selectedTemplate === template.id ? 'border-blue-500 ring-2 ring-blue-200' : 'border-gray-200'
-                  }`}
-                  onClick={() => setSelectedTemplate(template.id)}
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">💼</div>
+                <h3 className="text-xl font-bold mb-2">Portfolio Manager</h3>
+                <p className="text-gray-600 mb-4">
+                  Autonomous portfolio optimization with risk management
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">92% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
                 >
-                  <div className="text-4xl mb-3">{template.icon}</div>
-                  <h3 className="text-xl font-bold mb-2">{template.name}</h3>
-                  <p className="text-gray-600 mb-4">
-                    {template.description}
-                  </p>
-                  
-                  {/* Tags */}
-                  <div className="flex items-center justify-between mb-4">
-                    {template.seiOptimized ? (
-                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
-                    ) : (
-                      <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Multi-Chain</span>
-                    )}
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">{template.gasEfficiency}% Efficient</span>
-                  </div>
-                  
-                  <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full mb-4 block w-fit">
-                    {template.category}
-                  </span>
-                  
-                  {/* Capabilities */}
-                  <div className="mb-4">
-                    <p className="text-xs font-medium text-gray-700 mb-2">Capabilities:</p>
-                    <div className="flex flex-wrap gap-1">
-                      {template.capabilities.map((capability, index) => (
-                        <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                          {capability}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  {/* Action Buttons */}
-                  <div className="flex space-x-2">
-                    <Button 
-                      className="flex-1 bg-blue-600 hover:bg-blue-700" 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveTab('build');
-                      }}
-                    >
-                      ▶️ Deploy
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="flex-1"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveTab('build');
-                      }}
-                    >
-                      ⚙️ Customize
-                    </Button>
-                  </div>
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">📊</div>
+                <h3 className="text-xl font-bold mb-2">Data Aggregator</h3>
+                <p className="text-gray-600 mb-4">
+                  Real-time data aggregation from multiple blockchain sources
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Multi-Chain</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">76% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">🌾</div>
+                <h3 className="text-xl font-bold mb-2">Yield Optimizer</h3>
+                <p className="text-gray-600 mb-4">
+                  Automated yield farming optimization across multiple protocols
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Sei Optimized</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">89% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => setActiveTab('build')}
+                >
+                  Use This Template
+                </Button>
+              </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">🌉</div>
+                <h3 className="text-xl font-bold mb-2">Cross-Chain Bridge</h3>
+                <p className="text-gray-600 mb-4">
+                  Monitor and optimize cross-chain asset transfers
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Multi-Chain</span>
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">82% Efficient</span>
                 </div>
                 <Button 
                   className="w-full" 
@@ -284,7 +282,7 @@ export default function NoCodeStudio() {
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
-              <VisualAgentBuilder selectedTemplate={selectedTemplate} />
+              <VisualAgentBuilder />
             </div>
           </TabsContent>
 
