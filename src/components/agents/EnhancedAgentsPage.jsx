@@ -2,7 +2,7 @@
 // File: src/components/agents/EnhancedAgentsPage.jsx
 
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+// import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Shield, 
   Zap, 
@@ -101,12 +101,7 @@ const EnhancedAgentsPage = () => {
   ]);
 
   const AgentCard = ({ agent, isSelected, onClick }) => (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.02, y: -5 }}
-      whileTap={{ scale: 0.98 }}
+    <div
       className={`relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl p-6 cursor-pointer border-2 transition-all duration-300 ${
         isSelected 
           ? 'border-blue-500 shadow-lg shadow-blue-500/25' 
@@ -172,9 +167,7 @@ const EnhancedAgentsPage = () => {
       </div>
 
       {/* Action Button */}
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
+      <button
         className={`w-full mt-4 py-2 px-4 rounded-lg font-semibold transition-all duration-200 ${
           agent.status === 'active' 
             ? 'bg-blue-600 hover:bg-blue-700 text-white' 
@@ -186,8 +179,8 @@ const EnhancedAgentsPage = () => {
         {agent.status === 'active' && <><Play className="inline w-4 h-4 mr-2" />Deploy</>}
         {agent.status === 'battling' && <><Activity className="inline w-4 h-4 mr-2" />In Battle</>}
         {agent.status === 'resting' && <><Pause className="inline w-4 h-4 mr-2" />Resting</>}
-      </motion.button>
-    </motion.div>
+              </button>
+      </div>
   );
 
   return (

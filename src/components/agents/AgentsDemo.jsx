@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import EnhancedAgentsPage from './EnhancedAgentsPage';
 import { BattleArena, LiveBattleMonitor, AgentPerformanceDashboard } from './BattleComponents';
-import '../styles/agents.css';
+import '../../styles/agents.css';
 
 const AgentsDemo = () => {
   const [activeTab, setActiveTab] = useState('agents');

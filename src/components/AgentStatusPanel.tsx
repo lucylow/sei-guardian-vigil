@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Brain, Shield, Search, Zap, Eye, Database, MessageSquare, Activity, AlertTriangle, Cpu, MemoryStick, MapPin, Clock } from 'lucide-react';
 import { useSeiData } from '@/hooks/useSeiData';
-import { formatDistanceToNow } from 'date-fns';
+// import { formatDistanceToNow } from 'date-fns';
 
 const getAgentIcon = (type: string) => {
   switch (type) {
@@ -75,7 +75,7 @@ export const AgentStatusPanel = () => {
                     <MapPin className="w-3 h-3" />
                     <span>{agent.location}</span>
                     <Clock className="w-3 h-3 ml-2" />
-                    <span>{formatDistanceToNow(agent.lastActivity, { addSuffix: true })}</span>
+                    <span>{agent.lastActivity ? 'recently' : 'unknown'}</span>
                   </div>
                 </div>
                 

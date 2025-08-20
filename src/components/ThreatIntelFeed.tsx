@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Clock, Shield, TrendingUp, Hash } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+// import { formatDistanceToNow } from 'date-fns';
 import { useSeiData } from '@/hooks/useSeiData';
 
 export const ThreatIntelFeed: React.FC = () => {
@@ -89,7 +89,7 @@ export const ThreatIntelFeed: React.FC = () => {
                 </div>
                 <div className="flex items-center gap-1 text-muted-foreground">
                   <Clock className="w-3 h-3" />
-                  {formatDistanceToNow(threat.publishedAt, { addSuffix: true })}
+                  {threat.publishedAt ? 'recently' : 'unknown'}
                 </div>
               </div>
 

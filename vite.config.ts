@@ -17,4 +17,8 @@ export default defineConfig({
     jsx: 'automatic',
     jsxImportSource: 'react',
   },
+  optimizeDeps: {
+    include: ['date-fns', 'framer-motion'],
+    exclude: ['@swc/core'],
+  },
 });

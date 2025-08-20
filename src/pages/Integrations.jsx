@@ -184,7 +184,7 @@ jobs:
       - name: Scan Contract
         run: |
           curl -X POST https://api.seisentinel.com/scan \
-            -H "Authorization: Bearer ${{ secrets.SEI_API_KEY }}" \
+            -H "Authorization: Bearer \${ secrets.SEI_API_KEY }" \
             -F "file=@contract.wasm"`}
                   </pre>
                 </div>
