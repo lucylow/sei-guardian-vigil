@@ -13,12 +13,12 @@ import NotFound from "./pages/NotFound";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
 
 // SEI SENTINEL Frontend Pages
-import Login from "./pages/Login";
-import UploadScan from "./pages/UploadScan";
-import ScanResult from "./pages/ScanResult";
-import Monitoring from "./pages/Monitoring";
-import Integrations from "./pages/Integrations";
-import Alerts from "./pages/Alerts";
+import Login from "./pages/Login.jsx";
+import UploadScan from "./pages/UploadScan.jsx";
+import ScanResult from "./pages/ScanResult.jsx";
+import Monitoring from "./pages/Monitoring.jsx";
+import Integrations from "./pages/Integrations.jsx";
+import Alerts from "./pages/Alerts.jsx";
 import EnhancedAgentsPage from "./components/agents/EnhancedAgentsPage";
 import AgentsDemo from "./components/agents/AgentsDemo";
 
