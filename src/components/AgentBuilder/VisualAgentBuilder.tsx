@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   ReactFlow,
   addEdge,
@@ -8,15 +8,21 @@ import {
   Controls,
   MiniMap,
   type Node,
-  type Connection
+  type Connection,
+  type Edge,
+  ConnectionLine,
+  Panel,
+  useReactFlow,
+  Handle,
+  Position
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { NodePalette } from './NodePalette';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 
 // Template definitions for different agent types
 const agentTemplates = {
@@ -336,40 +342,38 @@ const nodeTypes = {
   // Core Agent Components
   agentPersonality: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">Agent Personality</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   skill: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">Skill</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   action: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-accent text-accent-foreground rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">Action</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   trigger: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-muted text-muted-foreground rounded-lg border relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">Trigger</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   output: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-green-600 text-white rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
       <div className="font-semibold">Output</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -542,120 +546,119 @@ const nodeTypes = {
   // SEI Blockchain Nodes
   seiValidator: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-indigo-700 text-white rounded-lg border-2 border-indigo-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Validator</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiStaking: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-yellow-700 text-white rounded-lg border-2 border-yellow-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Staking</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiSwap: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-green-700 text-white rounded-lg border-2 border-green-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Swap</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiLiquidity: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-blue-700 text-white rounded-lg border-2 border-blue-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Liquidity</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiNFT: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-purple-700 text-white rounded-lg border-2 border-purple-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI NFT</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiGovernance: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-red-700 text-white rounded-lg border-2 border-red-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Governance</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiBridge: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-cyan-700 text-white rounded-lg border-2 border-cyan-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Bridge</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiOracle: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-pink-700 text-white rounded-lg border-2 border-pink-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Oracle</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiContract: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-orange-700 text-white rounded-lg border-2 border-orange-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Contract</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiMempool: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-teal-700 text-white rounded-lg border-2 border-teal-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Mempool</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiGas: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-amber-700 text-white rounded-lg border-2 border-amber-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Gas Tracker</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiMetrics: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-lime-700 text-white rounded-lg border-2 border-lime-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Metrics</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiAlert: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-rose-700 text-white rounded-lg border-2 border-rose-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
       <div className="font-semibold">SEI Alert</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiBackup: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-slate-700 text-white rounded-lg border-2 border-slate-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Backup</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiRecovery: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-stone-700 text-white rounded-lg border-2 border-stone-500 relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <Handle type="target" position={Position.Top} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Bottom} className="w-3 h-3 bg-green-500 border-2 border-white" />
       <div className="font-semibold">SEI Recovery</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -741,15 +744,14 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
         }
         
         // Add connection with enhanced styling
-        const newEdge = {
+        const newEdge: Edge = {
           ...params,
           id: `e${Date.now()}`,
-          type: 'smoothstep',
+          type: 'default',
           animated: true,
           style: { 
             stroke: '#3b82f6', 
             strokeWidth: 3,
-            strokeDasharray: '5,5',
             filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
           },
           label: `${sourceNode.data.label} → ${targetNode.data.label}`,
@@ -781,10 +783,14 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
 
   const onConnectStart = useCallback((event: any, params: any) => {
     console.log('Connection start:', params);
+    // Add visual feedback for connection start
+    document.body.style.cursor = 'crosshair';
   }, []);
 
   const onConnectEnd = useCallback((event: any) => {
     console.log('Connection end:', event);
+    // Reset cursor
+    document.body.style.cursor = 'default';
   }, []);
 
   const onNodeClick = useCallback((event: any, node: any) => {
@@ -1206,7 +1212,7 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
                 </div>
                 <div>
                   <div className="font-medium mb-1">2. Connect Nodes</div>
-                  <p>Click and drag from the blue dots (top-left) to green dots (bottom-right) to create connections</p>
+                  <p>Click and drag from the blue dots (top) to green dots (bottom) to create visible connection lines</p>
                 </div>
                 <div>
                   <div className="font-medium mb-1">3. Configure</div>
@@ -1214,7 +1220,7 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
                 </div>
               </div>
               <div className="mt-3 p-2 bg-blue-100 rounded text-xs">
-                <strong>Pro Tip:</strong> Start with a Trigger node, add Skills and Actions in the middle, and end with Output nodes for a complete workflow!
+                <strong>Pro Tip:</strong> Start with a Trigger node (green dot at bottom), add Skills and Actions in the middle (blue dots at top, green dots at bottom), and end with Output nodes (blue dots at top) for a complete workflow!
               </div>
             </div>
           </div>
@@ -1242,6 +1248,9 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             nodeTypes={nodeTypes}
             fitView
             className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
+            connectionLineComponent={ConnectionLine}
+            snapToGrid={true}
+            snapGrid={[15, 15]}
           >
             <Background />
             <Controls className="bg-card border" />
