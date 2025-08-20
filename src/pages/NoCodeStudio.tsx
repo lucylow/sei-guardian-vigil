@@ -281,6 +281,27 @@ export default function NoCodeStudio() {
                   Use This Template
                 </Button>
               </div>
+              
+              <div className="bg-white rounded-lg shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow cursor-pointer">
+                <div className="text-3xl mb-3">🤖</div>
+                <h3 className="text-xl font-bold mb-2">SEI DeFi Bot</h3>
+                <p className="text-gray-600 mb-4">
+                  Automated DeFi trading on SEI with yield optimization
+                </p>
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">SEI Optimized</span>
+                  <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">96% Efficient</span>
+                </div>
+                <Button 
+                  className="w-full" 
+                  onClick={() => {
+                    setSelectedTemplate('sei-defi-bot');
+                    setActiveTab('build');
+                  }}
+                >
+                  Use This Template
+                </Button>
+              </div>
             </div>
           </TabsContent>
 
@@ -307,6 +328,7 @@ export default function NoCodeStudio() {
                           {selectedTemplate === 'data-aggregator' && 'Cross-Chain Data Agent'}
                           {selectedTemplate === 'yield-optimizer' && 'Yield Farming Optimizer'}
                           {selectedTemplate === 'cross-chain-bridge' && 'Cross-Chain Bridge Monitor'}
+                          {selectedTemplate === 'sei-defi-bot' && 'SEI DeFi Bot'}
                         </p>
                       </div>
                     </div>

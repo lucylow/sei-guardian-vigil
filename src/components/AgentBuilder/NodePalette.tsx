@@ -231,6 +231,120 @@ const nodeDefinitions = [
     description: 'Log events and activities',
     icon: '📝',
     category: 'Monitoring'
+  },
+  
+  // Blockchain Nodes
+  {
+    type: 'blockchain',
+    label: 'Blockchain',
+    description: 'Read from Sei or other blockchains',
+    icon: '⛓️',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiValidator',
+    label: 'SEI Validator',
+    description: 'Interact with SEI network validators',
+    icon: '🔐',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiStaking',
+    label: 'SEI Staking',
+    description: 'Manage SEI staking operations',
+    icon: '💰',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiSwap',
+    label: 'SEI Swap',
+    description: 'Execute trades on SEI DEXs',
+    icon: '🔄',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiLiquidity',
+    label: 'SEI Liquidity',
+    description: 'Manage liquidity pools on SEI',
+    icon: '🌊',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiNFT',
+    label: 'SEI NFT',
+    description: 'Mint and manage SEI NFTs',
+    icon: '🎨',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiGovernance',
+    label: 'SEI Governance',
+    description: 'Participate in SEI governance',
+    icon: '🗳️',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiBridge',
+    label: 'SEI Bridge',
+    description: 'Bridge assets to/from SEI',
+    icon: '🌉',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiOracle',
+    label: 'SEI Oracle',
+    description: 'Access SEI price feeds and data',
+    icon: '🔮',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiContract',
+    label: 'SEI Contract',
+    description: 'Deploy and interact with SEI contracts',
+    icon: '📜',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiMempool',
+    label: 'SEI Mempool',
+    description: 'Monitor SEI transaction mempool',
+    icon: '📋',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiGas',
+    label: 'SEI Gas Tracker',
+    description: 'Monitor and optimize gas usage',
+    icon: '⛽',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiMetrics',
+    label: 'SEI Metrics',
+    description: 'Track SEI network performance',
+    icon: '📊',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiAlert',
+    label: 'SEI Alert',
+    description: 'Set up SEI network alerts',
+    icon: '🚨',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiBackup',
+    label: 'SEI Backup',
+    description: 'Backup SEI wallet and data',
+    icon: '💾',
+    category: 'Blockchain'
+  },
+  {
+    type: 'seiRecovery',
+    label: 'SEI Recovery',
+    description: 'Recover lost SEI assets',
+    icon: '🔧',
+    category: 'Blockchain'
   }
 ];
 

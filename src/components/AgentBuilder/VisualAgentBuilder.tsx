@@ -272,37 +272,104 @@ const agentTemplates = {
       { id: 'e3', source: 'compute-route', target: 'execute-bridge' },
       { id: 'e4', source: 'execute-bridge', target: 'monitor-status' }
     ]
+  },
+  'sei-defi-bot': {
+    name: 'SEI DeFi Trading Bot',
+    description: 'Automated DeFi trading on SEI with yield optimization',
+    nodes: [
+      {
+        id: 'trigger-block',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'New Block Trigger', config: { event: 'NewBlock', interval: '400ms' } }
+      },
+      {
+        id: 'sei-oracle',
+        type: 'seiOracle',
+        position: { x: 300, y: 50 },
+        data: { label: 'SEI Price Oracle', config: { pairs: ['SEI/USDC', 'ATOM/USDC'], updateInterval: '1s' } }
+      },
+      {
+        id: 'sei-mempool',
+        type: 'seiMempool',
+        position: { x: 300, y: 150 },
+        data: { label: 'Monitor Mempool', config: { gasThreshold: '100000', priority: 'high' } }
+      },
+      {
+        id: 'compute-opportunity',
+        type: 'math',
+        position: { x: 500, y: 100 },
+        data: { label: 'Compute Opportunity', config: { minProfit: '0.5%', riskModel: 'Sharpe Ratio' } }
+      },
+      {
+        id: 'sei-swap',
+        type: 'seiSwap',
+        position: { x: 700, y: 100 },
+        data: { label: 'Execute SEI Swap', config: { slippage: '0.1%', gasOptimization: true } }
+      },
+      {
+        id: 'sei-staking',
+        type: 'seiStaking',
+        position: { x: 900, y: 50 },
+        data: { label: 'Stake Rewards', config: { validator: 'Auto-select', minStake: '100 SEI' } }
+      },
+      {
+        id: 'sei-alert',
+        type: 'seiAlert',
+        position: { x: 900, y: 150 },
+        data: { label: 'Send Alert', config: { channels: ['Slack', 'Email'], format: 'JSON' } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-block', target: 'sei-oracle' },
+      { id: 'e2', source: 'trigger-block', target: 'sei-mempool' },
+      { id: 'e3', source: 'sei-oracle', target: 'compute-opportunity' },
+      { id: 'e4', source: 'sei-mempool', target: 'compute-opportunity' },
+      { id: 'e5', source: 'compute-opportunity', target: 'sei-swap' },
+      { id: 'e6', source: 'sei-swap', target: 'sei-staking' },
+      { id: 'e7', source: 'sei-swap', target: 'sei-alert' }
+    ]
   }
 };
 
 const nodeTypes = {
   // Core Agent Components
   agentPersonality: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg">
+    <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Agent Personality</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   skill: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg">
+    <div className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Skill</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   action: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-accent text-accent-foreground rounded-lg">
+    <div className="px-4 py-2 bg-accent text-accent-foreground rounded-lg relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Action</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   trigger: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-muted text-muted-foreground rounded-lg border">
+    <div className="px-4 py-2 bg-muted text-muted-foreground rounded-lg border relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Trigger</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   output: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-green-600 text-white rounded-lg">
+    <div className="px-4 py-2 bg-green-600 text-white rounded-lg relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Output</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -471,6 +538,128 @@ const nodeTypes = {
       <div className="text-sm">{data.label}</div>
     </div>
   ),
+  
+  // SEI Blockchain Nodes
+  seiValidator: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-indigo-700 text-white rounded-lg border-2 border-indigo-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Validator</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiStaking: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-yellow-700 text-white rounded-lg border-2 border-yellow-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Staking</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiSwap: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-green-700 text-white rounded-lg border-2 border-green-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Swap</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiLiquidity: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-blue-700 text-white rounded-lg border-2 border-blue-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Liquidity</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiNFT: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-purple-700 text-white rounded-lg border-2 border-purple-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI NFT</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiGovernance: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-red-700 text-white rounded-lg border-2 border-red-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Governance</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiBridge: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-cyan-700 text-white rounded-lg border-2 border-cyan-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Bridge</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiOracle: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-pink-700 text-white rounded-lg border-2 border-pink-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Oracle</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiContract: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-orange-700 text-white rounded-lg border-2 border-orange-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Contract</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiMempool: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-700 text-white rounded-lg border-2 border-teal-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Mempool</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiGas: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-amber-700 text-white rounded-lg border-2 border-amber-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Gas Tracker</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiMetrics: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-lime-700 text-white rounded-lg border-2 border-lime-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Metrics</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiAlert: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-rose-700 text-white rounded-lg border-2 border-rose-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Alert</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiBackup: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-slate-700 text-white rounded-lg border-2 border-slate-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Backup</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  seiRecovery: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-stone-700 text-white rounded-lg border-2 border-stone-500 relative">
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="font-semibold">SEI Recovery</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
 };
 
 const networkOptions = [
@@ -557,8 +746,26 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
           id: `e${Date.now()}`,
           type: 'smoothstep',
           animated: true,
-          style: { stroke: '#3b82f6', strokeWidth: 2 },
+          style: { 
+            stroke: '#3b82f6', 
+            strokeWidth: 3,
+            strokeDasharray: '5,5',
+            filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
+          },
           label: `${sourceNode.data.label} → ${targetNode.data.label}`,
+          labelStyle: {
+            fill: '#1f2937',
+            fontWeight: 600,
+            fontSize: '12px',
+            background: '#ffffff',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            border: '1px solid #d1d5db'
+          },
+          labelBgStyle: {
+            fill: '#ffffff',
+            fillOpacity: 0.9
+          }
         };
         
         setEdges((eds) => [...eds, newEdge]);
@@ -972,10 +1179,11 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
           variant="outline"
           size="sm"
           onClick={() => {
-            // Zoom to fit all nodes
-            const reactFlowInstance = document.querySelector('.react-flow')?.__reactFlowInstance;
-            if (reactFlowInstance) {
-              reactFlowInstance.fitView({ padding: 0.1 });
+            // Zoom to fit all nodes - simplified approach
+            const canvas = document.querySelector('.react-flow');
+            if (canvas) {
+              // Trigger a fit view by dispatching a custom event
+              canvas.dispatchEvent(new CustomEvent('fitView'));
             }
           }}
           disabled={nodes.length === 0}
@@ -983,6 +1191,35 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
           🔍 Fit View
         </Button>
       </div>
+      
+      {/* Connection Tutorial */}
+      {nodes.length === 0 && (
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-start space-x-3">
+            <div className="text-2xl">💡</div>
+            <div className="flex-1">
+              <h4 className="font-semibold text-blue-900 mb-2">How to Build Your Agent Workflow</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-blue-800">
+                <div>
+                  <div className="font-medium mb-1">1. Add Nodes</div>
+                  <p>Drag nodes from the left palette onto the canvas, or click to add them randomly</p>
+                </div>
+                <div>
+                  <div className="font-medium mb-1">2. Connect Nodes</div>
+                  <p>Click and drag from the blue dots (top-left) to green dots (bottom-right) to create connections</p>
+                </div>
+                <div>
+                  <div className="font-medium mb-1">3. Configure</div>
+                  <p>Click any node to open the configuration panel and customize its properties</p>
+                </div>
+              </div>
+              <div className="mt-3 p-2 bg-blue-100 rounded text-xs">
+                <strong>Pro Tip:</strong> Start with a Trigger node, add Skills and Actions in the middle, and end with Output nodes for a complete workflow!
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="h-[600px] w-full flex border rounded-lg bg-background">
         <div className="w-64 border-r bg-card p-4">
