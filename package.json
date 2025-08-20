@@ -1,24 +1,14 @@
 {
-  "name": "sei-guardian-vigil",
+  "name": "vite_react_shadcn_ts",
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "description": "SEI Guardian Vigil - Blockchain Security Monitoring Platform",
-  "keywords": ["sei", "blockchain", "security", "monitoring", "vite", "react"],
-  "author": "SEI Guardian Team",
-  "license": "MIT",
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "build:dev": "vite build --mode development",
-    "build:lovable": "vite build --mode production",
-    "preview": "vite preview",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@elizaos/plugin-sei": "^1.0.0",
@@ -58,7 +48,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "date-fns": "^3.6.0",
+    "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
     "framer-motion": "^12.23.12",
     "input-otp": "^1.4.2",

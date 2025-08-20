@@ -1,4 +1,3 @@
-import { env } from "../config/environment.js";
 import { getOnChainTools } from "@goat-sdk/adapter-vercel-ai";
 import { sendETH } from "@goat-sdk/wallet-evm";
 import { erc721 } from "@goat-sdk/plugin-erc721";

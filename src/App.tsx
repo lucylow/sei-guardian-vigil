@@ -10,23 +10,7 @@ import Audits from "./pages/Audits";
 import Security from "./pages/Security";
 import NoCodeStudio from "./pages/NoCodeStudio";
 import NotFound from "./pages/NotFound";
-// import { SentinelChatbot } from "@/components/SentinelChatbot";
-
-// SEI SENTINEL Frontend Pages
-import Login from "./pages/Login.jsx";
-import UploadScan from "./pages/UploadScan.jsx";
-import ScanResult from "./pages/ScanResult.jsx";
-import Monitoring from "./pages/Monitoring.jsx";
-import Integrations from "./pages/Integrations.jsx";
-import Alerts from "./pages/Alerts.jsx";
-// import EnhancedAgentsPage from "./components/agents/EnhancedAgentsPage";
-// import AgentsDemo from "./components/agents/AgentsDemo";
-
-// No-Code Studio Pages
-import ContractTemplates from "./pages/ContractTemplates";
-import AIAssistant from "./pages/AIAssistant";
-import DeployAgent from "./pages/DeployAgent";
-import VisualBuilder from "./pages/VisualBuilder";
+import { SentinelChatbot } from "@/components/SentinelChatbot";
 
 const queryClient = new QueryClient();
 
@@ -38,36 +22,17 @@ const App = () => (
       <BrowserRouter>
         <>
           <Routes>
-            {/* SEI SENTINEL Frontend Routes */}
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Index />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            {/* <Route path="/agents" element={<EnhancedAgentsPage />} />
-            <Route path="/agents/demo" element={<AgentsDemo />} /> */}
-            <Route path="/upload" element={<UploadScan />} />
-            <Route path="/result/:scanId" element={<ScanResult />} />
-            <Route path="/monitoring" element={<Monitoring />} />
-            <Route path="/integrations" element={<Integrations />} />
-            <Route path="/alerts" element={<Alerts />} />
-            
-            {/* No-Code Studio Routes */}
-            <Route path="/contract-templates" element={<ContractTemplates />} />
-            <Route path="/ai-assistant" element={<AIAssistant />} />
-            <Route path="/deploy-agent" element={<DeployAgent />} />
-            <Route path="/visual-builder" element={<VisualBuilder />} />
-            
-            {/* Existing SEI Guardian Vigil Routes */}
-            <Route path="/guardian" element={<Index />} />
-            <Route path="/guardian/dashboard" element={<Dashboard />} />
-            <Route path="/guardian/agents" element={<Agents />} />
-            <Route path="/guardian/audits" element={<Audits />} />
-            <Route path="/guardian/security" element={<Security />} />
-            <Route path="/guardian/no-code-studio" element={<NoCodeStudio />} />
-            
-            {/* Catch-all route */}
+            <Route path="/agents" element={<Agents />} />
+            <Route path="/audits" element={<Audits />} />
+            <Route path="/security" element={<Security />} />
+            <Route path="/no-code-studio" element={<NoCodeStudio />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
           {/* Place this outside your page routing/components so it's always present */}
-          {/* <SentinelChatbot /> */}
+          <SentinelChatbot />
         </>
       </BrowserRouter>
     </TooltipProvider>
