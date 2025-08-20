@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Clock, Shield, TrendingUp, Hash } from 'lucide-react';
-import { formatDistanceToNow } from 'date-fns';
+// import { formatDistanceToNow } from 'date-fns';
 import { useSeiData } from '@/hooks/useSeiData';
 
 export const ThreatIntelFeed: React.FC = () => {

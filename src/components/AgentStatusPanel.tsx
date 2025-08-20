@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Brain, Shield, Search, Zap, Eye, Database, MessageSquare, Activity, AlertTriangle, Cpu, MemoryStick, MapPin, Clock } from 'lucide-react';
 import { useSeiData } from '@/hooks/useSeiData';
-import { formatDistanceToNow } from 'date-fns';
+// import { formatDistanceToNow } from 'date-fns';
 
 const getAgentIcon = (type: string) => {
   switch (type) {
