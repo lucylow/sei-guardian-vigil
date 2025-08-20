@@ -1,6 +1,5 @@
 import { Navigation } from "@/components/Navigation";
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
-import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
 import { MCPIntegration } from "@/components/MCPIntegration";
 import { AgenticWorkflow } from "@/components/AgenticWorkflow";
 import { MultiAgentOrchestrator } from "@/components/MultiAgentOrchestrator";
@@ -43,16 +42,20 @@ export default function Agents() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-foreground mb-2">AI Agent Development</h1>
           <p className="text-muted-foreground">Build, deploy, and manage AI agents on Sei Network</p>
+          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm text-blue-800">
+              💡 <strong>Dev Studio moved!</strong> The AI Agent Development Studio with templates, marketplace, and analytics is now available in the <strong>No-Code Studio</strong> page.
+            </p>
+          </div>
         </div>
 
         <Tabs defaultValue="orchestration" className="w-full">
-          <TabsList className="grid w-full grid-cols-8">
+          <TabsList className="grid w-full grid-cols-7">
             <TabsTrigger value="orchestration">Orchestration</TabsTrigger>
             <TabsTrigger value="orchestrator">Multi-Agent</TabsTrigger>
             <TabsTrigger value="memory">Mem0 Memory</TabsTrigger>
             <TabsTrigger value="hitl">Human-in-Loop</TabsTrigger>
             <TabsTrigger value="intervention">Intervention</TabsTrigger>
-            <TabsTrigger value="development">Dev Studio</TabsTrigger>
             <TabsTrigger value="mcp">MCP Integration</TabsTrigger>
             <TabsTrigger value="workflow">Workflows</TabsTrigger>
           </TabsList>
@@ -75,10 +78,6 @@ export default function Agents() {
 
           <TabsContent value="intervention" className="mt-6">
             <HumanInterventionPanel />
-          </TabsContent>
-
-          <TabsContent value="development" className="mt-6">
-            <AgentDevelopmentStudio />
           </TabsContent>
 
           <TabsContent value="mcp" className="mt-6">
