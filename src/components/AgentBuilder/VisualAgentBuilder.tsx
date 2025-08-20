@@ -321,6 +321,7 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
   const [isDeploying, setIsDeploying] = useState(false);
   const [network, setNetwork] = useState("demo");
   const [currentTemplate, setCurrentTemplate] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const { toast } = useToast();
 
   // Load template when selectedTemplate prop changes
@@ -377,6 +378,55 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
       description: "Ready for a new agent design",
     });
   }, [setNodes, setEdges, toast]);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+      setIsDragging(false);
+
+      const reactFlowBounds = document.querySelector('.react-flow')?.getBoundingClientRect();
+      const type = event.dataTransfer.getData('application/reactflow');
+      
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+      if (reactFlowBounds) {
+        const position = {
+          x: event.clientX - reactFlowBounds.left,
+          y: event.clientY - reactFlowBounds.top,
+        };
+
+        const newNode: Node = {
+          id: `${type}-${Date.now()}`,
+          type,
+          position,
+          data: {
+            label: type.charAt(0).toUpperCase() + type.slice(1),
+            config: {}
+          }
+        };
+
+        setNodes((nds) => [...nds, newNode]);
+        
+        toast({
+          title: "✅ Node Added",
+          description: `${type} node added to canvas`,
+        });
+      }
+    },
+    [setNodes, toast]
+  );
+
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    setIsDragging(true);
+  }, []);
+
+  const onDragLeave = useCallback(() => {
+    setIsDragging(false);
+  }, []);
 
   const handleDeploy = async () => {
     if (nodes.length === 0) {
@@ -481,9 +531,12 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onDrop={onDrop}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
             nodeTypes={nodeTypes}
             fitView
-            className="bg-background"
+            className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
           >
             <Background />
             <Controls className="bg-card border" />
