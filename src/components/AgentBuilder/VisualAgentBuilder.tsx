@@ -14,6 +14,9 @@ import '@xyflow/react/dist/style.css';
 import { NodePalette } from './NodePalette';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 // Template definitions for different agent types
 const agentTemplates = {
@@ -273,6 +276,7 @@ const agentTemplates = {
 };
 
 const nodeTypes = {
+  // Core Agent Components
   agentPersonality: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg">
       <div className="font-semibold">Agent Personality</div>
@@ -303,6 +307,170 @@ const nodeTypes = {
       <div className="text-sm">{data.label}</div>
     </div>
   ),
+  
+  // Data & Input Nodes
+  dataSource: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-blue-600 text-white rounded-lg">
+      <div className="font-semibold">Data Source</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  webhook: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-blue-500 text-white rounded-lg">
+      <div className="font-semibold">Webhook</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  blockchain: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-purple-600 text-white rounded-lg">
+      <div className="font-semibold">Blockchain</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  database: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-indigo-600 text-white rounded-lg">
+      <div className="font-semibold">Database</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  
+  // Logic & Control Nodes
+  condition: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-orange-600 text-white rounded-lg">
+      <div className="font-semibold">Condition</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  loop: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-orange-500 text-white rounded-lg">
+      <div className="font-semibold">Loop</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  switch: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-orange-400 text-white rounded-lg">
+      <div className="font-semibold">Switch</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  delay: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-yellow-600 text-white rounded-lg">
+      <div className="font-semibold">Delay</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  
+  // Processing Nodes
+  math: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-600 text-white rounded-lg">
+      <div className="font-semibold">Math</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  transform: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-500 text-white rounded-lg">
+      <div className="font-semibold">Transform</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  aggregate: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-400 text-white rounded-lg">
+      <div className="font-semibold">Aggregate</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  filter: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-300 text-white rounded-lg">
+      <div className="font-semibold">Filter</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  
+  // AI & External Services
+  aiModel: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-pink-600 text-white rounded-lg">
+      <div className="font-semibold">AI Model</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  nlp: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-pink-500 text-white rounded-lg">
+      <div className="font-semibold">NLP</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  vision: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-pink-400 text-white rounded-lg">
+      <div className="font-semibold">Vision</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  
+  // Communication Nodes
+  email: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-red-600 text-white rounded-lg">
+      <div className="font-semibold">Email</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  sms: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-red-500 text-white rounded-lg">
+      <div className="font-semibold">SMS</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  slack: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-red-400 text-white rounded-lg">
+      <div className="font-semibold">Slack</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  discord: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-red-300 text-white rounded-lg">
+      <div className="font-semibold">Discord</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  
+  // Storage & Output Nodes
+  fileStorage: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-gray-600 text-white rounded-lg">
+      <div className="font-semibold">File Storage</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  cache: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-gray-500 text-white rounded-lg">
+      <div className="font-semibold">Cache</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  queue: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-gray-400 text-white rounded-lg">
+      <div className="font-semibold">Queue</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  
+  // Monitoring & Analytics
+  metrics: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-emerald-600 text-white rounded-lg">
+      <div className="font-semibold">Metrics</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  alert: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-emerald-500 text-white rounded-lg">
+      <div className="font-semibold">Alert</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
+  logging: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-emerald-400 text-white rounded-lg">
+      <div className="font-semibold">Logging</div>
+      <div className="text-sm">{data.label}</div>
+    </div>
+  ),
 };
 
 const networkOptions = [
@@ -322,6 +490,7 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
   const [network, setNetwork] = useState("demo");
   const [currentTemplate, setCurrentTemplate] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
   const { toast } = useToast();
 
   // Load template when selectedTemplate prop changes
@@ -352,9 +521,81 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
   }, [setNodes, setEdges, toast]);
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    (params: Connection) => {
+      // Validate connection
+      const sourceNode = nodes.find(n => n.id === params.source);
+      const targetNode = nodes.find(n => n.id === params.target);
+      
+      if (sourceNode && targetNode) {
+        // Prevent self-connection
+        if (params.source === params.target) {
+          toast({
+            title: "❌ Invalid Connection",
+            description: "Cannot connect a node to itself",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Check for duplicate connections
+        const existingConnection = edges.find(
+          e => e.source === params.source && e.target === params.target
+        );
+        
+        if (existingConnection) {
+          toast({
+            title: "❌ Duplicate Connection",
+            description: "Connection already exists between these nodes",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Add connection with enhanced styling
+        const newEdge = {
+          ...params,
+          id: `e${Date.now()}`,
+          type: 'smoothstep',
+          animated: true,
+          style: { stroke: '#3b82f6', strokeWidth: 2 },
+          label: `${sourceNode.data.label} → ${targetNode.data.label}`,
+        };
+        
+        setEdges((eds) => [...eds, newEdge]);
+        
+        toast({
+          title: "✅ Connection Created",
+          description: `Connected ${sourceNode.data.label} to ${targetNode.data.label}`,
+        });
+      }
+    },
+    [nodes, edges, setEdges, toast]
   );
+
+  const onConnectStart = useCallback((event: any, params: any) => {
+    console.log('Connection start:', params);
+  }, []);
+
+  const onConnectEnd = useCallback((event: any) => {
+    console.log('Connection end:', event);
+  }, []);
+
+  const onNodeClick = useCallback((event: any, node: any) => {
+    setSelectedNode(node);
+    console.log('Node clicked:', node);
+  }, []);
+
+  const onPaneClick = useCallback(() => {
+    setSelectedNode(null);
+  }, []);
+
+  const updateNodeData = useCallback((nodeId: string, newData: any) => {
+    setNodes((nds) =>
+      nds.map((node) =>
+        node.id === nodeId ? { ...node, data: { ...node.data, ...newData } } : node
+      )
+    );
+  }, [setNodes]);
 
   const addNode = useCallback((type: string, position: { x: number; y: number }) => {
     const newNode: Node = {
@@ -438,6 +679,17 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
       return;
     }
 
+    // Validate workflow
+    const validation = validateWorkflow(nodes, edges);
+    if (!validation.isValid) {
+      toast({
+        title: "❌ Workflow Validation Failed",
+        description: validation.errors.join(', '),
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsDeploying(true);
 
     try {
@@ -467,6 +719,75 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
     } finally {
       setIsDeploying(false);
     }
+  };
+
+  const validateWorkflow = (workflowNodes: Node[], workflowEdges: any[]) => {
+    const errors: string[] = [];
+    
+    // Check if there are trigger nodes
+    const triggerNodes = workflowNodes.filter(n => n.type === 'trigger');
+    if (triggerNodes.length === 0) {
+      errors.push("No trigger nodes found - every agent needs a starting point");
+    }
+    
+    // Check if there are output nodes
+    const outputNodes = workflowNodes.filter(n => n.type === 'output');
+    if (outputNodes.length === 0) {
+      errors.push("No output nodes found - every agent needs an endpoint");
+    }
+    
+    // Check for disconnected nodes
+    const connectedNodeIds = new Set();
+    workflowEdges.forEach(edge => {
+      connectedNodeIds.add(edge.source);
+      connectedNodeIds.add(edge.target);
+    });
+    
+    const disconnectedNodes = workflowNodes.filter(n => !connectedNodeIds.has(n.id));
+    if (disconnectedNodes.length > 0) {
+      errors.push(`${disconnectedNodes.length} disconnected nodes found`);
+    }
+    
+    // Check for cycles (basic check)
+    const hasCycles = checkForCycles(workflowNodes, workflowEdges);
+    if (hasCycles) {
+      errors.push("Workflow contains cycles which may cause infinite loops");
+    }
+    
+    return {
+      isValid: errors.length === 0,
+      errors
+    };
+  };
+
+  const checkForCycles = (workflowNodes: Node[], workflowEdges: any[]) => {
+    // Simple cycle detection - can be enhanced
+    const visited = new Set();
+    const recStack = new Set();
+    
+    const hasCycle = (nodeId: string) => {
+      if (recStack.has(nodeId)) return true;
+      if (visited.has(nodeId)) return false;
+      
+      visited.add(nodeId);
+      recStack.add(nodeId);
+      
+      const outgoingEdges = workflowEdges.filter(e => e.source === nodeId);
+      for (const edge of outgoingEdges) {
+        if (hasCycle(edge.target)) return true;
+      }
+      
+      recStack.delete(nodeId);
+      return false;
+    };
+    
+    for (const node of workflowNodes) {
+      if (!visited.has(node.id)) {
+        if (hasCycle(node.id)) return true;
+      }
+    }
+    
+    return false;
   };
 
   return (
@@ -520,6 +841,149 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
         </div>
       </div>
       
+      {/* Workflow Statistics */}
+      {nodes.length > 0 && (
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-4 p-4 bg-gray-50 rounded-lg border">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-blue-600">{nodes.length}</div>
+            <div className="text-xs text-gray-600">Total Nodes</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-green-600">{edges.length}</div>
+            <div className="text-xs text-gray-600">Connections</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-purple-600">
+              {nodes.filter(n => n.type === 'trigger').length}
+            </div>
+            <div className="text-xs text-gray-600">Triggers</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-orange-600">
+              {nodes.filter(n => n.type === 'output').length}
+            </div>
+            <div className="text-xs text-gray-600">Outputs</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-teal-600">
+              {nodes.filter(n => n.type === 'skill').length}
+            </div>
+            <div className="text-xs text-gray-600">Skills</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-red-600">
+              {nodes.filter(n => n.type === 'action').length}
+            </div>
+            <div className="text-xs text-gray-600">Actions</div>
+          </div>
+        </div>
+      )}
+      
+      {/* Quick Actions Toolbar */}
+      <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            // Auto-layout nodes in a grid
+            const newNodes = nodes.map((node, index) => ({
+              ...node,
+              position: {
+                x: 100 + (index % 4) * 200,
+                y: 100 + Math.floor(index / 4) * 150
+              }
+            }));
+            setNodes(newNodes);
+            toast({
+              title: "🎯 Auto-Layout Applied",
+              description: "Nodes arranged in a grid pattern",
+            });
+          }}
+          disabled={nodes.length === 0}
+        >
+          📐 Auto-Layout
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            // Export workflow as JSON
+            const workflow = { nodes, edges, metadata: { name: 'Agent Workflow', created: new Date().toISOString() } };
+            const blob = new Blob([JSON.stringify(workflow, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'agent-workflow.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            toast({
+              title: "💾 Workflow Exported",
+              description: "Downloaded as agent-workflow.json",
+            });
+          }}
+          disabled={nodes.length === 0}
+        >
+          💾 Export
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            // Import workflow from file
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+              const file = (e.target as HTMLInputElement).files?.[0];
+              if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  try {
+                    const workflow = JSON.parse(e.target?.result as string);
+                    if (workflow.nodes && workflow.edges) {
+                      setNodes(workflow.nodes);
+                      setEdges(workflow.edges);
+                      setCurrentTemplate(null);
+                      toast({
+                        title: "📥 Workflow Imported",
+                        description: "Workflow loaded successfully",
+                      });
+                    }
+                  } catch (error) {
+                    toast({
+                      title: "❌ Import Failed",
+                      description: "Invalid workflow file",
+                      variant: "destructive",
+                    });
+                  }
+                };
+                reader.readAsText(file);
+              }
+            };
+            input.click();
+          }}
+        >
+          📥 Import
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            // Zoom to fit all nodes
+            const reactFlowInstance = document.querySelector('.react-flow')?.__reactFlowInstance;
+            if (reactFlowInstance) {
+              reactFlowInstance.fitView({ padding: 0.1 });
+            }
+          }}
+          disabled={nodes.length === 0}
+        >
+          🔍 Fit View
+        </Button>
+      </div>
+      
       <div className="h-[600px] w-full flex border rounded-lg bg-background">
         <div className="w-64 border-r bg-card p-4">
           <NodePalette onAddNode={addNode} />
@@ -531,6 +995,10 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
+            onConnectStart={onConnectStart}
+            onConnectEnd={onConnectEnd}
+            onNodeClick={onNodeClick}
+            onPaneClick={onPaneClick}
             onDrop={onDrop}
             onDragOver={onDragOver}
             onDragLeave={onDragLeave}
@@ -544,6 +1012,86 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
           </ReactFlow>
         </div>
       </div>
+      
+      {/* Node Configuration Panel */}
+      {selectedNode && (
+        <div className="mt-4 p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold">Configure Node: {selectedNode.data.label}</h4>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setSelectedNode(null)}
+            >
+              ✕ Close
+            </Button>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="nodeLabel" className="text-sm font-medium">Node Label</Label>
+              <Input
+                id="nodeLabel"
+                value={selectedNode.data.label || ''}
+                onChange={(e) => updateNodeData(selectedNode.id, { label: e.target.value })}
+                placeholder="Enter node label"
+                className="mt-1"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="nodeType" className="text-sm font-medium">Node Type</Label>
+              <Input
+                id="nodeType"
+                value={selectedNode.type}
+                disabled
+                className="mt-1 bg-gray-50"
+              />
+            </div>
+            
+            <div className="md:col-span-2">
+              <Label htmlFor="nodeDescription" className="text-sm font-medium">Description</Label>
+              <Textarea
+                id="nodeDescription"
+                value={selectedNode.data.description || ''}
+                onChange={(e) => updateNodeData(selectedNode.id, { description: e.target.value })}
+                placeholder="Describe what this node does..."
+                className="mt-1"
+                rows={3}
+              />
+            </div>
+            
+            <div className="md:col-span-2">
+              <Label htmlFor="nodeConfig" className="text-sm font-medium">Configuration (JSON)</Label>
+              <Textarea
+                id="nodeConfig"
+                value={JSON.stringify(selectedNode.data.config || {}, null, 2)}
+                onChange={(e) => {
+                  try {
+                    const config = JSON.parse(e.target.value);
+                    updateNodeData(selectedNode.id, { config });
+                  } catch (error) {
+                    // Invalid JSON, ignore
+                  }
+                }}
+                placeholder='{"key": "value"}'
+                className="mt-1 font-mono text-sm"
+                rows={4}
+              />
+              <p className="text-xs text-muted-foreground mt-1">
+                Enter configuration as valid JSON
+              </p>
+            </div>
+          </div>
+          
+          <div className="mt-4 pt-4 border-t border-gray-200">
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <span>Node ID: {selectedNode.id}</span>
+              <span>Position: ({Math.round(selectedNode.position.x)}, {Math.round(selectedNode.position.y)})</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
