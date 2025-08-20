@@ -32,7 +32,22 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: undefined,
+        entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
+    target: 'es2015',
+    assetsInlineLimit: 4096,
+    emptyOutDir: true,
+    reportCompressedSize: true,
+    chunkSizeWarningLimit: 1000,
   },
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(mode),
+    'process.env.BASE_URL': JSON.stringify('/'),
+  },
+  publicDir: 'public',
+  root: process.cwd(),
 }));
+
