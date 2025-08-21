@@ -10,6 +10,7 @@ import { ToolsIntegrationPanel } from "@/components/ToolsIntegrationPanel";
 import { useSeiData } from "@/hooks/useSeiData";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Database, 
   Shield, 
@@ -20,7 +21,10 @@ import {
   TrendingUp,
   Globe,
   Cpu,
-  Target
+  Target,
+  BarChart3,
+  Zap,
+  Settings
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -107,82 +111,212 @@ export default function Dashboard() {
           <p className="text-muted-foreground">Real-time monitoring and system overview</p>
         </div>
 
-        {/* Key Metrics Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {dashboardMetrics.map((metric, index) => {
-            const IconComponent = metric.icon;
-            return (
-              <Card key={index} className={`${metric.bgColor} ${metric.borderColor} hover:shadow-lg transition-shadow`}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-foreground">{metric.label}</CardTitle>
-                  <IconComponent className={`h-4 w-4 ${metric.color}`} />
-                </CardHeader>
-                <CardContent>
-                  <div className={`text-2xl font-bold ${metric.color}`}>{metric.value}</div>
-                  <p className="text-xs text-muted-foreground">{metric.description}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+            <TabsTrigger value="security">Security</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="tools">Tools</TabsTrigger>
+          </TabsList>
 
-        {/* Network Status Card */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-foreground">
-              <Globe className="w-5 h-5 text-primary" />
-              Network Status
-            </CardTitle>
-            <CardDescription className="text-muted-foreground">Current Sei Network metrics and performance</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {networkMetrics.map((metric, index) => {
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="mt-6">
+            {/* Key Metrics Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {dashboardMetrics.map((metric, index) => {
                 const IconComponent = metric.icon;
                 return (
-                  <div key={index} className="p-4 rounded-lg bg-background/40 border border-primary/10">
-                    <div className="flex items-center gap-2 mb-2">
-                      <IconComponent className={`w-4 h-4 ${metric.color}`} />
-                      <span className="text-xs text-muted-foreground">{metric.label}</span>
-                    </div>
-                    <div className={`text-lg font-bold ${metric.color}`}>
-                      {metric.value}
-                    </div>
-                    <p className="text-xs text-muted-foreground">{metric.description}</p>
-                  </div>
+                  <Card key={index} className={`${metric.bgColor} ${metric.borderColor} hover:shadow-lg transition-shadow`}>
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                      <CardTitle className="text-sm font-medium text-foreground">{metric.label}</CardTitle>
+                      <IconComponent className={`h-4 w-4 ${metric.color}`} />
+                    </CardHeader>
+                    <CardContent>
+                      <div className={`text-2xl font-bold ${metric.color}`}>{metric.value}</div>
+                      <p className="text-xs text-muted-foreground">{metric.description}</p>
+                    </CardContent>
+                  </Card>
                 );
               })}
             </div>
-          </CardContent>
-        </Card>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Sidebar */}
-          <div className="lg:col-span-3 space-y-6">
-            <SystemOverview />
-            <NetworkMetrics stats={networkStats} />
-          </div>
+            {/* Network Status Card */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Globe className="w-5 h-5 text-primary" />
+                  Network Status
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">Current Sei Network metrics and performance</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {networkMetrics.map((metric, index) => {
+                    const IconComponent = metric.icon;
+                    return (
+                      <div key={index} className="p-4 rounded-lg bg-background/40 border border-primary/10">
+                        <div className="flex items-center gap-2 mb-2">
+                          <IconComponent className={`w-4 h-4 ${metric.color}`} />
+                          <span className="text-xs text-muted-foreground">{metric.label}</span>
+                        </div>
+                        <div className={`text-lg font-bold ${metric.color}`}>
+                          {metric.value}
+                        </div>
+                        <p className="text-xs text-muted-foreground">{metric.description}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
 
-          {/* Center Content */}
-          <div className="lg:col-span-6 space-y-6">
-            <RealTimeMonitor contracts={contracts} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <VulnerabilityRadar vulnerabilities={vulnerabilities} />
-              <ContractHealthGrid contracts={contracts} />
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+              {/* Left Sidebar */}
+              <div className="lg:col-span-3 space-y-6">
+                <SystemOverview />
+                <NetworkMetrics stats={networkStats} />
+              </div>
+
+              {/* Center Content */}
+              <div className="lg:col-span-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <VulnerabilityRadar vulnerabilities={vulnerabilities} />
+                  <ContractHealthGrid contracts={contracts} />
+                </div>
+              </div>
+
+              {/* Right Sidebar */}
+              <div className="lg:col-span-3 space-y-6">
+                <ThreatIntelFeed />
+                <ToolsIntegrationPanel />
+              </div>
             </div>
-          </div>
+          </TabsContent>
 
-          {/* Right Sidebar */}
-          <div className="lg:col-span-3 space-y-6">
-            <ThreatIntelFeed />
-            <ToolsIntegrationPanel />
-          </div>
-        </div>
+          {/* Monitoring Tab */}
+          <TabsContent value="monitoring" className="mt-6">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Activity className="w-5 h-5 text-primary" />
+                    Real-Time Monitoring
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">Live system monitoring and performance tracking</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <RealTimeMonitor contracts={contracts} />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
 
-        {/* Cambrian Analytics Section */}
-        <div className="mt-8">
-          <CambrianAnalytics />
-        </div>
+          {/* Security Tab */}
+          <TabsContent value="security" className="mt-6">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Shield className="w-5 h-5 text-primary" />
+                    Security Overview
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">Current security status and threat monitoring</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <VulnerabilityRadar vulnerabilities={vulnerabilities} />
+                    <ContractHealthGrid contracts={contracts} />
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="mt-6">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <BarChart3 className="w-5 h-5 text-primary" />
+                    Advanced Analytics
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">Deep insights and performance analytics</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <CambrianAnalytics />
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          {/* Tools Tab */}
+          <TabsContent value="tools" className="mt-6">
+            <div className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Zap className="w-5 h-5 text-primary" />
+                    Quick Actions
+                  </CardTitle>
+                  <CardDescription className="text-muted-foreground">Common dashboard actions and tools</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                        <Shield className="w-8 h-8 text-blue-400" />
+                        <span className="font-medium text-foreground">Run Security Scan</span>
+                        <p className="text-xs text-muted-foreground text-center">Scan all contracts for vulnerabilities</p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                        <BarChart3 className="w-8 h-8 text-green-400" />
+                        <span className="font-medium text-foreground">Generate Report</span>
+                        <p className="text-xs text-muted-foreground text-center">Create comprehensive system report</p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                        <Database className="w-8 h-8 text-purple-400" />
+                        <span className="font-medium text-foreground">Backup Data</span>
+                        <p className="text-xs text-muted-foreground text-center">Create system backup</p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                        <Globe className="w-8 h-8 text-orange-400" />
+                        <span className="font-medium text-foreground">Network Status</span>
+                        <p className="text-xs text-muted-foreground text-center">Check network health</p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                        <Settings className="w-8 h-8 text-gray-400" />
+                        <span className="font-medium text-foreground">System Settings</span>
+                        <p className="text-xs text-muted-foreground text-center">Configure dashboard options</p>
+                      </CardContent>
+                    </Card>
+                    
+                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
+                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
+                        <Activity className="w-8 h-8 text-red-400" />
+                        <span className="font-medium text-foreground">Activity Log</span>
+                        <p className="text-xs text-muted-foreground text-center">View system activity history</p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
