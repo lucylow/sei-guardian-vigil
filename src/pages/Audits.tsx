@@ -1,5 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { AuditQueuePanel } from "@/components/AuditQueuePanel";
+import { SmartContractUploader } from "@/components/SmartContractUploader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -92,6 +93,11 @@ export default function Audits() {
               </Card>
             );
           })}
+        </div>
+
+        {/* Smart Contract Uploader */}
+        <div className="mb-8">
+          <SmartContractUploader />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
