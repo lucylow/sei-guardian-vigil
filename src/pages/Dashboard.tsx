@@ -118,67 +118,94 @@ export default function Dashboard() {
   // Recent auto-scans data
   const recentScans = [
     {
-      name: "SeiSwap Protocol",
-      address: "0x742d35...f44e",
-      tvl: "$48.7M",
-      lastScan: "7 min ago",
-      vulnerabilities: 1,
-      status: "warning",
-      gasOptimized: true
-    },
-    {
-      name: "SeiStake Pool",
-      address: "0xA0b86a...db1b",
-      tvl: "$48.0M",
-      lastScan: "31 min ago",
-      vulnerabilities: 2,
-      status: "warning",
-      gasOptimized: true
-    },
-    {
-      name: "SeiNFT Marketplace",
+      name: "FT Marketplace",
       address: "0xBE0eB5...33E8",
-      tvl: "$43.0M",
-      lastScan: "40 min ago",
-      vulnerabilities: 2,
-      status: "warning",
+      tvl: "$46.9M",
+      lastScan: "58 min ago",
+      vulnerabilities: 3,
+      status: "critical",
       gasOptimized: false
     },
     {
       name: "SeiDerivatives Exchange",
       address: "0x95aD61...C4cE",
-      tvl: "$42.4M",
-      lastScan: "59 min ago",
-      vulnerabilities: 1,
-      status: "warning",
-      gasOptimized: false
+      tvl: "$46.2M",
+      lastScan: "1 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
     },
     {
-      name: "SeiLend Vault",
-      address: "0x3f5CE5...f0bE",
-      tvl: "$36.0M",
-      lastScan: "28 min ago",
-      vulnerabilities: 1,
+      name: "SeiOracle Bridge",
+      address: "0x1f9840...F984",
+      tvl: "$45.0M",
+      lastScan: "53 min ago",
+      vulnerabilities: 2,
       status: "warning",
       gasOptimized: true
     },
     {
-      name: "SeiDAO Governance",
-      address: "0x28c6c0...1d60",
-      tvl: "$35.2M",
-      lastScan: "54 min ago",
-      vulnerabilities: 3,
+      name: "SeiFarms Liquidity",
+      address: "0x4f96fe...a6aa",
+      tvl: "$42.5M",
+      lastScan: "38 min ago",
+      vulnerabilities: 2,
+      status: "warning",
+      gasOptimized: true
+    },
+    {
+      name: "SeiLend Vault",
+      address: "0x3f5CE5...f0bE",
+      tvl: "$40.1M",
+      lastScan: "39 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
+    },
+    {
+      name: "SeiFarms Liquidity",
+      address: "0x4f96fe...a6aa",
+      tvl: "$39.3M",
+      lastScan: "27 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
+    },
+    {
+      name: "SeiStake Pool",
+      address: "0xA0b86a...db1b",
+      tvl: "$36.5M",
+      lastScan: "45 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
+    },
+    {
+      name: "SeiLend Vault",
+      address: "0x3f5CE5...f0bE",
+      tvl: "$33.1M",
+      lastScan: "32 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
+    },
+    {
+      name: "SeiStake Pool",
+      address: "0xA0b86a...db1b",
+      tvl: "$31.8M",
+      lastScan: "1 min ago",
+      vulnerabilities: 4,
       status: "critical",
       gasOptimized: false
     },
     {
       name: "SeiOracle Bridge",
       address: "0x1f9840...F984",
-      tvl: "$26.9M",
-      lastScan: "20 min ago",
-      vulnerabilities: 4,
-      status: "critical",
-      gasOptimized: true
+      tvl: "$30.3M",
+      lastScan: "57 min ago",
+      vulnerabilities: 2,
+      status: "warning",
+      gasOptimized: false
     }
   ];
 
@@ -371,51 +398,67 @@ export default function Dashboard() {
                     <Search className="w-5 h-5 text-green-500" />
                     🚀 Recent Auto‑Scans
                   </CardTitle>
+                  <CardDescription className="text-muted-foreground">
+                    Latest security scan results for monitored contracts
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {recentScans.map((scan, index) => (
-                      <div key={index} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
-                        <div className="flex items-center justify-between mb-3">
-                          <div>
-                            <h4 className="font-medium text-foreground">{scan.name}</h4>
-                            <p className="text-sm text-muted-foreground font-mono">{scan.address}</p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-lg font-bold text-foreground">{scan.tvl}</div>
-                            <div className="text-xs text-muted-foreground">TVL</div>
-                          </div>
-                        </div>
-                        
-                        <div className="grid grid-cols-3 gap-4 text-sm">
-                          <div>
-                            <div className="text-muted-foreground">Last Scan</div>
-                            <div className="font-medium">{scan.lastScan}</div>
-                          </div>
-                          <div>
-                            <div className="text-muted-foreground">Vulnerabilities</div>
-                            <div className="font-medium">{scan.vulnerabilities}</div>
-                          </div>
-                          <div>
-                            <div className="text-muted-foreground">Status</div>
-                            <Badge className={`${getStatusColor(scan.status)} text-xs`}>
-                              {getStatusText(scan.status)}
-                            </Badge>
-                          </div>
-                        </div>
-                        
-                        <div className="mt-3 pt-3 border-t">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm text-muted-foreground">Gas Optimized:</span>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-medium">
-                                {scan.gasOptimized ? "Yes" : "No"}
-                              </span>
-                              <Badge variant={scan.gasOptimized ? "default" : "secondary"} className="text-xs">
-                                {scan.gasOptimized ? "OPTIMIZED" : "PENDING"}
+                      <div key={index} className="border rounded-xl p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-background to-muted/20">
+                        {/* Header Section */}
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-3 mb-2">
+                              <h4 className="text-lg font-semibold text-foreground">{scan.name}</h4>
+                              <Badge 
+                                className={`${getStatusColor(scan.status)} text-xs font-medium px-2 py-1`}
+                              >
+                                {getStatusText(scan.status)}
                               </Badge>
                             </div>
+                            <p className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-1 rounded-md inline-block">
+                              {scan.address}
+                            </p>
                           </div>
+                          <div className="text-right">
+                            <div className="text-2xl font-bold text-foreground mb-1">{scan.tvl}</div>
+                            <div className="text-xs text-muted-foreground font-medium">Total Value Locked</div>
+                          </div>
+                        </div>
+                        
+                        {/* Metrics Grid */}
+                        <div className="grid grid-cols-3 gap-6 mb-4">
+                          <div className="text-center p-3 bg-muted/30 rounded-lg">
+                            <div className="text-xs text-muted-foreground mb-1">Last Scan</div>
+                            <div className="font-semibold text-foreground">{scan.lastScan}</div>
+                          </div>
+                          <div className="text-center p-3 bg-muted/30 rounded-lg">
+                            <div className="text-xs text-muted-foreground mb-1">Vulnerabilities</div>
+                            <div className="font-semibold text-foreground">{scan.vulnerabilities}</div>
+                          </div>
+                          <div className="text-center p-3 bg-muted/30 rounded-lg">
+                            <div className="text-xs text-muted-foreground mb-1">Risk Level</div>
+                            <div className={`font-semibold ${scan.status === 'critical' ? 'text-red-500' : 'text-yellow-500'}`}>
+                              {scan.status.toUpperCase()}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Gas Optimization Status */}
+                        <div className="flex items-center justify-between pt-4 border-t border-muted/50">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-muted-foreground">Gas Optimization:</span>
+                            <span className={`text-sm font-medium ${scan.gasOptimized ? 'text-green-600' : 'text-orange-600'}`}>
+                              {scan.gasOptimized ? "Yes" : "No"}
+                            </span>
+                          </div>
+                          <Badge 
+                            variant={scan.gasOptimized ? "default" : "secondary"} 
+                            className={`text-xs font-medium px-3 py-1 ${scan.gasOptimized ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'}`}
+                          >
+                            {scan.gasOptimized ? "OPTIMIZED" : "PENDING"}
+                          </Badge>
                         </div>
                       </div>
                     ))}
