@@ -7,6 +7,9 @@ import {
   Background,
   Controls,
   MiniMap,
+  Handle,
+  Position,
+  BackgroundVariant,
   type Node,
   type Connection
 } from '@xyflow/react';
@@ -335,69 +338,75 @@ const agentTemplates = {
 const nodeTypes = {
   // Core Agent Components
   agentPersonality: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="font-semibold">Agent Personality</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg relative min-w-[120px] border-2 border-primary-foreground/20">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Agent Personality</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   skill: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="font-semibold">Skill</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-blue-500 text-white rounded-lg relative min-w-[120px] border-2 border-blue-300">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Skill</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   action: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-accent text-accent-foreground rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="font-semibold">Action</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-purple-500 text-white rounded-lg relative min-w-[120px] border-2 border-purple-300">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Action</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   trigger: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-muted text-muted-foreground rounded-lg border relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="font-semibold">Trigger</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-orange-500 text-white rounded-lg border-2 border-orange-300 relative min-w-[120px]">
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Trigger</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   output: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-green-600 text-white rounded-lg relative">
-      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
-      <div className="font-semibold">Output</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-green-600 text-white rounded-lg relative min-w-[120px] border-2 border-green-400">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Output</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   
   // Data & Input Nodes
   dataSource: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-blue-600 text-white rounded-lg">
-      <div className="font-semibold">Data Source</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-blue-600 text-white rounded-lg min-w-[120px] border-2 border-blue-400">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Data Source</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   webhook: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-blue-500 text-white rounded-lg">
-      <div className="font-semibold">Webhook</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-blue-500 text-white rounded-lg min-w-[120px] border-2 border-blue-300">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Webhook</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   blockchain: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-purple-600 text-white rounded-lg">
-      <div className="font-semibold">Blockchain</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-purple-600 text-white rounded-lg min-w-[120px] border-2 border-purple-400">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Blockchain</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   database: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-indigo-600 text-white rounded-lg">
-      <div className="font-semibold">Database</div>
-      <div className="text-sm">{data.label}</div>
+    <div className="px-4 py-2 bg-indigo-600 text-white rounded-lg min-w-[120px] border-2 border-indigo-400">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">Database</div>
+      <div className="text-xs opacity-90">{data.label}</div>
     </div>
   ),
   
@@ -1841,9 +1850,17 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
           <NodePalette onAddNode={addNode} />
         </div>
         <div className="flex-1 h-full">
-          <ReactFlow
+            <ReactFlow
             nodes={nodes}
-            edges={edges}
+            edges={edges.map(edge => ({
+              ...edge,
+              style: { 
+                stroke: '#3b82f6', 
+                strokeWidth: 3,
+                ...edge.style 
+              },
+              animated: edge.animated !== false
+            }))}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
@@ -1858,9 +1875,9 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
             fitView
             className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
           >
-            <Background />
-            <Controls className="bg-card border" />
-            <MiniMap className="bg-card border" />
+            <Background variant={BackgroundVariant.Dots} gap={20} size={1} className="opacity-30" />
+            <Controls className="bg-card border shadow-lg" />
+            <MiniMap className="bg-card border shadow-lg" />
           </ReactFlow>
         </div>
       </div>
