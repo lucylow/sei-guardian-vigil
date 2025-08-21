@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { SentinelGameDashboard } from "@/components/SentinelGameDashboard";
 
 export default function Index() {
   return (
@@ -32,7 +31,7 @@ export default function Index() {
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <Link to="/agents">
+              <Link to="/agent-arena">
                 <Gamepad2 className="w-4 h-4 mr-2" />
                 Enter Arena
               </Link>
@@ -41,12 +40,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* Gamified Dashboard */}
-      <section className="py-16 px-4">
-        <div className="container mx-auto">
-          <SentinelGameDashboard />
-        </div>
-      </section>
 
       {/* Features Grid */}
       <section className="py-16 px-4">
