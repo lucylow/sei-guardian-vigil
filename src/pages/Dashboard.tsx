@@ -1,16 +1,9 @@
-import { Navigation } from "@/components/Navigation";
-import { SystemOverview } from "@/components/SystemOverview";
-import { NetworkMetrics } from "@/components/NetworkMetrics";
-import { RealTimeMonitor } from "@/components/RealTimeMonitor";
-import { VulnerabilityRadar } from "@/components/VulnerabilityRadar";
-import { ContractHealthGrid } from "@/components/ContractHealthGrid";
-import { ThreatIntelFeed } from "@/components/ThreatIntelFeed";
-import { CambrianAnalytics } from "@/components/CambrianAnalytics";
-import { ToolsIntegrationPanel } from "@/components/ToolsIntegrationPanel";
-import { useSeiData } from "@/hooks/useSeiData";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
   Database, 
   Shield, 
@@ -18,18 +11,39 @@ import {
   Clock, 
   Activity, 
   AlertTriangle, 
-  TrendingUp,
-  Globe,
-  Cpu,
+  TrendingUp, 
+  Globe, 
+  Cpu, 
   Target,
-  BarChart3,
   Zap,
-  Settings,
-  Zap as Lightning,
   Search,
-  Eye,
-  AlertCircle
-} from "lucide-react";
+  Lightning,
+  BarChart3,
+  Settings,
+  Bot,
+  Code,
+  Network,
+  Vote
+} from 'lucide-react';
+
+// Import enhanced components
+import { SeiNativeIntegration } from '@/components/SeiNativeIntegration';
+import { DeveloperTooling } from '@/components/DeveloperTooling';
+import { InfrastructureMonitoring } from '@/components/InfrastructureMonitoring';
+import { InteractiveDemo } from '@/components/InteractiveDemo';
+
+// Import existing components
+import SystemOverview from '@/components/SystemOverview';
+import NetworkMetrics from '@/components/NetworkMetrics';
+import RealTimeMonitor from '@/components/RealTimeMonitor';
+import VulnerabilityRadar from '@/components/VulnerabilityRadar';
+import ContractHealthGrid from '@/components/ContractHealthGrid';
+import ThreatIntelFeed from '@/components/ThreatIntelFeed';
+import ToolsIntegrationPanel from '@/components/ToolsIntegrationPanel';
+import CambrianAnalytics from '@/components/CambrianAnalytics';
+
+// Import hooks
+import { useSeiData } from '@/hooks/useSeiData';
 
 export default function Dashboard() {
   const { contracts, vulnerabilities, networkStats } = useSeiData();
@@ -500,13 +514,20 @@ export default function Dashboard() {
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="mt-6">
             <div className="space-y-6">
+              {/* Sei-Native Integration */}
+              <SeiNativeIntegration />
+              
+              {/* Infrastructure Monitoring */}
+              <InfrastructureMonitoring />
+              
+              {/* Cambrian Analytics */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
-                    <BarChart3 className="w-5 h-5 text-primary" />
+                    <TrendingUp className="w-5 h-5 text-primary" />
                     Advanced Analytics
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground">Deep insights and performance analytics</CardDescription>
+                  <CardDescription className="text-muted-foreground">Deep insights and performance analysis</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <CambrianAnalytics />
@@ -518,63 +539,47 @@ export default function Dashboard() {
           {/* Tools Tab */}
           <TabsContent value="tools" className="mt-6">
             <div className="space-y-6">
+              {/* Interactive Demo */}
+              <InteractiveDemo />
+              
+              {/* Developer Tooling */}
+              <DeveloperTooling />
+              
+              {/* Quick Actions */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
                     <Zap className="w-5 h-5 text-primary" />
                     Quick Actions
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground">Common dashboard actions and tools</CardDescription>
+                  <CardDescription className="text-muted-foreground">Common tasks and operations</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                        <Shield className="w-8 h-8 text-blue-400" />
-                        <span className="font-medium text-foreground">Run Security Scan</span>
-                        <p className="text-xs text-muted-foreground text-center">Scan all contracts for vulnerabilities</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                        <BarChart3 className="w-8 h-8 text-green-400" />
-                        <span className="font-medium text-foreground">Generate Report</span>
-                        <p className="text-xs text-muted-foreground text-center">Create comprehensive system report</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                        <Database className="w-8 h-8 text-purple-400" />
-                        <span className="font-medium text-foreground">Backup Data</span>
-                        <p className="text-xs text-muted-foreground text-center">Create system backup</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                        <Globe className="w-8 h-8 text-orange-400" />
-                        <span className="font-medium text-foreground">Network Status</span>
-                        <p className="text-xs text-muted-foreground text-center">Check network health</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                        <Settings className="w-8 h-8 text-gray-400" />
-                        <span className="font-medium text-foreground">System Settings</span>
-                        <p className="text-xs text-muted-foreground text-center">Configure dashboard options</p>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                      <CardContent className="p-6 flex flex-col items-center justify-center gap-3">
-                        <Activity className="w-8 h-8 text-red-400" />
-                        <span className="font-medium text-foreground">Activity Log</span>
-                        <p className="text-xs text-muted-foreground text-center">View system activity history</p>
-                      </CardContent>
-                    </Card>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
+                      <Shield className="w-6 h-6" />
+                      <span>Run Security Scan</span>
+                    </Button>
+                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
+                      <BarChart3 className="w-6 h-6" />
+                      <span>Generate Report</span>
+                    </Button>
+                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
+                      <Database className="w-6 h-6" />
+                      <span>Backup Data</span>
+                    </Button>
+                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
+                      <Network className="w-6 h-6" />
+                      <span>Network Status</span>
+                    </Button>
+                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
+                      <Settings className="w-6 h-6" />
+                      <span>System Settings</span>
+                    </Button>
+                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
+                      <Activity className="w-6 h-6" />
+                      <span>Activity Log</span>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
