@@ -10,8 +10,7 @@ import {
   type Connection,
   type Edge,
   Handle,
-  Position,
-  ConnectionLine
+  Position
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { NodePalette } from './NodePalette';
@@ -1259,7 +1258,6 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             nodeTypes={nodeTypes}
             fitView
             className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
-            connectionLineComponent={ConnectionLine}
             snapToGrid={true}
             snapGrid={[15, 15]}
             connectOnClick={false}
@@ -1276,7 +1274,6 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             <Background />
             <Controls className="bg-card border" />
             <MiniMap className="bg-card border" />
-            <ConnectionLine />
           </ReactFlow>
         </div>
       </div>
