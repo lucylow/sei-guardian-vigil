@@ -669,10 +669,11 @@ const networkOptions = [
 ];
 
 interface VisualAgentBuilderProps {
-  selectedTemplate?: string;
+  selectedTemplate: string | null;
+  onNavigateToDeploy?: () => void;
 }
 
-export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuilderProps) {
+export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeploy }: VisualAgentBuilderProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -1051,6 +1052,24 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
       } else {
         // Demo mode - simulate deployment
         await simulateDeployment(agentContract);
+      }
+      
+      // Show success message with navigation option
+      toast({
+        title: "🎉 Deployment Successful!",
+        description: `Your agent has been deployed to ${network}! Check the deploy tab for detailed results and management options.`,
+        variant: "default",
+      });
+      
+      // If navigation function is available, show additional guidance
+      if (onNavigateToDeploy) {
+        setTimeout(() => {
+          toast({
+            title: "📋 View Deployment Results",
+            description: "Click 'View Deploy Tab' to see detailed deployment information and manage your agent.",
+            variant: "default",
+          });
+        }, 1000);
       }
       
     } catch (error) {
@@ -1513,10 +1532,12 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
               ))}
             </select>
           </div>
+          
+          {/* Deploy Button */}
           <Button
             onClick={handleDeploy}
             disabled={isDeploying || nodes.length === 0}
-            className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600"
+            className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold"
           >
             {isDeploying ? (
               <>
@@ -1524,8 +1545,31 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
                 Deploying to Sei...
               </>
             ) : (
-              '🚀 Deploy Agent'
+              <>
+                🚀 Deploy Agent
+                <span className="ml-2 text-xs opacity-90">({network})</span>
+              </>
             )}
+          </Button>
+          
+          {/* Alternative Deployment Option */}
+          <Button
+            variant="outline"
+            onClick={() => {
+              if (onNavigateToDeploy) {
+                onNavigateToDeploy();
+              } else {
+                // Fallback toast message
+                toast({
+                  title: "📋 Deployment Options",
+                  description: "Use the 'Deploy & Test' tab for dedicated deployment options, or deploy directly from here using the button above.",
+                  variant: "default",
+                });
+              }
+            }}
+            className="border-purple-300 text-purple-700 hover:bg-purple-50"
+          >
+            📋 View Deploy Tab
           </Button>
         </div>
       </div>
@@ -1932,12 +1976,21 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
             <div className="flex-1">
               <h4 className="font-semibold text-green-900">Ready to Deploy</h4>
               <p className="text-sm text-green-700">
-                Your agent workflow is ready! Click "🚀 Deploy Agent" to deploy to the SEI blockchain.
+                Your agent workflow is ready! You can deploy directly from here or use the dedicated deployment options.
               </p>
               <div className="mt-2 text-xs text-green-600">
                 <div>• Workflow validated: {nodes.length} nodes, {edges.length} connections</div>
                 <div>• Smart contract will be generated automatically</div>
+                <div>• Current network: <strong>{network}</strong></div>
                 <div>• Deploy to testnet first, then mainnet</div>
+              </div>
+              
+              {/* Deployment Options */}
+              <div className="mt-3 flex items-center space-x-2">
+                <span className="text-xs text-green-600 font-medium">Deployment Options:</span>
+                <span className="text-xs text-green-500">🚀 Deploy directly from here</span>
+                <span className="text-xs text-green-500">•</span>
+                <span className="text-xs text-green-500">📋 Use dedicated deploy tab</span>
               </div>
             </div>
           </div>

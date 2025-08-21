@@ -439,12 +439,63 @@ export default function NoCodeStudio() {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-bold">Visual Agent Builder</h3>
-                <Button variant="outline" onClick={() => setActiveTab('deploy')}>
-                  Next: Deploy & Test
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                <div className="flex items-center space-x-3">
+                  {/* Workflow Status Indicator */}
+                  <div className="flex items-center space-x-2 text-sm">
+                    <div className={`w-3 h-3 rounded-full ${selectedTemplate ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                    <span className={selectedTemplate ? 'text-green-700' : 'text-gray-500'}>
+                      {selectedTemplate ? 'Template Loaded' : 'No Template'}
+                    </span>
+                  </div>
+                  
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setActiveTab('deploy')}
+                    disabled={!selectedTemplate}
+                    className={selectedTemplate ? 'border-green-300 text-green-700 hover:bg-green-50' : 'border-gray-300 text-gray-400 cursor-not-allowed'}
+                  >
+                    {selectedTemplate ? (
+                      <>
+                        Next: Deploy & Test
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    ) : (
+                      <>
+                        Select Template First
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
-              <VisualAgentBuilder selectedTemplate={selectedTemplate} />
+              
+              {/* Template Requirement Notice */}
+              {!selectedTemplate && (
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="text-2xl">📋</div>
+                    <div className="flex-1">
+                      <div className="text-blue-800 font-medium">Template Required</div>
+                      <div className="text-blue-600 text-sm">
+                        Please select a template from the "Choose Template" tab before building your agent.
+                      </div>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="border-blue-300 text-blue-800 hover:bg-blue-100"
+                      onClick={() => setActiveTab('templates')}
+                    >
+                      Browse Templates
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
+              <VisualAgentBuilder 
+                selectedTemplate={selectedTemplate} 
+                onNavigateToDeploy={() => setActiveTab('deploy')}
+              />
             </div>
           </TabsContent>
 
@@ -455,6 +506,41 @@ export default function NoCodeStudio() {
               <p className="text-lg text-muted-foreground">
                 Test your agent on testnet first, then deploy to mainnet with confidence.
               </p>
+            </div>
+
+            {/* Quick Deploy from Builder */}
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6 border border-purple-200">
+              <div className="flex items-center space-x-4 mb-4">
+                <div className="text-3xl">⚡</div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-purple-900">Quick Deploy from Builder</h3>
+                  <p className="text-purple-700 text-sm">
+                    Deploy directly from the Visual Agent Builder or use the dedicated deployment options below.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Button 
+                  variant="outline" 
+                  className="border-purple-300 text-purple-800 hover:bg-purple-100 h-12"
+                  onClick={() => setActiveTab('build')}
+                >
+                  <ArrowRight className="w-4 h-4 mr-2 rotate-180" />
+                  Back to Builder
+                </Button>
+                
+                <div className="text-center p-3 bg-white rounded-lg border border-purple-200">
+                  <div className="text-sm text-purple-600">
+                    <strong>Status:</strong> {selectedTemplate ? '✅ Template Ready' : '❌ No Template'}
+                  </div>
+                  {selectedTemplate && (
+                    <div className="text-xs text-purple-500 mt-1">
+                      Template: {selectedTemplate}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
