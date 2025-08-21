@@ -126,39 +126,39 @@ export default function Dashboard() {
     );
   }
 
-          if (error) {
-          return (
-            <div className="min-h-screen bg-background">
-              <Navigation />
-              <div className="container mx-auto px-4 py-6">
-                <Alert className="mb-6">
-                  <AlertTriangle className="h-4 w-4" />
-                  <AlertDescription>
-                    <strong>Connection Error:</strong> {error}
-                  </AlertDescription>
-                </Alert>
-                <div className="space-y-4">
-                  <p className="text-muted-foreground">
-                    The dashboard is having trouble connecting to external services. This is normal when running locally without the backend services.
-                  </p>
-                  <div className="flex gap-4">
-                    <Button onClick={retryInitialization} className="flex items-center gap-2">
-                      <RefreshCw className="w-4 h-4" />
-                      Retry Connection
-                    </Button>
-                    <Button onClick={handleRefresh} variant="outline" className="flex items-center gap-2">
-                      <RefreshCw className="w-4 h-4" />
-                      Refresh Data
-                    </Button>
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    💡 <strong>Tip:</strong> The dashboard will work with demo data even when external services are unavailable.
-                  </p>
-                </div>
-              </div>
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <div className="container mx-auto px-4 py-6">
+          <Alert className="mb-6">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Connection Error:</strong> {error}
+            </AlertDescription>
+          </Alert>
+          <div className="space-y-4">
+            <p className="text-muted-foreground">
+              The dashboard is having trouble connecting to external services. This is normal when running locally without the backend services.
+            </p>
+            <div className="flex gap-4">
+              <Button onClick={retryInitialization} className="flex items-center gap-2">
+                <RefreshCw className="w-4 h-4" />
+                Retry Connection
+              </Button>
+              <Button onClick={handleRefresh} variant="outline" className="flex items-center gap-2">
+                <RefreshCw className="w-4 h-4" />
+                Refresh Data
+              </Button>
             </div>
-          );
-        }
+            <p className="text-sm text-muted-foreground">
+              💡 <strong>Tip:</strong> The dashboard will work with demo data even when external services are unavailable.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
