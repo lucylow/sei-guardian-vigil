@@ -18,7 +18,8 @@ import {
   Activity,
   BarChart3,
   Settings,
-  Vote
+  Vote,
+  Wallet
 } from "lucide-react";
 
 import { Navigation } from "@/components/Navigation";
@@ -26,6 +27,7 @@ import { SeiNativeIntegration } from '@/components/SeiNativeIntegration';
 import { DeveloperTooling } from '@/components/DeveloperTooling';
 import { InfrastructureMonitoring } from '@/components/InfrastructureMonitoring';
 import { InteractiveDemo } from '@/components/InteractiveDemo';
+import { useWallet } from '@/contexts/WalletContext';
 
 // Import existing components
 import { SystemOverview } from '@/components/SystemOverview';
@@ -42,6 +44,7 @@ import { useSeiData } from '@/hooks/useSeiData';
 
 export default function Dashboard() {
   const { contracts, vulnerabilities, networkStats } = useSeiData();
+  const { walletInfo } = useWallet();
 
   // Dashboard metrics data
   const dashboardMetrics = [
@@ -241,12 +244,29 @@ export default function Dashboard() {
       <Navigation />
       
       <div className="container mx-auto px-4 py-6">
+        {/* Header with Wallet Info */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
+              <p className="text-muted-foreground">Monitor and manage your SEI security system</p>
+            </div>
+            {walletInfo && (
+              <div className="flex items-center gap-3 p-3 bg-card border rounded-lg">
+                <Wallet className="w-4 h-4 text-primary" />
+                <div className="text-sm">
+                  <div className="font-medium text-foreground">{walletInfo.type}</div>
+                  <div className="text-muted-foreground font-mono">
+                    {walletInfo.address.slice(0, 6)}...{walletInfo.address.slice(-4)}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-3 md:grid-cols-5 overflow-x-auto">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
             <TabsTrigger value="security">Security</TabsTrigger>
@@ -257,7 +277,7 @@ export default function Dashboard() {
           {/* Overview Tab */}
           <TabsContent value="overview" className="mt-6">
             {/* Key Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
               {dashboardMetrics.map((metric, index) => {
                 const IconComponent = metric.icon;
                 return (
@@ -285,7 +305,7 @@ export default function Dashboard() {
                 <CardDescription className="text-muted-foreground">Current Sei Network metrics and performance</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   {networkMetrics.map((metric, index) => {
                     const IconComponent = metric.icon;
                     return (
@@ -443,11 +463,11 @@ export default function Dashboard() {
                 <CardContent>
                   <div className="space-y-4">
                     {recentScans.map((scan, index) => (
-                      <div key={index} className="border rounded-xl p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-background to-muted/20">
+                      <div key={index} className="border rounded-xl p-4 md:p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-background to-muted/20">
                         {/* Header Section */}
-                        <div className="flex items-start justify-between mb-4">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
                           <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
                               <h4 className="text-lg font-semibold text-foreground">{scan.name}</h4>
                               <Badge 
                                 className={`${getStatusColor(scan.status)} text-xs font-medium px-2 py-1`}
@@ -455,7 +475,7 @@ export default function Dashboard() {
                                 {getStatusText(scan.status)}
                               </Badge>
                             </div>
-                            <p className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-1 rounded-md inline-block">
+                            <p className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-1 rounded-md inline-block break-all">
                               {scan.address}
                             </p>
                           </div>
@@ -466,10 +486,10 @@ export default function Dashboard() {
                         </div>
                         
                         {/* Metrics Grid */}
-                        <div className="grid grid-cols-3 gap-6 mb-4">
+                        <div className="grid grid-cols-3 gap-4 md:gap-6 mb-4">
                           <div className="text-center p-3 bg-muted/30 rounded-lg">
                             <div className="text-xs text-muted-foreground mb-1">Last Scan</div>
-                            <div className="font-semibold text-foreground">{scan.lastScan}</div>
+                            <div className="font-semibold text-foreground text-sm">{scan.lastScan}</div>
                           </div>
                           <div className="text-center p-3 bg-muted/30 rounded-lg">
                             <div className="text-xs text-muted-foreground mb-1">Vulnerabilities</div>
@@ -477,14 +497,14 @@ export default function Dashboard() {
                           </div>
                           <div className="text-center p-3 bg-muted/30 rounded-lg">
                             <div className="text-xs text-muted-foreground mb-1">Risk Level</div>
-                            <div className={`font-semibold ${scan.status === 'critical' ? 'text-red-500' : scan.status === 'warning' ? 'text-yellow-500' : 'text-green-500'}`}>
+                            <div className={`font-semibold text-sm ${scan.status === 'critical' ? 'text-red-500' : scan.status === 'warning' ? 'text-yellow-500' : 'text-green-500'}`}>
                               {scan.status.toUpperCase()}
                             </div>
                           </div>
                         </div>
                         
                         {/* Gas Optimization Status */}
-                        <div className="flex items-center justify-between pt-4 border-t border-muted/50">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-4 border-t border-muted/50">
                           <div className="flex items-center gap-2">
                             <span className="text-sm text-muted-foreground">Gas Optimization:</span>
                             <span className={`text-sm font-medium ${scan.gasOptimized ? 'text-green-600' : 'text-orange-600'}`}>
@@ -553,23 +573,23 @@ export default function Dashboard() {
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <Shield className="w-6 h-6" />
-                      <span>Run Security Scan</span>
+                      <span className="text-sm">Run Security Scan</span>
                     </Button>
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <BarChart3 className="w-6 h-6" />
-                      <span>Generate Report</span>
+                      <span className="text-sm">Generate Report</span>
                     </Button>
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <Database className="w-6 h-6" />
-                      <span>Backup Data</span>
+                      <span className="text-sm">Backup Data</span>
                     </Button>
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <Settings className="w-6 h-6" />
-                      <span>System Settings</span>
+                      <span className="text-sm">System Settings</span>
                     </Button>
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <Activity className="w-6 h-6" />
-                      <span>Activity Log</span>
+                      <span className="text-sm">Activity Log</span>
                     </Button>
                   </div>
                 </CardContent>
