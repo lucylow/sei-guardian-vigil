@@ -70,7 +70,7 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
             <CardHeader>
               <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap className="w-8 h-8 text-green-500" />
-              </CardHeader>
+              </div>
               <CardTitle>Real-Time Protection</CardTitle>
               <CardDescription>
                 24/7 monitoring and instant response to security threats
@@ -82,7 +82,7 @@ export default function LaunchPage({ onLaunch }: LaunchPageProps) {
             <CardHeader>
               <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Users className="w-8 h-8 text-purple-500" />
-              </CardHeader>
+              </div>
               <CardTitle>Multi-Agent System</CardTitle>
               <CardDescription>
                 Coordinated AI agents working together for comprehensive coverage
