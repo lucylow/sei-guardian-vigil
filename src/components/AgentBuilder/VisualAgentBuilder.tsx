@@ -680,6 +680,12 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
   const [currentTemplate, setCurrentTemplate] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedNode, setSelectedNode] = useState<any>(null);
+  
+  // New custom connection system
+  const [connectionMode, setConnectionMode] = useState(false);
+  const [sourceNode, setSourceNode] = useState<any>(null);
+  const [targetNode, setTargetNode] = useState<any>(null);
+  
   const { toast } = useToast();
 
   // Load template when selectedTemplate prop changes
@@ -787,10 +793,133 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
     console.log('Connection end:', event);
   }, []);
 
+  // Custom connection system functions
+  const startConnectionMode = useCallback(() => {
+    setConnectionMode(true);
+    setSourceNode(null);
+    setTargetNode(null);
+    toast({
+      title: "🔗 Connection Mode Active",
+      description: "Click on a source node (green dot), then click on a target node (blue dot)",
+    });
+  }, [toast]);
+
+  const selectNodeForConnection = useCallback((node: any, isSource: boolean) => {
+    if (isSource) {
+      setSourceNode(node);
+      toast({
+        title: "✅ Source Selected",
+        description: `Selected "${node.data.label}" as source. Now click on a target node.`,
+      });
+    } else {
+      setTargetNode(node);
+      toast({
+        title: "✅ Target Selected",
+        description: `Selected "${node.data.label}" as target. Ready to connect!`,
+      });
+    }
+  }, [toast]);
+
+  const createConnection = useCallback(() => {
+    if (!sourceNode || !targetNode) {
+      toast({
+        title: "❌ Missing Selection",
+        description: "Please select both source and target nodes",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (sourceNode.id === targetNode.id) {
+      toast({
+        title: "❌ Invalid Connection",
+        description: "Cannot connect a node to itself",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Check for duplicate connections
+    const existingConnection = edges.find(
+      e => e.source === sourceNode.id && e.target === targetNode.id
+    );
+    
+    if (existingConnection) {
+      toast({
+        title: "❌ Duplicate Connection",
+        description: "Connection already exists between these nodes",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Create new connection
+    const newEdge = {
+      id: `e${Date.now()}`,
+      source: sourceNode.id,
+      target: targetNode.id,
+      type: 'default',
+      animated: true,
+      style: { 
+        stroke: '#3b82f6', 
+        strokeWidth: 3,
+        filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
+      },
+      label: `${sourceNode.data.label} → ${targetNode.data.label}`,
+      labelStyle: {
+        fill: '#1f2937',
+        fontWeight: 600,
+        fontSize: '12px',
+        background: '#ffffff',
+        padding: '4px 8px',
+        borderRadius: '4px',
+        border: '1px solid #d1d5db'
+      },
+      labelBgStyle: {
+        fill: '#ffffff',
+        fillOpacity: 0.9
+      }
+    };
+
+    setEdges((eds) => [...eds, newEdge]);
+    
+    toast({
+      title: "✅ Connection Created",
+      description: `Connected "${sourceNode.data.label}" to "${targetNode.data.label}"`,
+    });
+
+    // Reset connection mode
+    setConnectionMode(false);
+    setSourceNode(null);
+    setTargetNode(null);
+  }, [sourceNode, targetNode, edges, setEdges, toast]);
+
+  const cancelConnection = useCallback(() => {
+    setConnectionMode(false);
+    setSourceNode(null);
+    setTargetNode(null);
+    toast({
+      title: "❌ Connection Cancelled",
+      description: "Connection mode deactivated",
+    });
+  }, [toast]);
+
   const onNodeClick = useCallback((event: any, node: any) => {
-    setSelectedNode(node);
-    console.log('Node clicked:', node);
-  }, []);
+    if (connectionMode) {
+      // In connection mode, handle node selection
+      if (!sourceNode) {
+        // First click - select source node
+        selectNodeForConnection(node, true);
+      } else if (!targetNode && sourceNode.id !== node.id) {
+        // Second click - select target node
+        selectNodeForConnection(node, false);
+      }
+    } else {
+      // Normal mode - open configuration panel
+      setSelectedNode(node);
+      console.log('Node clicked:', node);
+    }
+  }, [connectionMode, sourceNode, targetNode, selectNodeForConnection]);
 
   const onPaneClick = useCallback(() => {
     setSelectedNode(null);
@@ -1091,6 +1220,63 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
         <Button
           variant="outline"
           size="sm"
+          onClick={startConnectionMode}
+          disabled={connectionMode}
+          className={connectionMode ? 'bg-green-100 text-green-800' : ''}
+        >
+          🔗 Start Connection Mode
+        </Button>
+        
+        {connectionMode && (
+          <>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={createConnection}
+              disabled={!sourceNode || !targetNode}
+              className="bg-blue-500 text-white hover:bg-blue-600"
+            >
+              ✅ Create Connection
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={cancelConnection}
+              className="bg-red-500 text-white hover:bg-red-600"
+            >
+              ❌ Cancel
+            </Button>
+          </>
+        )}
+        
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            // Test connection functionality
+            if (nodes.length >= 2) {
+              const testEdge = {
+                id: `test-${Date.now()}`,
+                source: nodes[0].id,
+                target: nodes[1].id,
+                type: 'default',
+                animated: true,
+                style: { stroke: '#ef4444', strokeWidth: 4 }
+              };
+              setEdges((eds) => [...eds, testEdge]);
+              toast({
+                title: "🧪 Test Connection",
+                description: "Added test connection between first two nodes",
+              });
+            }
+          }}
+        >
+          🧪 Test Connection
+        </Button>
+        
+        <Button
+          variant="outline"
+          size="sm"
           onClick={() => {
             // Auto-layout nodes in a grid
             const newNodes = nodes.map((node, index) => ({
@@ -1191,6 +1377,38 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
           🔍 Fit View
         </Button>
       </div>
+      
+      {/* Connection Status Display */}
+      {connectionMode && (
+        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div className="flex items-center space-x-2 text-yellow-800">
+            <div className="text-lg">🔗</div>
+            <div className="text-sm">
+              <strong>Connection Mode Active:</strong>
+              {!sourceNode && " Click on a source node (green dot) to start"}
+              {sourceNode && !targetNode && ` Source: "${sourceNode.data.label}" - Now click on a target node (blue dot)`}
+              {sourceNode && targetNode && ` Ready to connect: "${sourceNode.data.label}" → "${targetNode.data.label}"`}
+            </div>
+          </div>
+          {sourceNode && targetNode && (
+            <div className="mt-2 p-2 bg-green-100 rounded text-xs text-green-800">
+              ✅ <strong>Ready to Connect!</strong> Click "Create Connection" button to finalize the connection.
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Connection Instructions */}
+      {nodes.length > 0 && !connectionMode && (
+        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center space-x-2 text-blue-800">
+            <div className="text-lg">💡</div>
+            <div className="text-sm">
+              <strong>How to Connect Nodes:</strong> Click "🔗 Start Connection Mode", then click on a source node (green dot), then click on a target node (blue dot), and finally click "Create Connection".
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Connection Tutorial */}
       {nodes.length === 0 && (
