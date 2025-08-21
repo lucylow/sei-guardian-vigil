@@ -42,11 +42,6 @@ export default function Agents() {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-foreground mb-2">AI Agent Development</h1>
           <p className="text-muted-foreground">Build, deploy, and manage AI agents on Sei Network</p>
-          <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800">
-              💡 <strong>Dev Studio moved!</strong> The AI Agent Development Studio with templates, marketplace, and analytics is now available in the <strong>No-Code Studio</strong> page.
-            </p>
-          </div>
         </div>
 
         <Tabs defaultValue="orchestration" className="w-full">
