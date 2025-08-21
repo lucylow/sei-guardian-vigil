@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield, BarChart3, Users, FileSearch, ShieldCheck } from "lucide-react";
+import { Shield, BarChart3, Users, FileSearch, ShieldCheck, Sword } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navigation() {
@@ -13,6 +13,7 @@ export function Navigation() {
     { to: "/agents", label: "Agents", icon: Users },
     { to: "/audits", label: "Audits", icon: FileSearch },
     { to: "/security", label: "Security", icon: ShieldCheck },
+    { to: "/agent-arena", label: "Agent Arena", icon: Sword },
   ];
 
   return (
