@@ -9,6 +9,7 @@ import Agents from "./pages/Agents";
 import Audits from "./pages/Audits";
 import Security from "./pages/Security";
 import NoCodeStudio from "./pages/NoCodeStudio";
+import AgentArena from "./pages/AgentArena";
 import NotFound from "./pages/NotFound";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/audits" element={<Audits />} />
             <Route path="/security" element={<Security />} />
             <Route path="/no-code-studio" element={<NoCodeStudio />} />
+            <Route path="/agent-arena" element={<AgentArena />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
