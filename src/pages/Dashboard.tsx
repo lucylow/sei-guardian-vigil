@@ -118,94 +118,94 @@ export default function Dashboard() {
   // Recent auto-scans data
   const recentScans = [
     {
-      name: "FT Marketplace",
+      name: "SeiDAO Governance",
+      address: "0x28c6c0...1d60",
+      tvl: "$49.0M",
+      lastScan: "53 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
+    },
+    {
+      name: "SeiStake Pool",
+      address: "0xA0b86a...db1b",
+      tvl: "$48.8M",
+      lastScan: "37 min ago",
+      vulnerabilities: 0,
+      status: "safe",
+      gasOptimized: true
+    },
+    {
+      name: "SeiNFT Marketplace",
       address: "0xBE0eB5...33E8",
-      tvl: "$46.9M",
-      lastScan: "58 min ago",
+      tvl: "$44.1M",
+      lastScan: "7 min ago",
       vulnerabilities: 3,
       status: "critical",
-      gasOptimized: false
+      gasOptimized: true
+    },
+    {
+      name: "SeiFarms Liquidity",
+      address: "0x4f96fe...a6aa",
+      tvl: "$42.0M",
+      lastScan: "2 min ago",
+      vulnerabilities: 0,
+      status: "safe",
+      gasOptimized: true
     },
     {
       name: "SeiDerivatives Exchange",
       address: "0x95aD61...C4cE",
-      tvl: "$46.2M",
-      lastScan: "1 min ago",
-      vulnerabilities: 4,
-      status: "critical",
+      tvl: "$41.9M",
+      lastScan: "31 min ago",
+      vulnerabilities: 1,
+      status: "warning",
       gasOptimized: true
     },
     {
       name: "SeiOracle Bridge",
       address: "0x1f9840...F984",
-      tvl: "$45.0M",
-      lastScan: "53 min ago",
-      vulnerabilities: 2,
+      tvl: "$39.6M",
+      lastScan: "40 min ago",
+      vulnerabilities: 1,
       status: "warning",
-      gasOptimized: true
+      gasOptimized: false
     },
     {
-      name: "SeiFarms Liquidity",
-      address: "0x4f96fe...a6aa",
-      tvl: "$42.5M",
-      lastScan: "38 min ago",
-      vulnerabilities: 2,
-      status: "warning",
-      gasOptimized: true
-    },
-    {
-      name: "SeiLend Vault",
-      address: "0x3f5CE5...f0bE",
-      tvl: "$40.1M",
-      lastScan: "39 min ago",
-      vulnerabilities: 4,
-      status: "critical",
-      gasOptimized: true
-    },
-    {
-      name: "SeiFarms Liquidity",
-      address: "0x4f96fe...a6aa",
+      name: "SeiOracle Bridge",
+      address: "0x1f9840...F984",
       tvl: "$39.3M",
-      lastScan: "27 min ago",
+      lastScan: "6 min ago",
       vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: false
+    },
+    {
+      name: "SeiDAO Governance",
+      address: "0x28c6c0...1d60",
+      tvl: "$38.8M",
+      lastScan: "27 min ago",
+      vulnerabilities: 3,
       status: "critical",
       gasOptimized: true
     },
     {
-      name: "SeiStake Pool",
-      address: "0xA0b86a...db1b",
-      tvl: "$36.5M",
-      lastScan: "45 min ago",
-      vulnerabilities: 4,
-      status: "critical",
+      name: "SeiSwap Protocol",
+      address: "0x742d35...f44e",
+      tvl: "$37.4M",
+      lastScan: "32 min ago",
+      vulnerabilities: 0,
+      status: "safe",
       gasOptimized: true
     },
     {
       name: "SeiLend Vault",
       address: "0x3f5CE5...f0bE",
-      tvl: "$33.1M",
-      lastScan: "32 min ago",
-      vulnerabilities: 4,
-      status: "critical",
+      tvl: "$36.9M",
+      lastScan: "3 min ago",
+      vulnerabilities: 0,
+      status: "safe",
       gasOptimized: true
-    },
-    {
-      name: "SeiStake Pool",
-      address: "0xA0b86a...db1b",
-      tvl: "$31.8M",
-      lastScan: "1 min ago",
-      vulnerabilities: 4,
-      status: "critical",
-      gasOptimized: false
-    },
-    {
-      name: "SeiOracle Bridge",
-      address: "0x1f9840...F984",
-      tvl: "$30.3M",
-      lastScan: "57 min ago",
-      vulnerabilities: 2,
-      status: "warning",
-      gasOptimized: false
     }
   ];
 
@@ -265,6 +265,103 @@ export default function Dashboard() {
                 );
               })}
             </div>
+
+            {/* Live Block Finality */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Lightning className="w-5 h-5 text-blue-500" />
+                  ⚡ Live Block Finality (Twin-Turbo)
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="bg-blue-50 dark:bg-blue-950/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                      Block #8876694
+                    </div>
+                    <div className="text-lg text-blue-700 dark:text-blue-300">
+                      Finality latency: 699 ms
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Auto-Scans */}
+            <Card className="mb-8">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-foreground">
+                  <Search className="w-5 h-5 text-green-500" />
+                  🚀 Recent Auto‑Scans
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Latest security scan results for monitored contracts
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentScans.map((scan, index) => (
+                    <div key={index} className="border rounded-xl p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-background to-muted/20">
+                      {/* Header Section */}
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h4 className="text-lg font-semibold text-foreground">{scan.name}</h4>
+                            <Badge 
+                              className={`${getStatusColor(scan.status)} text-xs font-medium px-2 py-1`}
+                            >
+                              {getStatusText(scan.status)}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-1 rounded-md inline-block">
+                            {scan.address}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-2xl font-bold text-foreground mb-1">{scan.tvl}</div>
+                          <div className="text-xs text-muted-foreground font-medium">Total Value Locked</div>
+                        </div>
+                      </div>
+                      
+                      {/* Metrics Grid */}
+                      <div className="grid grid-cols-3 gap-6 mb-4">
+                        <div className="text-center p-3 bg-muted/30 rounded-lg">
+                          <div className="text-xs text-muted-foreground mb-1">Last Scan</div>
+                          <div className="font-semibold text-foreground">{scan.lastScan}</div>
+                        </div>
+                        <div className="text-center p-3 bg-muted/30 rounded-lg">
+                          <div className="text-xs text-muted-foreground mb-1">Vulnerabilities</div>
+                          <div className="font-semibold text-foreground">{scan.vulnerabilities}</div>
+                        </div>
+                        <div className="text-center p-3 bg-muted/30 rounded-lg">
+                          <div className="text-xs text-muted-foreground mb-1">Risk Level</div>
+                          <div className={`font-semibold ${scan.status === 'critical' ? 'text-red-500' : scan.status === 'warning' ? 'text-yellow-500' : 'text-green-500'}`}>
+                            {scan.status.toUpperCase()}
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Gas Optimization Status */}
+                      <div className="flex items-center justify-between pt-4 border-t border-muted/50">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-muted-foreground">Gas Optimization:</span>
+                          <span className={`text-sm font-medium ${scan.gasOptimized ? 'text-green-600' : 'text-orange-600'}`}>
+                            {scan.gasOptimized ? "Yes" : "No"}
+                          </span>
+                        </div>
+                        <Badge 
+                          variant={scan.gasOptimized ? "default" : "secondary"} 
+                          className={`text-xs font-medium px-3 py-1 ${scan.gasOptimized ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'}`}
+                        >
+                          {scan.gasOptimized ? "OPTIMIZED" : "PENDING"}
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Network Status Card */}
             <Card className="mb-8">
@@ -356,103 +453,6 @@ export default function Dashboard() {
                         <div className="text-sm font-medium text-foreground">{vuln.type}</div>
                         <div className="text-xs text-muted-foreground">{vuln.severity}</div>
                         <div className="text-lg font-bold text-red-500">{vuln.count}</div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Live Block Finality */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <Lightning className="w-5 h-5 text-blue-500" />
-                    ⚡ Live Block Finality (Twin-Turbo)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-blue-50 dark:bg-blue-950/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                        Block #8757814
-                      </div>
-                      <div className="text-lg text-blue-700 dark:text-blue-300">
-                        Finality latency: 346 ms
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Auto-Scans */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-foreground">
-                    <Search className="w-5 h-5 text-green-500" />
-                    🚀 Recent Auto‑Scans
-                  </CardTitle>
-                  <CardDescription className="text-muted-foreground">
-                    Latest security scan results for monitored contracts
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {recentScans.map((scan, index) => (
-                      <div key={index} className="border rounded-xl p-6 hover:shadow-lg hover:border-primary/30 transition-all duration-200 bg-gradient-to-r from-background to-muted/20">
-                        {/* Header Section */}
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h4 className="text-lg font-semibold text-foreground">{scan.name}</h4>
-                              <Badge 
-                                className={`${getStatusColor(scan.status)} text-xs font-medium px-2 py-1`}
-                              >
-                                {getStatusText(scan.status)}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground font-mono bg-muted/50 px-3 py-1 rounded-md inline-block">
-                              {scan.address}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-2xl font-bold text-foreground mb-1">{scan.tvl}</div>
-                            <div className="text-xs text-muted-foreground font-medium">Total Value Locked</div>
-                          </div>
-                        </div>
-                        
-                        {/* Metrics Grid */}
-                        <div className="grid grid-cols-3 gap-6 mb-4">
-                          <div className="text-center p-3 bg-muted/30 rounded-lg">
-                            <div className="text-xs text-muted-foreground mb-1">Last Scan</div>
-                            <div className="font-semibold text-foreground">{scan.lastScan}</div>
-                          </div>
-                          <div className="text-center p-3 bg-muted/30 rounded-lg">
-                            <div className="text-xs text-muted-foreground mb-1">Vulnerabilities</div>
-                            <div className="font-semibold text-foreground">{scan.vulnerabilities}</div>
-                          </div>
-                          <div className="text-center p-3 bg-muted/30 rounded-lg">
-                            <div className="text-xs text-muted-foreground mb-1">Risk Level</div>
-                            <div className={`font-semibold ${scan.status === 'critical' ? 'text-red-500' : 'text-yellow-500'}`}>
-                              {scan.status.toUpperCase()}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Gas Optimization Status */}
-                        <div className="flex items-center justify-between pt-4 border-t border-muted/50">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">Gas Optimization:</span>
-                            <span className={`text-sm font-medium ${scan.gasOptimized ? 'text-green-600' : 'text-orange-600'}`}>
-                              {scan.gasOptimized ? "Yes" : "No"}
-                            </span>
-                          </div>
-                          <Badge 
-                            variant={scan.gasOptimized ? "default" : "secondary"} 
-                            className={`text-xs font-medium px-3 py-1 ${scan.gasOptimized ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400'}`}
-                          >
-                            {scan.gasOptimized ? "OPTIMIZED" : "PENDING"}
-                          </Badge>
-                        </div>
                       </div>
                     ))}
                   </div>
