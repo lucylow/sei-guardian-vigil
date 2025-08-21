@@ -580,6 +580,26 @@ export const SmartContractUploader = () => {
                 }}
               />
             )}
+
+            {/* Enhanced AI Toolchain Section */}
+            {selectedContract.status === 'completed' && (
+              <EnhancedAuditPanel
+                contractCode={selectedContract.content}
+                contractName={selectedContract.name}
+                contractType={selectedContract.language as 'solidity' | 'cosmwasm' | 'typescript'}
+                onAuditComplete={(result) => {
+                  console.log('Enhanced AI Audit completed:', result);
+                  // Update contract with enhanced audit results
+                  setContracts(prev =>
+                    prev.map(c =>
+                      c.id === selectedContract.id
+                        ? { ...c, enhancedAuditResult: result }
+                        : c
+                    )
+                  );
+                }}
+              />
+            )}
           </CardContent>
         </Card>
       )}
