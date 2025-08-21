@@ -24,7 +24,11 @@ import {
   Target,
   BarChart3,
   Zap,
-  Settings
+  Settings,
+  Zap as Lightning,
+  Search,
+  Eye,
+  AlertCircle
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -100,6 +104,101 @@ export default function Dashboard() {
       description: "Average block time" 
     },
   ];
+
+  // Security vulnerability types
+  const vulnerabilityTypes = [
+    { type: "Overflow", count: 6, severity: "critical", color: "bg-red-500" },
+    { type: "Frontrunning", count: 1, severity: "critical", color: "bg-red-500" },
+    { type: "Reentrancy", count: 3, severity: "critical", color: "bg-red-500" },
+    { type: "Oracle manipulation", count: 4, severity: "critical", color: "bg-red-500" },
+    { type: "Logic error", count: 3, severity: "critical", color: "bg-red-500" },
+    { type: "Access control", count: 8, severity: "critical", color: "bg-red-500" },
+  ];
+
+  // Recent auto-scans data
+  const recentScans = [
+    {
+      name: "SeiSwap Protocol",
+      address: "0x742d35...f44e",
+      tvl: "$48.7M",
+      lastScan: "7 min ago",
+      vulnerabilities: 1,
+      status: "warning",
+      gasOptimized: true
+    },
+    {
+      name: "SeiStake Pool",
+      address: "0xA0b86a...db1b",
+      tvl: "$48.0M",
+      lastScan: "31 min ago",
+      vulnerabilities: 2,
+      status: "warning",
+      gasOptimized: true
+    },
+    {
+      name: "SeiNFT Marketplace",
+      address: "0xBE0eB5...33E8",
+      tvl: "$43.0M",
+      lastScan: "40 min ago",
+      vulnerabilities: 2,
+      status: "warning",
+      gasOptimized: false
+    },
+    {
+      name: "SeiDerivatives Exchange",
+      address: "0x95aD61...C4cE",
+      tvl: "$42.4M",
+      lastScan: "59 min ago",
+      vulnerabilities: 1,
+      status: "warning",
+      gasOptimized: false
+    },
+    {
+      name: "SeiLend Vault",
+      address: "0x3f5CE5...f0bE",
+      tvl: "$36.0M",
+      lastScan: "28 min ago",
+      vulnerabilities: 1,
+      status: "warning",
+      gasOptimized: true
+    },
+    {
+      name: "SeiDAO Governance",
+      address: "0x28c6c0...1d60",
+      tvl: "$35.2M",
+      lastScan: "54 min ago",
+      vulnerabilities: 3,
+      status: "critical",
+      gasOptimized: false
+    },
+    {
+      name: "SeiOracle Bridge",
+      address: "0x1f9840...F984",
+      tvl: "$26.9M",
+      lastScan: "20 min ago",
+      vulnerabilities: 4,
+      status: "critical",
+      gasOptimized: true
+    }
+  ];
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "critical": return "bg-red-500 text-white";
+      case "warning": return "bg-yellow-500 text-black";
+      case "safe": return "bg-green-500 text-white";
+      default: return "bg-gray-500 text-white";
+    }
+  };
+
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "critical": return "CRITICAL";
+      case "warning": return "WARNING";
+      case "safe": return "SAFE";
+      default: return "UNKNOWN";
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -215,18 +314,111 @@ export default function Dashboard() {
           {/* Security Tab */}
           <TabsContent value="security" className="mt-6">
             <div className="space-y-6">
+              {/* Security Overview Header */}
+              <div className="text-center mb-8">
+                <h2 className="text-2xl font-bold text-foreground mb-2">Security Overview</h2>
+                <p className="text-muted-foreground">Current security status and threat monitoring</p>
+              </div>
+
+              {/* Vulnerability Types Grid */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
-                    <Shield className="w-5 h-5 text-primary" />
-                    Security Overview
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                    Vulnerability Types
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground">Current security status and threat monitoring</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <VulnerabilityRadar vulnerabilities={vulnerabilities} />
-                    <ContractHealthGrid contracts={contracts} />
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    {vulnerabilityTypes.map((vuln, index) => (
+                      <div key={index} className="text-center p-4 border rounded-lg">
+                        <div className={`inline-block w-3 h-3 rounded-full ${vuln.color} mb-2`}></div>
+                        <div className="text-sm font-medium text-foreground">{vuln.type}</div>
+                        <div className="text-xs text-muted-foreground">{vuln.severity}</div>
+                        <div className="text-lg font-bold text-red-500">{vuln.count}</div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Live Block Finality */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Lightning className="w-5 h-5 text-blue-500" />
+                    ⚡ Live Block Finality (Twin-Turbo)
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-blue-50 dark:bg-blue-950/20 p-6 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                        Block #8757814
+                      </div>
+                      <div className="text-lg text-blue-700 dark:text-blue-300">
+                        Finality latency: 346 ms
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent Auto-Scans */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-foreground">
+                    <Search className="w-5 h-5 text-green-500" />
+                    🚀 Recent Auto‑Scans
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {recentScans.map((scan, index) => (
+                      <div key={index} className="border rounded-lg p-4 hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center justify-between mb-3">
+                          <div>
+                            <h4 className="font-medium text-foreground">{scan.name}</h4>
+                            <p className="text-sm text-muted-foreground font-mono">{scan.address}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold text-foreground">{scan.tvl}</div>
+                            <div className="text-xs text-muted-foreground">TVL</div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4 text-sm">
+                          <div>
+                            <div className="text-muted-foreground">Last Scan</div>
+                            <div className="font-medium">{scan.lastScan}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">Vulnerabilities</div>
+                            <div className="font-medium">{scan.vulnerabilities}</div>
+                          </div>
+                          <div>
+                            <div className="text-muted-foreground">Status</div>
+                            <Badge className={`${getStatusColor(scan.status)} text-xs`}>
+                              {getStatusText(scan.status)}
+                            </Badge>
+                          </div>
+                        </div>
+                        
+                        <div className="mt-3 pt-3 border-t">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">Gas Optimized:</span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">
+                                {scan.gasOptimized ? "Yes" : "No"}
+                              </span>
+                              <Badge variant={scan.gasOptimized ? "default" : "secondary"} className="text-xs">
+                                {scan.gasOptimized ? "OPTIMIZED" : "PENDING"}
+                              </Badge>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </CardContent>
               </Card>
