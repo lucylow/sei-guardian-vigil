@@ -1,24 +1,22 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   ReactFlow,
+  addEdge,
   useNodesState,
   useEdgesState,
   Background,
   Controls,
   MiniMap,
   type Node,
-  type Connection,
-  type Edge,
-  Handle,
-  Position
+  type Connection
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { NodePalette } from './NodePalette';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 // Template definitions for different agent types
 const agentTemplates = {
@@ -711,77 +709,83 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
     }
   }, [setNodes, setEdges, toast]);
 
+  const onConnect = useCallback(
+    (params: Connection) => {
+      // Validate connection
+      const sourceNode = nodes.find(n => n.id === params.source);
+      const targetNode = nodes.find(n => n.id === params.target);
+      
+      if (sourceNode && targetNode) {
+        // Prevent self-connection
+        if (params.source === params.target) {
+          toast({
+            title: "❌ Invalid Connection",
+            description: "Cannot connect a node to itself",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Check for duplicate connections
+        const existingConnection = edges.find(
+          e => e.source === params.source && e.target === params.target
+        );
+        
+        if (existingConnection) {
+          toast({
+            title: "❌ Duplicate Connection",
+            description: "Connection already exists between these nodes",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Add connection with enhanced styling
+        const newEdge = {
+          ...params,
+          id: `e${Date.now()}`,
+          type: 'smoothstep',
+          animated: true,
+          style: { 
+            stroke: '#3b82f6', 
+            strokeWidth: 3,
+            strokeDasharray: '5,5',
+            filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
+          },
+          label: `${sourceNode.data.label} → ${targetNode.data.label}`,
+          labelStyle: {
+            fill: '#1f2937',
+            fontWeight: 600,
+            fontSize: '12px',
+            background: '#ffffff',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            border: '1px solid #d1d5db'
+          },
+          labelBgStyle: {
+            fill: '#ffffff',
+            fillOpacity: 0.9
+          }
+        };
+        
+        setEdges((eds) => [...eds, newEdge]);
+        
+        toast({
+          title: "✅ Connection Created",
+          description: `Connected ${sourceNode.data.label} to ${targetNode.data.label}`,
+        });
+      }
+    },
+    [nodes, edges, setEdges, toast]
+  );
+
   const onConnectStart = useCallback((event: any, params: any) => {
     console.log('Connection start:', params);
-    // Add visual feedback for connection start
-    document.body.style.cursor = 'crosshair';
-    // Add a visual indicator to the source node
-    if (params.nodeId) {
-      const nodeElement = document.querySelector(`[data-id="${params.nodeId}"]`);
-      if (nodeElement) {
-        nodeElement.classList.add('ring-2', 'ring-green-500', 'ring-opacity-75');
-      }
-    }
   }, []);
 
   const onConnectEnd = useCallback((event: any) => {
     console.log('Connection end:', event);
-    // Reset cursor
-    document.body.style.cursor = 'default';
-    // Remove visual indicators from all nodes
-    document.querySelectorAll('.react-flow__node').forEach(node => {
-      node.classList.remove('ring-2', 'ring-green-500', 'ring-opacity-75');
-    });
   }, []);
-
-  const onConnect = useCallback(
-    (params: Connection) => {
-      console.log('Connection attempt:', params);
-      
-      // Simple validation
-      if (!params.source || !params.target) {
-        console.log('Invalid connection params');
-        return;
-      }
-      
-      // Create new edge with enhanced styling
-      const newEdge: Edge = {
-        id: `e${Date.now()}`,
-        source: params.source,
-        target: params.target,
-        type: 'default',
-        animated: true,
-        style: { 
-          stroke: '#3b82f6', 
-          strokeWidth: 3,
-          filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
-        },
-        label: `Connection ${params.source} → ${params.target}`,
-        labelStyle: {
-          fill: '#1f2937',
-          fontWeight: 600,
-          fontSize: '12px',
-          background: '#ffffff',
-          padding: '4px 8px',
-          borderRadius: '4px',
-          border: '1px solid #d1d5db'
-        },
-        labelBgStyle: {
-          fill: '#ffffff',
-          fillOpacity: 0.9
-        }
-      };
-      
-      console.log('Adding new edge:', newEdge);
-      setEdges((eds) => [...eds, newEdge]);
-      
-      toast({
-        title: "✅ Connection Created",
-        description: `Connected nodes successfully`,
-      });
-    },
-    [setEdges, toast]
-  );
 
   const onNodeClick = useCallback((event: any, node: any) => {
     setSelectedNode(node);
@@ -1188,26 +1192,6 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
         </Button>
       </div>
       
-      {/* Connection Instructions */}
-      {nodes.length > 0 && (
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center space-x-2 text-blue-800">
-            <div className="text-lg">🔗</div>
-            <div className="text-sm">
-              <strong>How to Connect Nodes:</strong> Click and drag from a <span className="bg-green-500 text-white px-1 rounded">🟢 green dot</span> (output) to a <span className="bg-blue-500 text-white px-1 rounded">🔵 blue dot</span> (input) to create a connection line
-            </div>
-          </div>
-          <div className="mt-2 text-xs text-blue-700">
-            💡 <strong>Pro Tip:</strong> When you start dragging from a green dot, you'll see a connection line. Drop it on a blue dot to complete the connection!
-          </div>
-          <div className="mt-2 p-2 bg-blue-100 rounded text-xs text-blue-800">
-            🎯 <strong>Connection Mode:</strong> 
-            <span className="ml-1 font-mono">🟢 Green dots = Outputs (start connections)</span> | 
-            <span className="ml-1 font-mono">🔵 Blue dots = Inputs (end connections)</span>
-          </div>
-        </div>
-      )}
-      
       {/* Connection Tutorial */}
       {nodes.length === 0 && (
         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
@@ -1258,18 +1242,6 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             nodeTypes={nodeTypes}
             fitView
             className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
-            snapToGrid={true}
-            snapGrid={[15, 15]}
-            connectOnClick={false}
-            deleteKeyCode="Delete"
-            multiSelectionKeyCode="Shift"
-            selectionKeyCode="Ctrl"
-            panOnDrag={true}
-            zoomOnScroll={true}
-            zoomOnPinch={true}
-            zoomOnDoubleClick={false}
-            preventScrolling={true}
-            attributionPosition="bottom-left"
           >
             <Background />
             <Controls className="bg-card border" />
