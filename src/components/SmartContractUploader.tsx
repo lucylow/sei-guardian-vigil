@@ -18,6 +18,7 @@ import {
   Target
 } from 'lucide-react';
 import { auditService, type AuditResult, type AuditSettings } from '@/lib/auditService';
+import { AuditCertificateNFT } from './AuditCertificateNFT';
 
 interface ContractUpload {
   id: string;
@@ -563,6 +564,20 @@ export const SmartContractUploader = () => {
                   Custom Analysis
                 </Button>
               </div>
+            )}
+
+            {/* NFT Certificate Section */}
+            {selectedContract.status === 'completed' && selectedContract.auditResult && (
+              <AuditCertificateNFT
+                auditResult={selectedContract.auditResult}
+                contractName={selectedContract.name}
+                contractAddress={`0x${Math.random().toString(16).substr(2, 40)}`}
+                blockchain={selectedContract.blockchain}
+                onCertificateMinted={(certificate) => {
+                  console.log('NFT Certificate minted:', certificate);
+                  // You can add additional logic here for handling the minted certificate
+                }}
+              />
             )}
           </CardContent>
         </Card>
