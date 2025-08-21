@@ -8,6 +8,7 @@ import { ThreatIntelFeed } from "@/components/ThreatIntelFeed";
 import { CambrianAnalytics } from "@/components/CambrianAnalytics";
 import { ToolsIntegrationPanel } from "@/components/ToolsIntegrationPanel";
 import { DashboardDemo } from "@/components/DashboardDemo";
+import { ConnectionStatus } from "@/components/ConnectionStatus";
 import { useDashboard } from "@/hooks/useDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,6 +46,7 @@ export default function Dashboard() {
     isLoading,
     error,
     lastUpdate,
+    isInitialized,
     systemHealth,
     activeAgents,
     totalContracts,
@@ -57,7 +59,8 @@ export default function Dashboard() {
     agentStatuses,
     addActivity,
     addAlert,
-    refreshData
+    refreshData,
+    retryInitialization
   } = useDashboard();
 
   const [dashboardStats, setDashboardStats] = useState({
@@ -123,25 +126,39 @@ export default function Dashboard() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Navigation />
-        <div className="container mx-auto px-4 py-6">
-          <Alert className="mb-6">
-            <AlertTriangle className="h-4 w-4" />
-            <AlertDescription>
-              <strong>Error:</strong> {error}
-            </AlertDescription>
-          </Alert>
-          <Button onClick={handleRefresh} className="flex items-center gap-2">
-            <RefreshCw className="w-4 h-4" />
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
+          if (error) {
+          return (
+            <div className="min-h-screen bg-background">
+              <Navigation />
+              <div className="container mx-auto px-4 py-6">
+                <Alert className="mb-6">
+                  <AlertTriangle className="h-4 w-4" />
+                  <AlertDescription>
+                    <strong>Connection Error:</strong> {error}
+                  </AlertDescription>
+                </Alert>
+                <div className="space-y-4">
+                  <p className="text-muted-foreground">
+                    The dashboard is having trouble connecting to external services. This is normal when running locally without the backend services.
+                  </p>
+                  <div className="flex gap-4">
+                    <Button onClick={retryInitialization} className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4" />
+                      Retry Connection
+                    </Button>
+                    <Button onClick={handleRefresh} variant="outline" className="flex items-center gap-2">
+                      <RefreshCw className="w-4 h-4" />
+                      Refresh Data
+                    </Button>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    💡 <strong>Tip:</strong> The dashboard will work with demo data even when external services are unavailable.
+                  </p>
+                </div>
+              </div>
+            </div>
+          );
+        }
 
   return (
     <div className="min-h-screen bg-background">
@@ -156,9 +173,13 @@ export default function Dashboard() {
             </div>
             <div className="flex items-center gap-4">
               <div className="text-right text-sm text-muted-foreground">
-                <div>Last updated: {lastUpdate?.toLocaleTimeString() || 'Never'}</div>
                 <div>System health: {systemHealth}%</div>
               </div>
+              <ConnectionStatus 
+                isInitialized={isInitialized}
+                hasError={!!error}
+                lastUpdate={lastUpdate}
+              />
               <Button onClick={handleRefresh} variant="outline" size="sm" className="flex items-center gap-2">
                 <RefreshCw className="w-4 h-4" />
                 Refresh
