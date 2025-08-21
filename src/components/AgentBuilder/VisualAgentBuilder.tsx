@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import {
   ReactFlow,
-  addEdge,
   useNodesState,
   useEdgesState,
   Background,
@@ -10,9 +9,6 @@ import {
   type Node,
   type Connection,
   type Edge,
-  ConnectionLine,
-  Panel,
-  useReactFlow,
   Handle,
   Position
 } from '@xyflow/react';
@@ -1755,7 +1751,6 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             nodeTypes={nodeTypes}
             fitView
             className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
-            connectionLineComponent={ConnectionLine}
             snapToGrid={true}
             snapGrid={[15, 15]}
             connectOnClick={false}
