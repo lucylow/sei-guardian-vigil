@@ -293,7 +293,7 @@ export function MultiAgentOrchestrator() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-foreground">Multi-Agent Orchestrator</h2>
-          <p className="text-muted-foreground">Coordinating {agents.length} specialized AI agents with human oversight</p>
+          <p className="text-muted-foreground">Coordinating specialized AI agents with human oversight</p>
         </div>
         <div className="flex space-x-2">
           <Button variant="outline">
