@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { auditService, type AuditResult, type AuditSettings } from '@/lib/auditService';
 import { AuditCertificateNFT } from './AuditCertificateNFT';
+import { EnhancedAuditPanel } from './EnhancedAuditPanel';
 
 interface ContractUpload {
   id: string;
