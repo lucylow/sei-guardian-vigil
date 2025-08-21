@@ -1,24 +1,22 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   ReactFlow,
+  addEdge,
   useNodesState,
   useEdgesState,
   Background,
   Controls,
   MiniMap,
   type Node,
-  type Connection,
-  type Edge,
-  Handle,
-  Position
+  type Connection
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { NodePalette } from './NodePalette';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 // Template definitions for different agent types
 const agentTemplates = {
@@ -338,78 +336,40 @@ const nodeTypes = {
   // Core Agent Components
   agentPersonality: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-primary text-primary-foreground rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Agent Personality</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   skill: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Skill</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   action: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-accent text-accent-foreground rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Action</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   trigger: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-muted text-muted-foreground rounded-lg border relative">
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Trigger</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   output: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-green-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">Output</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -417,73 +377,25 @@ const nodeTypes = {
   
   // Data & Input Nodes
   dataSource: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-blue-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-blue-600 text-white rounded-lg">
       <div className="font-semibold">Data Source</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   webhook: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-blue-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-blue-500 text-white rounded-lg">
       <div className="font-semibold">Webhook</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   blockchain: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-purple-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-purple-600 text-white rounded-lg">
       <div className="font-semibold">Blockchain</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   database: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-indigo-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-indigo-600 text-white rounded-lg">
       <div className="font-semibold">Database</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -491,73 +403,25 @@ const nodeTypes = {
   
   // Logic & Control Nodes
   condition: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-orange-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-orange-600 text-white rounded-lg">
       <div className="font-semibold">Condition</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   loop: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-orange-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-orange-500 text-white rounded-lg">
       <div className="font-semibold">Loop</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   switch: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-orange-400 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-orange-400 text-white rounded-lg">
       <div className="font-semibold">Switch</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   delay: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-yellow-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-yellow-600 text-white rounded-lg">
       <div className="font-semibold">Delay</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -565,73 +429,25 @@ const nodeTypes = {
   
   // Processing Nodes
   math: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-teal-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-teal-600 text-white rounded-lg">
       <div className="font-semibold">Math</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   transform: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-teal-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-teal-500 text-white rounded-lg">
       <div className="font-semibold">Transform</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   aggregate: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-teal-400 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-teal-400 text-white rounded-lg">
       <div className="font-semibold">Aggregate</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   filter: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-teal-300 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-teal-300 text-white rounded-lg">
       <div className="font-semibold">Filter</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -639,55 +455,19 @@ const nodeTypes = {
   
   // AI & External Services
   aiModel: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-pink-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-pink-600 text-white rounded-lg">
       <div className="font-semibold">AI Model</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   nlp: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-pink-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-pink-500 text-white rounded-lg">
       <div className="font-semibold">NLP</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   vision: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-pink-400 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-pink-400 text-white rounded-lg">
       <div className="font-semibold">Vision</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -695,73 +475,25 @@ const nodeTypes = {
   
   // Communication Nodes
   email: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-red-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-red-600 text-white rounded-lg">
       <div className="font-semibold">Email</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   sms: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-red-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-red-500 text-white rounded-lg">
       <div className="font-semibold">SMS</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   slack: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-red-400 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-red-400 text-white rounded-lg">
       <div className="font-semibold">Slack</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   discord: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-red-300 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-red-300 text-white rounded-lg">
       <div className="font-semibold">Discord</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -769,55 +501,19 @@ const nodeTypes = {
   
   // Storage & Output Nodes
   fileStorage: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-gray-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-gray-600 text-white rounded-lg">
       <div className="font-semibold">File Storage</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   cache: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-gray-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-gray-500 text-white rounded-lg">
       <div className="font-semibold">Cache</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   queue: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-gray-400 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-gray-400 text-white rounded-lg">
       <div className="font-semibold">Queue</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -825,55 +521,19 @@ const nodeTypes = {
   
   // Monitoring & Analytics
   metrics: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-emerald-600 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-emerald-600 text-white rounded-lg">
       <div className="font-semibold">Metrics</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   alert: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-emerald-500 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-emerald-500 text-white rounded-lg">
       <div className="font-semibold">Alert</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   logging: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-emerald-400 text-white rounded-lg relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+    <div className="px-4 py-2 bg-emerald-400 text-white rounded-lg">
       <div className="font-semibold">Logging</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -882,264 +542,120 @@ const nodeTypes = {
   // SEI Blockchain Nodes
   seiValidator: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-indigo-700 text-white rounded-lg border-2 border-indigo-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Validator</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiStaking: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-yellow-700 text-white rounded-lg border-2 border-yellow-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Staking</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiSwap: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-green-700 text-white rounded-lg border-2 border-green-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Swap</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiLiquidity: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-blue-700 text-white rounded-lg border-2 border-blue-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Liquidity</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiNFT: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-purple-700 text-white rounded-lg border-2 border-purple-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI NFT</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiGovernance: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-red-700 text-white rounded-lg border-2 border-red-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Governance</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiBridge: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-cyan-700 text-white rounded-lg border-2 border-cyan-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Bridge</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiOracle: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-pink-700 text-white rounded-lg border-2 border-pink-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Oracle</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiContract: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-orange-700 text-white rounded-lg border-2 border-orange-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Contract</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiMempool: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-teal-700 text-white rounded-lg border-2 border-teal-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Mempool</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiGas: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-amber-700 text-white rounded-lg border-2 border-amber-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Gas Tracker</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiMetrics: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-lime-700 text-white rounded-lg border-2 border-lime-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Metrics</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiAlert: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-rose-700 text-white rounded-lg border-2 border-rose-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Alert</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiBackup: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-slate-700 text-white rounded-lg border-2 border-slate-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Backup</div>
       <div className="text-sm">{data.label}</div>
     </div>
   ),
   seiRecovery: ({ data }: { data: any }) => (
     <div className="px-4 py-2 bg-stone-700 text-white rounded-lg border-2 border-stone-500 relative">
-      <Handle 
-        type="target" 
-        position={Position.Top} 
-        className="w-4 h-4 bg-blue-500 border-2 border-white shadow-lg hover:bg-blue-600 transition-colors" 
-        style={{ top: '-8px' }}
-      />
-      <Handle 
-        type="source" 
-        position={Position.Bottom} 
-        className="w-4 h-4 bg-green-500 border-2 border-white shadow-lg hover:bg-green-600 transition-colors" 
-        style={{ bottom: '-8px' }}
-      />
+      <div className="absolute -top-2 -left-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
+      <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
       <div className="font-semibold">SEI Recovery</div>
       <div className="text-sm">{data.label}</div>
     </div>
@@ -1195,74 +711,80 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
 
   const onConnect = useCallback(
     (params: Connection) => {
-      console.log('Connection attempt:', params);
+      // Validate connection
+      const sourceNode = nodes.find(n => n.id === params.source);
+      const targetNode = nodes.find(n => n.id === params.target);
       
-      // Simple validation
-      if (!params.source || !params.target) {
-        console.log('Invalid connection params');
-        return;
-      }
-      
-      // Create new edge
-      const newEdge: Edge = {
-        id: `e${Date.now()}`,
-        source: params.source,
-        target: params.target,
-        type: 'default',
-        animated: true,
-        style: { 
-          stroke: '#3b82f6', 
-          strokeWidth: 3,
-          filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
-        },
-        label: `Connection ${params.source} → ${params.target}`,
-        labelStyle: {
-          fill: '#1f2937',
-          fontWeight: 600,
-          fontSize: '12px',
-          background: '#ffffff',
-          padding: '4px 8px',
-          borderRadius: '4px',
-          border: '1px solid #d1d5db'
-        },
-        labelBgStyle: {
-          fill: '#ffffff',
-          fillOpacity: 0.9
+      if (sourceNode && targetNode) {
+        // Prevent self-connection
+        if (params.source === params.target) {
+          toast({
+            title: "❌ Invalid Connection",
+            description: "Cannot connect a node to itself",
+            variant: "destructive",
+          });
+          return;
         }
-      };
-      
-      console.log('Adding new edge:', newEdge);
-      setEdges((eds) => [...eds, newEdge]);
-      
-      toast({
-        title: "✅ Connection Created",
-        description: `Connected nodes successfully`,
-      });
+        
+        // Check for duplicate connections
+        const existingConnection = edges.find(
+          e => e.source === params.source && e.target === params.target
+        );
+        
+        if (existingConnection) {
+          toast({
+            title: "❌ Duplicate Connection",
+            description: "Connection already exists between these nodes",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // Add connection with enhanced styling
+        const newEdge = {
+          ...params,
+          id: `e${Date.now()}`,
+          type: 'smoothstep',
+          animated: true,
+          style: { 
+            stroke: '#3b82f6', 
+            strokeWidth: 3,
+            strokeDasharray: '5,5',
+            filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
+          },
+          label: `${sourceNode.data.label} → ${targetNode.data.label}`,
+          labelStyle: {
+            fill: '#1f2937',
+            fontWeight: 600,
+            fontSize: '12px',
+            background: '#ffffff',
+            padding: '4px 8px',
+            borderRadius: '4px',
+            border: '1px solid #d1d5db'
+          },
+          labelBgStyle: {
+            fill: '#ffffff',
+            fillOpacity: 0.9
+          }
+        };
+        
+        setEdges((eds) => [...eds, newEdge]);
+        
+        toast({
+          title: "✅ Connection Created",
+          description: `Connected ${sourceNode.data.label} to ${targetNode.data.label}`,
+        });
+      }
     },
-    [setEdges, toast]
+    [nodes, edges, setEdges, toast]
   );
 
   const onConnectStart = useCallback((event: any, params: any) => {
     console.log('Connection start:', params);
-    // Add visual feedback for connection start
-    document.body.style.cursor = 'crosshair';
-    // Add a visual indicator to the source node
-    if (params.nodeId) {
-      const nodeElement = document.querySelector(`[data-id="${params.nodeId}"]`);
-      if (nodeElement) {
-        nodeElement.classList.add('ring-2', 'ring-green-500', 'ring-opacity-75');
-      }
-    }
   }, []);
 
   const onConnectEnd = useCallback((event: any) => {
     console.log('Connection end:', event);
-    // Reset cursor
-    document.body.style.cursor = 'default';
-    // Remove visual indicators from all nodes
-    document.querySelectorAll('.react-flow__node').forEach(node => {
-      node.classList.remove('ring-2', 'ring-green-500', 'ring-opacity-75');
-    });
   }, []);
 
   const onNodeClick = useCallback((event: any, node: any) => {
@@ -1570,37 +1092,21 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
           variant="outline"
           size="sm"
           onClick={() => {
-            // Test connection functionality
-            if (nodes.length >= 2) {
-              const testEdge: Edge = {
-                id: `test-${Date.now()}`,
-                source: nodes[0].id,
-                target: nodes[1].id,
-                type: 'default',
-                animated: true,
-                style: { stroke: '#ef4444', strokeWidth: 4 }
-              };
-              setEdges((eds) => [...eds, testEdge]);
-              toast({
-                title: "🧪 Test Connection",
-                description: "Added test connection between first two nodes",
-              });
-            }
-          }}
-        >
-          🧪 Test Connection
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => {
-            // Auto-layout nodes
+            // Auto-layout nodes in a grid
             const newNodes = nodes.map((node, index) => ({
               ...node,
-              position: { x: 100 + (index * 200), y: 100 }
+              position: {
+                x: 100 + (index % 4) * 200,
+                y: 100 + Math.floor(index / 4) * 150
+              }
             }));
             setNodes(newNodes);
+            toast({
+              title: "🎯 Auto-Layout Applied",
+              description: "Nodes arranged in a grid pattern",
+            });
           }}
+          disabled={nodes.length === 0}
         >
           📐 Auto-Layout
         </Button>
@@ -1700,7 +1206,7 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
                 </div>
                 <div>
                   <div className="font-medium mb-1">2. Connect Nodes</div>
-                  <p>Click and drag from the blue dots (top) to green dots (bottom) to create visible connection lines</p>
+                  <p>Click and drag from the blue dots (top-left) to green dots (bottom-right) to create connections</p>
                 </div>
                 <div>
                   <div className="font-medium mb-1">3. Configure</div>
@@ -1708,28 +1214,13 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
                 </div>
               </div>
               <div className="mt-3 p-2 bg-blue-100 rounded text-xs">
-                <strong>Pro Tip:</strong> Start with a Trigger node (green dot at bottom), add Skills and Actions in the middle (blue dots at top, green dots at bottom), and end with Output nodes (blue dots at top) for a complete workflow!
+                <strong>Pro Tip:</strong> Start with a Trigger node, add Skills and Actions in the middle, and end with Output nodes for a complete workflow!
               </div>
             </div>
           </div>
         </div>
       )}
       
-      {/* Connection Instructions */}
-      {nodes.length > 0 && (
-        <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
-          <div className="flex items-center space-x-2 text-blue-800">
-            <div className="text-lg">🔗</div>
-            <div className="text-sm">
-              <strong>How to Connect Nodes:</strong> Click and drag from a <span className="bg-green-500 text-white px-1 rounded">🟢 green dot</span> (output) to a <span className="bg-blue-500 text-white px-1 rounded">🔵 blue dot</span> (input) to create a connection line
-            </div>
-          </div>
-          <div className="mt-2 text-xs text-blue-700">
-            💡 <strong>Pro Tip:</strong> When you start dragging from a green dot, you'll see a connection line. Drop it on a blue dot to complete the connection!
-          </div>
-        </div>
-      )}
-
       <div className="h-[600px] w-full flex border rounded-lg bg-background">
         <div className="w-64 border-r bg-card p-4">
           <NodePalette onAddNode={addNode} />
@@ -1751,18 +1242,6 @@ export default function VisualAgentBuilder({ selectedTemplate }: VisualAgentBuil
             nodeTypes={nodeTypes}
             fitView
             className={`bg-background ${isDragging ? 'ring-2 ring-blue-500 ring-opacity-50' : ''}`}
-            snapToGrid={true}
-            snapGrid={[15, 15]}
-            connectOnClick={false}
-            deleteKeyCode="Delete"
-            multiSelectionKeyCode="Shift"
-            selectionKeyCode="Ctrl"
-            panOnDrag={true}
-            zoomOnScroll={true}
-            zoomOnPinch={true}
-            zoomOnDoubleClick={false}
-            preventScrolling={true}
-            attributionPosition="bottom-left"
           >
             <Background />
             <Controls className="bg-card border" />
