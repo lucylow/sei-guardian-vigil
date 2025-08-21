@@ -1,0 +1,217 @@
+/* Matrix Code Rain Effect */
+.matrix-rain {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, 
+    transparent 0%, 
+    rgba(0, 255, 0, 0.1) 50%, 
+    transparent 100%);
+  animation: matrix-rain 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes matrix-rain {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+/* Matrix Grid Background */
+.matrix-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: matrix-grid-pulse 4s ease-in-out infinite;
+}
+
+@keyframes matrix-grid-pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Cyberpunk Glow Effects */
+.cyber-glow {
+  box-shadow: 
+    0 0 5px rgba(0, 255, 0, 0.5),
+    0 0 10px rgba(0, 255, 0, 0.3),
+    0 0 15px rgba(0, 255, 0, 0.1);
+}
+
+.cyber-glow-blue {
+  box-shadow: 
+    0 0 5px rgba(0, 150, 255, 0.5),
+    0 0 10px rgba(0, 150, 255, 0.3),
+    0 0 15px rgba(0, 150, 255, 0.1);
+}
+
+.cyber-glow-purple {
+  box-shadow: 
+    0 0 5px rgba(150, 0, 255, 0.5),
+    0 0 10px rgba(150, 0, 255, 0.3),
+    0 0 15px rgba(150, 0, 255, 0.1);
+}
+
+/* Matrix Text Effect */
+.matrix-text {
+  text-shadow: 
+    0 0 5px rgba(0, 255, 0, 0.8),
+    0 0 10px rgba(0, 255, 0, 0.6),
+    0 0 15px rgba(0, 255, 0, 0.4);
+}
+
+/* Hover Animations */
+.matrix-hover {
+  transition: all 0.3s ease;
+}
+
+.matrix-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 8px rgba(0, 255, 0, 0.2),
+    0 8px 16px rgba(0, 255, 0, 0.1);
+}
+
+/* Loading Spinner with Matrix Theme */
+.matrix-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(0, 255, 0, 0.3);
+  border-top: 2px solid rgba(0, 255, 0, 0.8);
+  border-radius: 50%;
+  animation: matrix-spin 1s linear infinite;
+}
+
+@keyframes matrix-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pulse Animation for Alerts */
+.matrix-pulse {
+  animation: matrix-pulse 2s ease-in-out infinite;
+}
+
+@keyframes matrix-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
+  }
+}
+
+/* Gradient Text Animations */
+.gradient-text-animate {
+  background: linear-gradient(45deg, 
+    #00ff00, #00ffff, #0080ff, #8000ff, #ff0080, #ff8000, #ffff00, #00ff00);
+  background-size: 400% 400%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Matrix Border Animation */
+.matrix-border {
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, #00ff00, #00ffff, #0080ff, #8000ff);
+  background-size: 400% 400%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.matrix-border::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #00ff00, #00ffff, #0080ff, #8000ff);
+  background-size: 400% 400%;
+  animation: gradient-shift 3s ease infinite;
+  z-index: -1;
+  border-radius: inherit;
+}
+
+/* Floating Animation */
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Glitch Effect */
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  animation: glitch-1 0.5s infinite;
+  color: #00ffff;
+  z-index: -1;
+}
+
+.glitch::after {
+  animation: glitch-2 0.5s infinite;
+  color: #ff00ff;
+  z-index: -2;
+}
+
+@keyframes glitch-1 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+}
+
+@keyframes glitch-2 {
+  0%, 100% { transform: translate(0); }
+  20% { transform: translate(2px, -2px); }
+  40% { transform: translate(2px, 2px); }
+  60% { transform: translate(-2px, -2px); }
+  80% { transform: translate(-2px, 2px); }
+}

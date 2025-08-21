@@ -9,3 +9,7 @@ export { VulnerabilityRadar } from './VulnerabilityRadar';
 export { RealTimeMonitor } from './RealTimeMonitor';
 export { SentinelChatbot } from './SentinelChatbot';
 export { ContractHealthGrid } from './ContractHealthGrid';
+
+// Matrix NFT Gamification Components
+export { AgentCard } from './AgentCard';
+export { MatrixNFTDashboard } from './MatrixNFTDashboard';
