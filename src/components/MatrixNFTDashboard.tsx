@@ -172,20 +172,16 @@ export const MatrixNFTDashboard: React.FC<MatrixNFTDashboardProps> = ({ classNam
 
   const handleBattle = (agent: any) => {
     console.log(`Starting battle with ${agent.name}`);
-    // Here you would integrate with the actual battle system
-    // For now, we'll just show an alert
     alert(`${agent.name} is entering the Matrix to battle vulnerabilities!`);
   };
 
   const connectWallet = () => {
-    // Simulate wallet connection
     setIsWalletConnected(true);
     setWalletAddress("sei1sentinel...");
   };
 
   const mintNewAgent = () => {
     alert("Minting new Digital Sentinel NFT...");
-    // Here you would integrate with the actual NFT minting system
   };
 
   const getFilterIcon = (filter: string) => {
@@ -198,23 +194,13 @@ export const MatrixNFTDashboard: React.FC<MatrixNFTDashboardProps> = ({ classNam
     }
   };
 
-  const getFilterLabel = (filter: string) => {
-    switch (filter) {
-      case "security_analyst": return "Security Analysts";
-      case "threat_intel": return "Threat Intel";
-      case "remediation": return "Remediation";
-      case "compliance": return "Compliance";
-      default: return "All Agents";
-    }
-  };
-
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header with Matrix Theme */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center space-x-3">
           <Gamepad2 className="w-8 h-8 text-green-400" />
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold text-foreground">
             Digital Sentinels
           </h1>
           <Gamepad2 className="w-8 h-8 text-blue-400" />

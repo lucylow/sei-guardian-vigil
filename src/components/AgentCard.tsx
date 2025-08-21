@@ -123,25 +123,17 @@ export const AgentCard: React.FC<AgentCardProps> = ({
 
   return (
     <Card 
-      className={`relative overflow-hidden cursor-pointer transition-all duration-500 hover:scale-105 group ${
+      className={`relative overflow-hidden cursor-pointer transition-all duration-300 hover:scale-105 ${
         isSelected ? 'ring-2 ring-primary ring-offset-2' : ''
       } ${className}`}
       onClick={() => onSelect(agent)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Matrix Grid Background Effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-green-900/5 to-blue-900/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      
-      {/* Agent Avatar with Matrix Effects */}
+      {/* Agent Avatar */}
       <div className="relative h-32 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20 flex items-center justify-center overflow-hidden">
-        {/* Matrix Code Rain Effect */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="matrix-rain"></div>
-        </div>
-        
         {/* Agent Icon */}
-        <div className={`relative w-16 h-16 rounded-full ${getAgentRoleColor(agent.role)} flex items-center justify-center border-2 transition-all duration-300 group-hover:scale-110`}>
+        <div className={`relative w-16 h-16 rounded-full ${getAgentRoleColor(agent.role)} flex items-center justify-center border-2 transition-all duration-300 hover:scale-110`}>
           {getAgentRoleIcon(agent.role)}
         </div>
         
@@ -249,11 +241,6 @@ export const AgentCard: React.FC<AgentCardProps> = ({
           <div className="text-lg font-bold text-green-400">{agent.stats.tokensEarned.toLocaleString()}</div>
         </div>
       </CardContent>
-
-      {/* Hover Effects */}
-      {isHovered && (
-        <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-blue-500/10 pointer-events-none" />
-      )}
     </Card>
   );
 };

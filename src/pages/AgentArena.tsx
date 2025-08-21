@@ -1,7 +1,6 @@
 import { Navigation } from "@/components/Navigation";
 import { SentinelGameDashboard } from "@/components/SentinelGameDashboard";
 import { MatrixNFTDashboard } from "@/components/MatrixNFTDashboard";
-import "../styles/matrix-effects.css";
 
 export default function AgentArenaPage() {
   return (
@@ -10,11 +9,8 @@ export default function AgentArenaPage() {
       
       {/* Hero Section with Matrix Theme */}
       <section className="relative py-12 px-4 overflow-hidden">
-        {/* Matrix Grid Background */}
-        <div className="absolute inset-0 matrix-grid opacity-20"></div>
-        
         <div className="container mx-auto text-center relative z-10">
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4 gradient-text-animate">
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-4">
             Agent Arena
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
@@ -23,7 +19,7 @@ export default function AgentArenaPage() {
           </p>
           
           {/* Matrix Breach Alert */}
-          <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-500/30 rounded-lg p-6 max-w-2xl mx-auto matrix-pulse">
+          <div className="bg-gradient-to-r from-red-900/20 to-orange-900/20 border border-red-500/30 rounded-lg p-6 max-w-2xl mx-auto">
             <div className="flex items-center justify-center space-x-3 text-red-400 mb-3">
               <div className="w-6 h-6 border-2 border-red-400 border-t-transparent rounded-full animate-spin"></div>
               <span className="text-lg font-bold">Matrix Breach Detected</span>

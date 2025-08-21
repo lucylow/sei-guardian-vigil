@@ -5,42 +5,37 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Database, 
   Shield, 
   Users, 
   Clock, 
-  Activity, 
-  AlertTriangle, 
-  TrendingUp, 
-  Globe, 
+  Database, 
+  Target, 
   Cpu, 
-  Target,
   Zap,
-  Search,
-  Lightning,
+  AlertTriangle,
+  CheckCircle,
+  TrendingUp,
+  Activity,
   BarChart3,
   Settings,
-  Bot,
-  Code,
-  Network,
   Vote
-} from 'lucide-react';
+} from "lucide-react";
 
-// Import enhanced components
+import { Navigation } from "@/components/Navigation";
 import { SeiNativeIntegration } from '@/components/SeiNativeIntegration';
 import { DeveloperTooling } from '@/components/DeveloperTooling';
 import { InfrastructureMonitoring } from '@/components/InfrastructureMonitoring';
 import { InteractiveDemo } from '@/components/InteractiveDemo';
 
 // Import existing components
-import SystemOverview from '@/components/SystemOverview';
-import NetworkMetrics from '@/components/NetworkMetrics';
-import RealTimeMonitor from '@/components/RealTimeMonitor';
-import VulnerabilityRadar from '@/components/VulnerabilityRadar';
-import ContractHealthGrid from '@/components/ContractHealthGrid';
-import ThreatIntelFeed from '@/components/ThreatIntelFeed';
-import ToolsIntegrationPanel from '@/components/ToolsIntegrationPanel';
-import CambrianAnalytics from '@/components/CambrianAnalytics';
+import { SystemOverview } from '@/components/SystemOverview';
+import { NetworkMetrics } from '@/components/NetworkMetrics';
+import { RealTimeMonitor } from '@/components/RealTimeMonitor';
+import { VulnerabilityRadar } from '@/components/VulnerabilityRadar';
+import { ContractHealthGrid } from '@/components/ContractHealthGrid';
+import { ThreatIntelFeed } from '@/components/ThreatIntelFeed';
+import { ToolsIntegrationPanel } from '@/components/ToolsIntegrationPanel';
+import { CambrianAnalytics } from '@/components/CambrianAnalytics';
 
 // Import hooks
 import { useSeiData } from '@/hooks/useSeiData';
@@ -284,7 +279,7 @@ export default function Dashboard() {
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-foreground">
-                  <Globe className="w-5 h-5 text-primary" />
+                  <Shield className="w-5 h-5 text-primary" />
                   Network Status
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">Current Sei Network metrics and performance</CardDescription>
@@ -341,7 +336,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
-                    <Lightning className="w-5 h-5 text-blue-500" />
+                    <Zap className="w-5 h-5 text-blue-500" />
                     ⚡ Live Block Finality (Twin-Turbo)
                   </CardTitle>
                 </CardHeader>
@@ -438,7 +433,7 @@ export default function Dashboard() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-foreground">
-                    <Search className="w-5 h-5 text-green-500" />
+                    <CheckCircle className="w-5 h-5 text-green-500" />
                     🚀 Recent Auto‑Scans
                   </CardTitle>
                   <CardDescription className="text-muted-foreground">
@@ -567,10 +562,6 @@ export default function Dashboard() {
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <Database className="w-6 h-6" />
                       <span>Backup Data</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
-                      <Network className="w-6 h-6" />
-                      <span>Network Status</span>
                     </Button>
                     <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2">
                       <Settings className="w-6 h-6" />
