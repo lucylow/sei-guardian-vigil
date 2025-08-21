@@ -234,7 +234,6 @@ export default function Dashboard() {
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard</h1>
-          <p className="text-muted-foreground">Real-time monitoring and system overview</p>
         </div>
 
         <Tabs defaultValue="overview" className="w-full">
@@ -341,12 +340,6 @@ export default function Dashboard() {
           {/* Security Tab */}
           <TabsContent value="security" className="mt-6">
             <div className="space-y-6">
-              {/* Security Overview Header */}
-              <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold text-foreground mb-2">Security Overview</h2>
-                <p className="text-muted-foreground">Current security status and threat monitoring</p>
-              </div>
-
               {/* Vulnerability Types Grid */}
               <Card>
                 <CardHeader>
