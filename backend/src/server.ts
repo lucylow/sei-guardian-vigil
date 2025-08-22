@@ -7,11 +7,15 @@ import BattleEngine from "./BattleEngine";
 import RewardSystem from "./RewardSystem";
 import seiMcpRouter from "./seiMcpIntegration";
 import visualAgentRouter from "../api/visualAgent.js";
+import agentRouter from "./agentRoutes"; // Import the new agent router
 
 const app = express();
 app.use(express.json()); // <-- Ensure body parser is enabled
+
+// API Routes
 app.use("/api/sei", seiMcpRouter);
 app.use("/api/visual-agent", visualAgentRouter);
+app.use("/api/agents", agentRouter); // Add the new agent routes
 
 const server = http.createServer(app);
 const io = new SocketIO(server, { cors: { origin: "*" } });
@@ -56,7 +60,13 @@ app.get("/api/status", (req, res) => {
   res.json({
     status: "operational",
     mockMode: Blockchain.isMockActive(),
-    version: "1.2.0"
+    version: "1.2.0",
+    features: {
+      agents: true,
+      battles: true,
+      rewards: true,
+      seiIntegration: true
+    }
   });
 });
 
@@ -99,6 +109,9 @@ app.post("/api/battle/reward", async (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
-  console.log(`SEI SENTINEL API running on port ${PORT}`);
+  console.log(`🚀 SEI SENTINEL API running on port ${PORT}`);
   console.log(`Mode: ${Blockchain.isMockActive() ? "MOCK" : "LIVE"}`);
+  console.log(`📡 Agent API endpoints available at /api/agents/*`);
+  console.log(`🔗 Sei MCP integration available at /api/sei/*`);
+  console.log(`🎮 Battle system active on /api/battle/*`);
 });
