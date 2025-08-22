@@ -73,10 +73,14 @@ const Demo: React.FC = () => {
 
       {/* Main Demo Tabs */}
       <Tabs defaultValue="playground" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="playground" className="flex items-center gap-2">
             <Code className="h-4 w-4" />
             Interactive Demo
+          </TabsTrigger>
+          <TabsTrigger value="parallel" className="flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" />
+            Parallel EVM
           </TabsTrigger>
           <TabsTrigger value="performance" className="flex items-center gap-2">
             <TrendingUp className="h-4 w-4" />
@@ -87,20 +91,31 @@ const Demo: React.FC = () => {
             Arena
           </TabsTrigger>
           <TabsTrigger value="sdk" className="flex items-center gap-2">
-            <Code className="h-4 w-4" />
+            <Shield className="h-4 w-4" />
             Developer SDK
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="playground" className="space-y-6">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl font-bold mb-2">Interactive Security Scan Demo</h2>
-            <p className="text-muted-foreground">
-              Experience SEI Sentinel's AI-powered security scanning in action. Submit your own contract or try our sample contracts.
-            </p>
-          </div>
-          <DemoPlayground />
-        </TabsContent>
+                  <TabsContent value="playground" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold mb-2">Interactive Security Scan Demo</h2>
+              <p className="text-muted-foreground">
+                Experience SEI Sentinel's AI-powered security scanning in action. Submit your own contract or try our sample contracts.
+              </p>
+            </div>
+            <DemoPlayground />
+          </TabsContent>
+
+          <TabsContent value="parallel" className="space-y-6">
+            <div className="text-center mb-6">
+              <h2 className="text-3xl font-bold mb-2">SEI Parallelized EVM Demonstration</h2>
+              <p className="text-muted-foreground">
+                Witness the power of Sei Network's parallelized execution with multiple AI agents auditing contracts simultaneously. 
+                This showcases the infrastructure advantage that enables scalable AI agent operations.
+              </p>
+            </div>
+            <ParallelAuditDemo />
+          </TabsContent>
 
         <TabsContent value="performance" className="space-y-6">
           <div className="text-center mb-6">
