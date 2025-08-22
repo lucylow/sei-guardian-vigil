@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Wallet, Copy, ExternalLink, AlertCircle } from "lucide-react";
+import { Wallet, Copy, ExternalLink, AlertCircle, CheckCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 declare global {
@@ -21,6 +21,7 @@ export default function ConnectWalletButton() {
     chainName: string;
     rpc: string;
   } | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Sei Network configuration
   const seiConfig = {
@@ -147,10 +148,12 @@ export default function ConnectWalletButton() {
     if (account) {
       try {
         await navigator.clipboard.writeText(account);
+        setCopied(true);
         toast({
           title: "Address Copied",
           description: "Wallet address copied to clipboard",
         });
+        setTimeout(() => setCopied(false), 2000);
       } catch (error) {
         toast({
           title: "Copy Failed",
@@ -169,10 +172,10 @@ export default function ConnectWalletButton() {
 
   if (account) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-3">
         {/* Network Info */}
-        <div className="hidden md:flex items-center space-x-2 text-sm">
-          <Badge variant="secondary" className="text-xs bg-red-900/30 border-red-700/50 text-red-400 font-mono tracking-wide">
+        <div className="hidden md:flex items-center space-x-3">
+          <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-900/40 to-red-800/40 border-red-700/50 text-red-300 font-mono tracking-wide shadow-lg shadow-red-500/20 font-bold">
             {networkInfo?.chainName || "SEI NETWORK"}
           </Badge>
         </div>
@@ -182,10 +185,11 @@ export default function ConnectWalletButton() {
           variant="outline"
           size="sm"
           onClick={openKeplr}
-          className="flex items-center space-x-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide"
+          className="flex items-center space-x-3 border-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold shadow-lg hover:shadow-red-500/25 transform hover:scale-105"
         >
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
           <Wallet className="w-4 h-4" />
-          <span className="hidden sm:inline">
+          <span className="hidden sm:inline font-mono">
             {account.slice(0, 6)}...{account.slice(-4)}
           </span>
         </Button>
@@ -195,9 +199,13 @@ export default function ConnectWalletButton() {
           variant="ghost"
           size="sm"
           onClick={copyAddress}
-          className="px-2 text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300"
+          className="px-3 text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 transform hover:scale-105"
         >
-          <Copy className="w-4 h-4" />
+          {copied ? (
+            <CheckCircle className="w-4 h-4 text-green-400" />
+          ) : (
+            <Copy className="w-4 h-4" />
+          )}
         </Button>
         
         {/* Disconnect */}
@@ -205,7 +213,7 @@ export default function ConnectWalletButton() {
           variant="ghost"
           size="sm"
           onClick={disconnectWallet}
-          className="px-2 text-red-600/70 hover:text-red-500 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide"
+          className="px-4 text-red-600/70 hover:text-red-500 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
         >
           DISCONNECT
         </Button>
@@ -214,9 +222,9 @@ export default function ConnectWalletButton() {
   }
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-3">
       {error && (
-        <div className="flex items-center space-x-1 text-red-500 text-xs font-mono tracking-wide">
+        <div className="flex items-center space-x-2 text-red-500 text-xs font-mono tracking-wide bg-red-900/20 px-3 py-2 rounded-lg border border-red-700/30">
           <AlertCircle className="w-3 h-3" />
           <span>{error}</span>
         </div>
@@ -225,10 +233,19 @@ export default function ConnectWalletButton() {
       <Button
         onClick={connectKeplr}
         disabled={isConnecting}
-        className="flex items-center space-x-2 bg-transparent border-2 border-red-500 text-red-400 hover:bg-red-500 hover:text-black transition-all duration-300 font-mono tracking-wide font-bold shadow-lg hover:shadow-red-500/25"
+        className="flex items-center space-x-3 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 transition-all duration-300 font-mono tracking-wide font-bold shadow-2xl hover:shadow-red-500/40 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       >
-        <Wallet className="w-4 h-4" />
-        {isConnecting ? "CONNECTING..." : "CONNECT WALLET"}
+        {isConnecting ? (
+          <>
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span>CONNECTING...</span>
+          </>
+        ) : (
+          <>
+            <Wallet className="w-4 h-4" />
+            <span>CONNECT WALLET</span>
+          </>
+        )}
       </Button>
       
       {/* Install Keplr Link */}
@@ -237,13 +254,13 @@ export default function ConnectWalletButton() {
           variant="outline"
           size="sm"
           asChild
-          className="border-red-700/50 text-red-600/70 hover:border-red-600 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide"
+          className="border-2 border-red-700/50 text-red-600/70 hover:border-red-600 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25"
         >
           <a 
             href="https://www.keplr.app/" 
             target="_blank" 
             rel="noopener noreferrer"
-            className="flex items-center space-x-1"
+            className="flex items-center space-x-2"
           >
             <ExternalLink className="w-3 h-3" />
             <span className="text-xs">INSTALL KEPLR</span>

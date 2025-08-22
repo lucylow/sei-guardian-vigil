@@ -49,30 +49,33 @@ export function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-black font-mono text-red-400">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/20 to-black font-mono text-red-400">
       {/* Header */}
-      <header className="border-b-2 border-red-900/50 bg-black/95 backdrop-blur supports-[backdrop-filter]:bg-black/60">
+      <header className="sticky top-0 z-50 border-b-2 border-red-900/50 bg-black/95 backdrop-blur-xl supports-[backdrop-filter]:bg-black/80 shadow-2xl shadow-red-500/10">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
             <Link to="/" className="flex items-center space-x-3 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/25 transition-all duration-300">
-                <Shield className="w-5 h-5 text-white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-red-600 via-red-700 to-red-800 rounded-2xl flex items-center justify-center group-hover:shadow-2xl group-hover:shadow-red-500/40 transition-all duration-500 transform group-hover:scale-105">
+                <Shield className="w-6 h-6 text-white group-hover:animate-pulse" />
               </div>
-              <div>
-                <span className="font-bold text-xl bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent tracking-wider">
+              <div className="transform group-hover:scale-105 transition-transform duration-300">
+                <span className="font-bold text-2xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent tracking-wider">
                   SEI SENTINEL
                 </span>
-                <div className="text-xs text-red-600/70 tracking-wider">GUARDIAN VIGIL</div>
+                <div className="text-xs text-red-600/70 tracking-wider font-medium">GUARDIAN VIGIL</div>
               </div>
             </Link>
             
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               {/* Network Status */}
-              <div className="hidden md:flex items-center space-x-2 text-sm">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
-                <span className="text-red-600/70 tracking-wide">SEI NETWORK</span>
-                <Badge variant="secondary" className="text-xs bg-red-900/30 border-red-700/50 text-red-400">
-                  <Activity className="w-3 h-3 mr-1" />
+              <div className="hidden md:flex items-center space-x-3 text-sm">
+                <div className="relative">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse shadow-lg shadow-red-500/50"></div>
+                  <div className="absolute inset-0 w-3 h-3 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                </div>
+                <span className="text-red-600/70 tracking-wide font-medium">SEI NETWORK</span>
+                <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-900/40 to-red-800/40 border-red-700/50 text-red-300 shadow-lg shadow-red-500/20 font-bold tracking-wide">
+                  <Activity className="w-3 h-3 mr-1 animate-pulse" />
                   LIVE
                 </Badge>
               </div>
@@ -86,26 +89,30 @@ export function Layout({ children }: LayoutProps) {
 
       <div className="flex">
         {/* Sidebar Navigation */}
-        <aside className="w-64 min-h-screen border-r-2 border-red-900/50 bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30">
-          <nav className="p-4 space-y-2">
+        <aside className="w-72 min-h-screen border-r-2 border-red-900/50 bg-gradient-to-b from-black/80 via-black/60 to-black/40 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">
+          <nav className="p-6 space-y-3">
             {navItems.map(({ to, label, icon: Icon, description }) => (
               <Link
                 key={to}
                 to={to}
                 className={cn(
-                  "flex items-center space-x-3 px-3 py-3 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-2 border-transparent",
+                  "group flex items-center space-x-4 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1",
                   isActive(to) 
-                    ? "bg-red-900/30 text-red-300 border-l-red-500 shadow-lg shadow-red-500/25" 
+                    ? "bg-gradient-to-r from-red-900/40 to-red-800/20 text-red-300 border-l-red-500 shadow-xl shadow-red-500/30 transform translate-x-1" 
                     : "text-red-600/70 hover:border-l-red-700/50"
                 )}
               >
-                <Icon className={cn(
-                  "w-4 h-4 transition-colors duration-300",
-                  isActive(to) ? "text-red-400" : "text-red-600/70"
-                )} />
+                <div className={cn(
+                  "p-2 rounded-lg transition-all duration-300",
+                  isActive(to) 
+                    ? "bg-red-500/20 text-red-400 shadow-lg shadow-red-500/20" 
+                    : "bg-red-900/20 text-red-600/70 group-hover:bg-red-500/20 group-hover:text-red-400"
+                )}>
+                  <Icon className="w-5 h-5" />
+                </div>
                 <div className="flex-1">
-                  <div className="font-medium tracking-wide">{label}</div>
-                  <div className="text-xs text-red-600/50 hidden lg:block tracking-wide">
+                  <div className="font-bold tracking-wide text-base">{label}</div>
+                  <div className="text-xs text-red-600/50 hidden lg:block tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     {description}
                   </div>
                 </div>
@@ -114,23 +121,23 @@ export function Layout({ children }: LayoutProps) {
           </nav>
 
           {/* Quick Stats */}
-          <div className="p-4 border-t border-red-900/50">
-            <div className="space-y-3">
-              <div className="text-xs font-medium text-red-600/70 uppercase tracking-wider">
+          <div className="p-6 border-t border-red-900/50">
+            <div className="space-y-4">
+              <div className="text-xs font-bold text-red-600/70 uppercase tracking-wider">
                 QUICK STATS
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-red-600/70">Active Agents</span>
-                  <Badge variant="secondary" className="text-xs bg-red-900/30 border-red-700/50 text-red-400">8</Badge>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                  <span className="text-red-600/70 font-medium">Active Agents</span>
+                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">8</Badge>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-red-600/70">Contracts Monitored</span>
-                  <Badge variant="secondary" className="text-xs bg-red-900/30 border-red-700/50 text-red-400">24</Badge>
+                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                  <span className="text-red-600/70 font-medium">Contracts Monitored</span>
+                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">24</Badge>
                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-red-600/70">Security Score</span>
-                  <Badge variant="default" className="text-xs bg-red-600 text-white shadow-lg shadow-red-500/25">94%</Badge>
+                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                  <span className="text-red-600/70 font-medium">Security Score</span>
+                  <Badge variant="default" className="text-xs bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg shadow-green-500/25 font-bold">94%</Badge>
                 </div>
               </div>
             </div>
@@ -138,32 +145,35 @@ export function Layout({ children }: LayoutProps) {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 min-h-screen bg-gradient-to-br from-black via-gray-900/20 to-black">
-          <div className="container mx-auto p-6">
+        <main className="flex-1 min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black">
+          <div className="container mx-auto p-8">
             {children}
           </div>
         </main>
       </div>
 
       {/* Footer */}
-      <footer className="border-t-2 border-red-900/50 bg-black/50 backdrop-blur supports-[backdrop-filter]:bg-black/30">
-        <div className="container mx-auto px-4 py-6">
+      <footer className="border-t-2 border-red-900/50 bg-gradient-to-r from-black/80 via-black/60 to-black/80 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">
+        <div className="container mx-auto px-6 py-8">
           <div className="flex items-center justify-between text-sm text-red-600/70">
-            <div className="flex items-center space-x-4">
-              <span className="tracking-wide">© 2024 SEI SENTINEL. BUILT ON SEI NETWORK.</span>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
-                <span className="tracking-wide">NETWORK: HEALTHY</span>
+            <div className="flex items-center space-x-6">
+              <span className="tracking-wide font-medium">© 2024 SEI SENTINEL. BUILT ON SEI NETWORK.</span>
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
+                  <div className="absolute inset-0 w-2 h-2 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                </div>
+                <span className="tracking-wide font-medium">NETWORK: HEALTHY</span>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link to="/docs" className="hover:text-red-400 transition-colors duration-300 tracking-wide">
+            <div className="flex items-center space-x-6">
+              <Link to="/docs" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
                 DOCUMENTATION
               </Link>
-              <Link to="/settings" className="hover:text-red-400 transition-colors duration-300 tracking-wide">
+              <Link to="/settings" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
                 SETTINGS
               </Link>
-              <a href="https://github.com/sei-network" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-colors duration-300 tracking-wide">
+              <a href="https://github.com/sei-network" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
                 GITHUB
               </a>
             </div>
