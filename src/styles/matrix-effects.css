@@ -1,185 +1,200 @@
-/* Matrix Code Rain Effect */
-.matrix-rain {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(180deg, 
-    transparent 0%, 
-    rgba(0, 255, 0, 0.1) 50%, 
-    transparent 100%);
-  animation: matrix-rain 3s linear infinite;
-  pointer-events: none;
-}
+/* Matrix-Themed CSS Effects for SEI Sentinel Agent Arena */
 
 @keyframes matrix-rain {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
+  0% { transform: translateY(-100vh); opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
 }
 
-/* Matrix Grid Background */
-.matrix-grid {
-  background-image: 
-    linear-gradient(rgba(0, 255, 0, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 1px, transparent 1px);
-  background-size: 20px 20px;
-  animation: matrix-grid-pulse 4s ease-in-out infinite;
+@keyframes matrix-glow {
+  0%, 100% { text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41, 0 0 15px #00ff41; }
+  50% { text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41; }
 }
 
-@keyframes matrix-grid-pulse {
-  0%, 100% {
-    opacity: 0.3;
-  }
-  50% {
-    opacity: 0.6;
-  }
+@keyframes digital-glitch {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(-2px); }
+  20% { transform: translateX(2px); }
+  30% { transform: translateX(-2px); }
+  40% { transform: translateX(2px); }
+  50% { transform: translateX(0); }
+  100% { transform: translateX(0); }
 }
 
-/* Cyberpunk Glow Effects */
-.cyber-glow {
-  box-shadow: 
-    0 0 5px rgba(0, 255, 0, 0.5),
-    0 0 10px rgba(0, 255, 0, 0.3),
-    0 0 15px rgba(0, 255, 0, 0.1);
+@keyframes code-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
 }
 
-.cyber-glow-blue {
-  box-shadow: 
-    0 0 5px rgba(0, 150, 255, 0.5),
-    0 0 10px rgba(0, 150, 255, 0.3),
-    0 0 15px rgba(0, 150, 255, 0.1);
+@keyframes matrix-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
 }
 
-.cyber-glow-purple {
-  box-shadow: 
-    0 0 5px rgba(150, 0, 255, 0.5),
-    0 0 10px rgba(150, 0, 255, 0.3),
-    0 0 15px rgba(150, 0, 255, 0.1);
+@keyframes matrix-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
 }
 
-/* Matrix Text Effect */
-.matrix-text {
-  text-shadow: 
-    0 0 5px rgba(0, 255, 0, 0.8),
-    0 0 10px rgba(0, 255, 0, 0.6),
-    0 0 15px rgba(0, 255, 0, 0.4);
+@keyframes matrix-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
 }
 
-/* Hover Animations */
-.matrix-hover {
-  transition: all 0.3s ease;
-}
-
-.matrix-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 4px 8px rgba(0, 255, 0, 0.2),
-    0 8px 16px rgba(0, 255, 0, 0.1);
-}
-
-/* Loading Spinner with Matrix Theme */
-.matrix-spinner {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(0, 255, 0, 0.3);
-  border-top: 2px solid rgba(0, 255, 0, 0.8);
-  border-radius: 50%;
-  animation: matrix-spin 1s linear infinite;
-}
-
-@keyframes matrix-spin {
+@keyframes matrix-rotate {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
 
-/* Pulse Animation for Alerts */
-.matrix-pulse {
-  animation: matrix-pulse 2s ease-in-out infinite;
+/* Matrix Text Effects */
+.matrix-text {
+  font-family: 'Courier New', monospace;
+  color: #00ff41;
+  animation: matrix-glow 2s ease-in-out infinite;
 }
 
-@keyframes matrix-pulse {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 0, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(0, 255, 0, 0);
-  }
+.matrix-rain-char {
+  position: absolute;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  animation: matrix-rain 3s linear infinite;
+  opacity: 0.7;
 }
 
-/* Gradient Text Animations */
-.gradient-text-animate {
-  background: linear-gradient(45deg, 
-    #00ff00, #00ffff, #0080ff, #8000ff, #ff0080, #ff8000, #ffff00, #00ff00);
-  background-size: 400% 400%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradient-shift 3s ease infinite;
+.digital-glitch {
+  animation: digital-glitch 0.3s ease-in-out;
 }
 
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Matrix Border Animation */
-.matrix-border {
+/* Matrix Card Effects */
+.agent-card-matrix {
+  background: linear-gradient(135deg, #000000 0%, #001100 50%, #000000 100%);
+  border: 1px solid #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
   position: relative;
-  border: 2px solid transparent;
-  background: linear-gradient(45deg, #00ff00, #00ffff, #0080ff, #8000ff);
-  background-size: 400% 400%;
-  animation: gradient-shift 3s ease infinite;
+  overflow: hidden;
 }
 
-.matrix-border::before {
+.agent-card-matrix::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, #00ff00, #00ffff, #0080ff, #8000ff);
-  background-size: 400% 400%;
-  animation: gradient-shift 3s ease infinite;
-  z-index: -1;
-  border-radius: inherit;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.1), transparent);
+  animation: code-scroll 2s infinite;
 }
 
-/* Floating Animation */
-.float {
-  animation: float 3s ease-in-out infinite;
+.vulnerability-card-matrix {
+  background: linear-gradient(135deg, #330000 0%, #110000 50%, #330000 100%);
+  border: 1px solid #ff0000;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.battle-progress-matrix {
+  background: linear-gradient(90deg, #00ff41, #0080ff);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  animation: matrix-glow 1s ease-in-out infinite;
 }
 
-/* Glitch Effect */
-.glitch {
+/* Responsive Matrix Grid */
+.matrix-grid {
+  background-image: 
+    linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Matrix Button Effects */
+.matrix-button {
+  background: linear-gradient(45deg, #00ff41, #0080ff);
+  border: none;
+  color: black;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.matrix-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.matrix-button:hover::before {
+  left: 100%;
+}
+
+.matrix-button:hover {
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.6);
+  transform: translateY(-2px);
+}
+
+/* Agent Status Indicators */
+.status-active {
+  color: #00ff41;
+  text-shadow: 0 0 10px #00ff41;
+}
+
+.status-battling {
+  color: #ff0000;
+  text-shadow: 0 0 10px #ff0000;
+  animation: digital-glitch 0.5s infinite;
+}
+
+.status-resting {
+  color: #ffff00;
+  text-shadow: 0 0 10px #ffff00;
+}
+
+/* Matrix Loading Animation */
+.matrix-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #00ff41;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: matrix-rotate 1s ease-in-out infinite;
+}
+
+/* Matrix Rain Container */
+.matrix-rain-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.matrix-rain-drop {
+  position: absolute;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  opacity: 0.7;
+  text-shadow: 0 0 5px #00ff41;
+  animation: matrix-rain 3s linear infinite;
+}
+
+/* Matrix Glitch Effects */
+.matrix-glitch {
   position: relative;
 }
 
-.glitch::before,
-.glitch::after {
+.matrix-glitch::before,
+.matrix-glitch::after {
   content: attr(data-text);
   position: absolute;
   top: 0;
@@ -188,30 +203,274 @@
   height: 100%;
 }
 
-.glitch::before {
-  animation: glitch-1 0.5s infinite;
-  color: #00ffff;
+.matrix-glitch::before {
+  animation: digital-glitch 0.3s infinite;
+  color: #ff0000;
   z-index: -1;
 }
 
-.glitch::after {
-  animation: glitch-2 0.5s infinite;
-  color: #ff00ff;
+.matrix-glitch::after {
+  animation: digital-glitch 0.3s infinite reverse;
+  color: #00ffff;
   z-index: -2;
 }
 
-@keyframes glitch-1 {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(-2px, 2px); }
-  40% { transform: translate(-2px, -2px); }
-  60% { transform: translate(2px, 2px); }
-  80% { transform: translate(2px, -2px); }
+/* Matrix Holographic Effects */
+.matrix-hologram {
+  background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 65, 0.1) 50%, transparent 70%);
+  background-size: 200% 200%;
+  animation: matrix-pulse 2s ease-in-out infinite;
 }
 
-@keyframes glitch-2 {
-  0%, 100% { transform: translate(0); }
-  20% { transform: translate(2px, -2px); }
-  40% { transform: translate(2px, 2px); }
-  60% { transform: translate(-2px, -2px); }
-  80% { transform: translate(-2px, 2px); }
+.matrix-hologram::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(0, 255, 65, 0.05) 50%, transparent 70%);
+  background-size: 200% 200%;
+  animation: matrix-pulse 2s ease-in-out infinite reverse;
+}
+
+/* Matrix Typography */
+.matrix-font {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.matrix-title {
+  font-size: 3rem;
+  color: #00ff41;
+  text-shadow: 0 0 20px #00ff41;
+  animation: matrix-glow 3s ease-in-out infinite;
+}
+
+.matrix-subtitle {
+  font-size: 1.5rem;
+  color: #00cc33;
+  text-shadow: 0 0 10px #00cc33;
+}
+
+/* Matrix Card Animations */
+.matrix-card-hover {
+  transition: all 0.3s ease;
+}
+
+.matrix-card-hover:hover {
+  transform: translateY(-5px) rotateY(5deg);
+  box-shadow: 0 10px 30px rgba(0, 255, 65, 0.4);
+}
+
+.matrix-card-hover:hover::before {
+  animation: code-scroll 1s ease-in-out;
+}
+
+/* Matrix Progress Bars */
+.matrix-progress {
+  background: linear-gradient(90deg, #001100, #003300);
+  border: 1px solid #00ff41;
+  box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.matrix-progress-bar {
+  background: linear-gradient(90deg, #00ff41, #00cc33);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+  animation: matrix-pulse 2s ease-in-out infinite;
+}
+
+/* Matrix Badge Effects */
+.matrix-badge {
+  background: linear-gradient(45deg, #001100, #003300);
+  border: 1px solid #00ff41;
+  color: #00ff41;
+  text-shadow: 0 0 5px #00ff41;
+  animation: matrix-flicker 2s ease-in-out infinite;
+}
+
+.matrix-badge-legendary {
+  background: linear-gradient(45deg, #332200, #664400);
+  border: 1px solid #ffaa00;
+  color: #ffaa00;
+  text-shadow: 0 0 5px #ffaa00;
+}
+
+.matrix-badge-epic {
+  background: linear-gradient(45deg, #330033, #660066);
+  border: 1px solid #ff00ff;
+  color: #ff00ff;
+  text-shadow: 0 0 5px #ff00ff;
+}
+
+.matrix-badge-rare {
+  background: linear-gradient(45deg, #003333, #006666);
+  border: 1px solid #00ffff;
+  color: #00ffff;
+  text-shadow: 0 0 5px #00ffff;
+}
+
+/* Matrix Input Fields */
+.matrix-input {
+  background: #001100;
+  border: 1px solid #00ff41;
+  color: #00ff41;
+  font-family: 'Courier New', monospace;
+  padding: 10px;
+  transition: all 0.3s ease;
+}
+
+.matrix-input:focus {
+  outline: none;
+  border-color: #00cc33;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+  background: #002200;
+}
+
+/* Matrix Table Effects */
+.matrix-table {
+  background: #001100;
+  border: 1px solid #00ff41;
+}
+
+.matrix-table th {
+  background: #003300;
+  color: #00ff41;
+  border-bottom: 1px solid #00ff41;
+}
+
+.matrix-table td {
+  border-bottom: 1px solid #004400;
+  color: #00cc33;
+}
+
+.matrix-table tr:hover {
+  background: #002200;
+  animation: matrix-pulse 1s ease-in-out;
+}
+
+/* Matrix Modal Effects */
+.matrix-modal {
+  background: linear-gradient(135deg, #000000 0%, #001100 50%, #000000 100%);
+  border: 2px solid #00ff41;
+  box-shadow: 0 0 50px rgba(0, 255, 65, 0.5);
+}
+
+.matrix-modal-header {
+  background: linear-gradient(90deg, #001100, #003300);
+  border-bottom: 1px solid #00ff41;
+  color: #00ff41;
+}
+
+/* Matrix Notification Effects */
+.matrix-notification {
+  background: linear-gradient(45deg, #001100, #003300);
+  border: 1px solid #00ff41;
+  color: #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+  animation: matrix-float 3s ease-in-out infinite;
+}
+
+.matrix-notification-success {
+  border-color: #00ff41;
+  color: #00ff41;
+}
+
+.matrix-notification-warning {
+  border-color: #ffaa00;
+  color: #ffaa00;
+}
+
+.matrix-notification-error {
+  border-color: #ff0000;
+  color: #ff0000;
+}
+
+/* Matrix Scrollbar */
+.matrix-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.matrix-scrollbar::-webkit-scrollbar-track {
+  background: #001100;
+}
+
+.matrix-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00ff41, #00cc33);
+  border-radius: 4px;
+}
+
+.matrix-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00cc33, #009900);
+}
+
+/* Matrix Selection */
+.matrix-selection::selection {
+  background: rgba(0, 255, 65, 0.3);
+  color: #00ff41;
+}
+
+.matrix-selection::-moz-selection {
+  background: rgba(0, 255, 65, 0.3);
+  color: #00ff41;
+}
+
+/* Matrix Focus States */
+.matrix-focus:focus {
+  outline: none;
+  border-color: #00ff41;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+}
+
+/* Matrix Disabled States */
+.matrix-disabled {
+  opacity: 0.5;
+  filter: grayscale(100%);
+  cursor: not-allowed;
+}
+
+/* Matrix Loading States */
+.matrix-loading-overlay {
+  background: rgba(0, 17, 0, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.matrix-loading-spinner {
+  border: 3px solid #001100;
+  border-top: 3px solid #00ff41;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: matrix-rotate 1s linear infinite;
+}
+
+/* Matrix Responsive Design */
+@media (max-width: 768px) {
+  .matrix-title {
+    font-size: 2rem;
+  }
+  
+  .matrix-subtitle {
+    font-size: 1rem;
+  }
+  
+  .matrix-card-hover:hover {
+    transform: translateY(-2px) rotateY(2deg);
+  }
+}
+
+/* Matrix Print Styles */
+@media print {
+  .matrix-rain-container,
+  .matrix-glitch::before,
+  .matrix-glitch::after {
+    display: none;
+  }
+  
+  .matrix-card-hover:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }

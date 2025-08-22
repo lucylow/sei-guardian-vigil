@@ -5,6 +5,9 @@
 /* Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap');
 
+/* Matrix Effects Import */
+@import './styles/matrix-effects.css';
+
 /* CSS Variables for SEI Red Palette */
 :root {
   --sei-neon-red: 0 100% 50%;
