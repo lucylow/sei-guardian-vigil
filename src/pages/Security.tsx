@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+/* Navigation is now handled by the Layout component */
 import { HumanInterventionPanel } from "@/components/HumanInterventionPanel";
 import { ThreatIntelFeed } from "@/components/ThreatIntelFeed";
 import { SeiMCPPlugin } from "@/components/SeiMCPPlugin";
@@ -77,7 +77,7 @@ export default function Security() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">

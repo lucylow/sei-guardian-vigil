@@ -21,7 +21,7 @@ import {
   Vote
 } from "lucide-react";
 
-import { Navigation } from "@/components/Navigation";
+// Navigation is now handled by the Layout component
 import { SeiNativeIntegration } from '@/components/SeiNativeIntegration';
 import { DeveloperTooling } from '@/components/DeveloperTooling';
 import { InfrastructureMonitoring } from '@/components/InfrastructureMonitoring';
@@ -238,7 +238,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">

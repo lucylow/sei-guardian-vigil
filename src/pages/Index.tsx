@@ -1,5 +1,5 @@
 
-import { Navigation } from "@/components/Navigation";
+/* Navigation is now handled by the Layout component */
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2 } from "lucide-react";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 export default function Index() {
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       
       {/* Hero Section */}
       <section className="relative py-20 px-4">

@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+/* Navigation is now handled by the Layout component */
 import { AuditQueuePanel } from "@/components/AuditQueuePanel";
 import { SmartContractUploader } from "@/components/SmartContractUploader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,7 +65,7 @@ export default function Audits() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">

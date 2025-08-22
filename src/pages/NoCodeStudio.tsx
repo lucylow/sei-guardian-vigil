@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navigation } from "@/components/Navigation";
+/* Navigation is now handled by the Layout component */
 import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
 import { Button } from "@/components/ui/button";
@@ -103,7 +103,7 @@ export default function NoCodeStudio() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-8 text-center">

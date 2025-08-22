@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+/* Navigation is now handled by the Layout component */
 import { AgentStatusPanel } from "@/components/AgentStatusPanel";
 import { MCPIntegration } from "@/components/MCPIntegration";
 import { AgenticWorkflow } from "@/components/AgenticWorkflow";
@@ -36,7 +36,7 @@ export default function Agents() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">

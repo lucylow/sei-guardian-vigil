@@ -1,4 +1,4 @@
-import { Navigation } from "@/components/Navigation";
+/* Navigation is now handled by the Layout component */
 import { SentinelGameDashboard } from "@/components/SentinelGameDashboard";
 import { MatrixNFTDashboard } from "@/components/MatrixNFTDashboard";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,7 +32,7 @@ export default function AgentArenaPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navigation />
+              {/* Navigation is now handled by the Layout component */}
       
       {/* Game Header - Status and Stats */}
       <section className="relative py-6 px-4 bg-gradient-to-r from-slate-900/50 to-slate-800/50 border-b border-green-500/20">
