@@ -7,33 +7,33 @@ import { Link } from "react-router-dom";
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-background">
-              {/* Navigation is now handled by the Layout component */}
+    <div className="min-h-screen bg-black font-mono text-red-400">
+      {/* Navigation is now handled by the Layout component */}
       
       {/* Hero Section */}
       <section className="relative py-20 px-4">
         <div className="container mx-auto text-center">
           <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-primary rounded-full flex items-center justify-center">
-              <Shield className="w-10 h-10 text-primary-foreground" />
+            <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center shadow-2xl shadow-red-500/25 group-hover:shadow-red-500/50 transition-all duration-500">
+              <Shield className="w-10 h-10 text-white" />
             </div>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-            SEI Sentinel
+          <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-gradient-to-r from-red-400 to-red-600 bg-clip-text mb-6 tracking-wider">
+            SEI SENTINEL
           </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Gamified Multi-Agent Security System for Sei Network. NFT-powered agents compete to protect $626M+ DeFi ecosystem.
+          <p className="text-xl text-red-300/80 mb-8 max-w-2xl mx-auto tracking-wide leading-relaxed">
+            GAMIFIED MULTI-AGENT SECURITY SYSTEM FOR SEI NETWORK. NFT-POWERED AGENTS COMPETE TO PROTECT $626M+ DEFI ECOSYSTEM.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg">
+            <Button asChild size="lg" className="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white border-2 border-red-500 shadow-lg hover:shadow-red-500/25 transition-all duration-300 font-mono tracking-wide font-bold">
               <Link to="/dashboard">
-                View Dashboard <ArrowRight className="w-4 h-4 ml-2" />
+                VIEW DASHBOARD <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
             </Button>
-            <Button variant="outline" size="lg" asChild>
+            <Button variant="outline" size="lg" asChild className="border-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold">
               <Link to="/agent-arena">
                 <Gamepad2 className="w-4 h-4 mr-2" />
-                Enter Arena
+                ENTER ARENA
               </Link>
             </Button>
           </div>
@@ -44,64 +44,64 @@ export default function Index() {
       {/* Features Grid */}
       <section className="py-16 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">System Capabilities</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-red-300 tracking-wider">SYSTEM CAPABILITIES</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Activity className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Real-time Monitoring</CardTitle>
-                <CardDescription>
-                  Continuous monitoring of smart contracts and network activity
+            <Card className="hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300 bg-black/50 border-red-900/50 hover:border-red-700/50 group">
+              <CardHeader className="group-hover:bg-red-900/10 transition-all duration-300">
+                <Activity className="w-8 h-8 text-red-400 mb-2 group-hover:text-red-300 transition-colors duration-300" />
+                <CardTitle className="text-red-300 font-mono tracking-wide">REAL-TIME MONITORING</CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  CONTINUOUS MONITORING OF SMART CONTRACTS AND NETWORK ACTIVITY
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/dashboard">View Monitor</Link>
+                <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide">
+                  <Link to="/dashboard">VIEW MONITOR</Link>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Users className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Multi-Agent System</CardTitle>
-                <CardDescription>
-                  Coordinated AI agents working together for comprehensive security
+            <Card className="hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300 bg-black/50 border-red-900/50 hover:border-red-700/50 group">
+              <CardHeader className="group-hover:bg-red-900/10 transition-all duration-300">
+                <Users className="w-8 h-8 text-red-400 mb-2 group-hover:text-red-300 transition-colors duration-300" />
+                <CardTitle className="text-red-300 font-mono tracking-wide">MULTI-AGENT SYSTEM</CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  COORDINATED AI AGENTS WORKING TOGETHER FOR COMPREHENSIVE SECURITY
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/agents">Manage Agents</Link>
+                <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide">
+                  <Link to="/agents">MANAGE AGENTS</Link>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <FileSearch className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Automated Auditing</CardTitle>
-                <CardDescription>
-                  AI-powered smart contract auditing with vulnerability detection
+            <Card className="hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300 bg-black/50 border-red-900/50 hover:border-red-700/50 group">
+              <CardHeader className="group-hover:bg-red-900/10 transition-all duration-300">
+                <FileSearch className="w-8 h-8 text-red-400 mb-2 group-hover:text-red-300 transition-colors duration-300" />
+                <CardTitle className="text-red-300 font-mono tracking-wide">AUTOMATED AUDITING</CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  AI-POWERED SMART CONTRACT AUDITING WITH VULNERABILITY DETECTION
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/audits">View Audits</Link>
+                <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide">
+                  <Link to="/audits">VIEW AUDITS</Link>
                 </Button>
               </CardContent>
             </Card>
 
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <Shield className="w-8 h-8 text-primary mb-2" />
-                <CardTitle>Threat Intelligence</CardTitle>
-                <CardDescription>
-                  Advanced threat detection and response mechanisms
+            <Card className="hover:shadow-xl hover:shadow-red-500/25 transition-all duration-300 bg-black/50 border-red-900/50 hover:border-red-700/50 group">
+              <CardHeader className="group-hover:bg-red-900/10 transition-all duration-300">
+                <Shield className="w-8 h-8 text-red-400 mb-2 group-hover:text-red-300 transition-colors duration-300" />
+                <CardTitle className="text-red-300 font-mono tracking-wide">THREAT INTELLIGENCE</CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  ADVANCED THREAT DETECTION AND RESPONSE MECHANISMS
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/security">Security Center</Link>
+                <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide">
+                  <Link to="/security">SECURITY CENTER</Link>
                 </Button>
               </CardContent>
             </Card>

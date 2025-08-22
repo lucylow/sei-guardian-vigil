@@ -172,8 +172,8 @@ export default function ConnectWalletButton() {
       <div className="flex items-center space-x-2">
         {/* Network Info */}
         <div className="hidden md:flex items-center space-x-2 text-sm">
-          <Badge variant="secondary" className="text-xs">
-            {networkInfo?.chainName || "Sei Network"}
+          <Badge variant="secondary" className="text-xs bg-red-900/30 border-red-700/50 text-red-400 font-mono tracking-wide">
+            {networkInfo?.chainName || "SEI NETWORK"}
           </Badge>
         </div>
         
@@ -182,7 +182,7 @@ export default function ConnectWalletButton() {
           variant="outline"
           size="sm"
           onClick={openKeplr}
-          className="flex items-center space-x-2"
+          className="flex items-center space-x-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide"
         >
           <Wallet className="w-4 h-4" />
           <span className="hidden sm:inline">
@@ -195,7 +195,7 @@ export default function ConnectWalletButton() {
           variant="ghost"
           size="sm"
           onClick={copyAddress}
-          className="px-2"
+          className="px-2 text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300"
         >
           <Copy className="w-4 h-4" />
         </Button>
@@ -205,9 +205,9 @@ export default function ConnectWalletButton() {
           variant="ghost"
           size="sm"
           onClick={disconnectWallet}
-          className="px-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+          className="px-2 text-red-600/70 hover:text-red-500 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide"
         >
-          Disconnect
+          DISCONNECT
         </Button>
       </div>
     );
@@ -216,7 +216,7 @@ export default function ConnectWalletButton() {
   return (
     <div className="flex items-center space-x-2">
       {error && (
-        <div className="flex items-center space-x-1 text-red-600 text-xs">
+        <div className="flex items-center space-x-1 text-red-500 text-xs font-mono tracking-wide">
           <AlertCircle className="w-3 h-3" />
           <span>{error}</span>
         </div>
@@ -225,10 +225,10 @@ export default function ConnectWalletButton() {
       <Button
         onClick={connectKeplr}
         disabled={isConnecting}
-        className="flex items-center space-x-2"
+        className="flex items-center space-x-2 bg-transparent border-2 border-red-500 text-red-400 hover:bg-red-500 hover:text-black transition-all duration-300 font-mono tracking-wide font-bold shadow-lg hover:shadow-red-500/25"
       >
         <Wallet className="w-4 h-4" />
-        {isConnecting ? "Connecting..." : "Connect Wallet"}
+        {isConnecting ? "CONNECTING..." : "CONNECT WALLET"}
       </Button>
       
       {/* Install Keplr Link */}
@@ -237,6 +237,7 @@ export default function ConnectWalletButton() {
           variant="outline"
           size="sm"
           asChild
+          className="border-red-700/50 text-red-600/70 hover:border-red-600 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide"
         >
           <a 
             href="https://www.keplr.app/" 
@@ -245,7 +246,7 @@ export default function ConnectWalletButton() {
             className="flex items-center space-x-1"
           >
             <ExternalLink className="w-3 h-3" />
-            <span className="text-xs">Install Keplr</span>
+            <span className="text-xs">INSTALL KEPLR</span>
           </a>
         </Button>
       )}

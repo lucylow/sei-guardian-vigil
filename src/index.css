@@ -53,6 +53,20 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* SEI Sentinel Brand Colors */
+    --sei-neon-red: 0 100% 50%;
+    --sei-dark-red: 0 100% 25%;
+    --sei-light-red: 0 100% 75%;
+    --sei-red-900: 0 100% 15%;
+    --sei-red-800: 0 100% 20%;
+    --sei-red-700: 0 100% 30%;
+    --sei-red-600: 0 100% 40%;
+    --sei-red-500: 0 100% 50%;
+    --sei-red-400: 0 100% 60%;
+    --sei-red-300: 0 100% 70%;
+    --sei-red-200: 0 100% 80%;
+    --sei-red-100: 0 100% 90%;
   }
 
   .dark {
@@ -101,5 +115,78 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Source Code Pro', 'Courier New', monospace;
+  }
+}
+
+/* SEI Sentinel Custom Styles */
+@layer components {
+  .sei-glow {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+  }
+  
+  .sei-glow-hover:hover {
+    box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+  }
+  
+  .sei-text-glow {
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  }
+  
+  .sei-border-glow {
+    border-color: rgba(255, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+  }
+  
+  .sei-card {
+    @apply bg-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300;
+  }
+  
+  .sei-card:hover {
+    @apply shadow-xl shadow-red-500/25;
+  }
+  
+  .sei-button {
+    @apply bg-transparent border-2 border-red-500 text-red-400 hover:bg-red-500 hover:text-black transition-all duration-300 font-mono tracking-wide font-bold;
+  }
+  
+  .sei-button:hover {
+    @apply shadow-lg shadow-red-500/25;
+  }
+  
+  .sei-button-outline {
+    @apply border-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold;
+  }
+  
+  .sei-text-primary {
+    @apply text-red-300 font-mono tracking-wide;
+  }
+  
+  .sei-text-secondary {
+    @apply text-red-600/70 font-mono tracking-wide;
+  }
+  
+  .sei-badge {
+    @apply bg-red-900/30 border-red-700/50 text-red-400 font-mono tracking-wide;
+  }
+}
+
+/* Custom scrollbar for SEI theme */
+@layer utilities {
+  .scrollbar-sei::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .scrollbar-sei::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.8);
+  }
+  
+  .scrollbar-sei::-webkit-scrollbar-thumb {
+    background: rgba(255, 0, 0, 0.5);
+    border-radius: 4px;
+  }
+  
+  .scrollbar-sei::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 0, 0, 0.7);
   }
 }
