@@ -18,7 +18,8 @@ import {
   Activity,
   BarChart3,
   Settings,
-  Vote
+  Vote,
+  Eye
 } from "lucide-react";
 
 // Navigation is now handled by the Layout component
@@ -39,8 +40,10 @@ import { CambrianAnalytics } from '@/components/CambrianAnalytics';
 
 // Import hooks
 import { useSeiData } from '@/hooks/useSeiData';
+import { useState } from "react";
 
 export default function Dashboard() {
+  const [activeTab, setActiveTab] = useState("overview");
   const { contracts, vulnerabilities, networkStats } = useSeiData();
 
   // Dashboard metrics data
@@ -237,344 +240,339 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black font-mono text-red-400">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black font-mono text-red-400">
       {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-red-300 mb-2 tracking-wider">DASHBOARD</h1>
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text mb-3 tracking-wider">
+                DASHBOARD
+              </h1>
+              <p className="text-lg text-red-600/70 font-medium tracking-wide">
+                REAL-TIME SECURITY MONITORING & SYSTEM OVERVIEW
+              </p>
+            </div>
+            <div className="flex items-center space-x-4">
+              <Badge variant="secondary" className="text-sm bg-gradient-to-r from-green-600/20 to-green-700/20 border-green-600/50 text-green-400 font-mono tracking-wide font-bold px-4 py-2">
+                <CheckCircle className="w-4 h-4 mr-2" />
+                SYSTEM HEALTHY
+              </Badge>
+              <Badge variant="secondary" className="text-sm bg-gradient-to-r from-blue-600/20 to-blue-700/20 border-blue-600/50 text-blue-400 font-mono tracking-wide font-bold px-4 py-2">
+                <Activity className="w-4 h-4 mr-2" />
+                ONLINE
+              </Badge>
+            </div>
+          </div>
         </div>
 
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-black/50 border-red-900/50">
-            <TabsTrigger value="overview" className="text-red-400 hover:text-red-300 data-[state=active]:bg-red-900/30 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide">OVERVIEW</TabsTrigger>
-            <TabsTrigger value="monitoring" className="text-red-400 hover:text-red-300 data-[state=active]:bg-red-900/30 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide">MONITORING</TabsTrigger>
-            <TabsTrigger value="security" className="text-red-400 hover:text-red-300 data-[state=active]:bg-red-900/30 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide">SECURITY</TabsTrigger>
-            <TabsTrigger value="analytics" className="text-red-400 hover:text-red-300 data-[state=active]:bg-red-900/30 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide">ANALYTICS</TabsTrigger>
-            <TabsTrigger value="tools" className="text-red-400 hover:text-red-300 data-[state=active]:bg-red-900/30 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide">TOOLS</TabsTrigger>
+        {/* Quick Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <TrendingUp className="w-5 h-5 text-green-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">24</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">ACTIVE AGENTS</div>
+              <div className="text-xs text-green-400 mt-2">+12% from last week</div>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <FileSearch className="w-6 h-6 text-white" />
+                </div>
+                <AlertTriangle className="w-5 h-5 text-yellow-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">156</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">CONTRACTS MONITORED</div>
+              <div className="text-xs text-yellow-400 mt-2">3 require attention</div>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Shield className="w-6 h-6 text-white" />
+                </div>
+                <CheckCircle className="w-5 h-5 text-green-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">94%</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">SECURITY SCORE</div>
+              <div className="text-xs text-green-400 mt-2">+2% improvement</div>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <Clock className="w-5 h-5 text-blue-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">400ms</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">AVG RESPONSE</div>
+              <div className="text-xs text-blue-400 mt-2">Ultra-fast</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-5 bg-gradient-to-r from-black/50 via-red-900/20 to-black/50 border-red-900/50 shadow-xl shadow-red-500/10">
+            <TabsTrigger 
+              value="overview" 
+              className="text-red-400 hover:text-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-900/40 data-[state=active]:to-red-800/20 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide font-bold transition-all duration-300 data-[state=active]:shadow-lg data-[state=active]:shadow-red-500/25"
+            >
+              OVERVIEW
+            </TabsTrigger>
+            <TabsTrigger 
+              value="monitoring" 
+              className="text-red-400 hover:text-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-900/40 data-[state=active]:to-red-800/20 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide font-bold transition-all duration-300 data-[state=active]:shadow-lg data-[state=active]:shadow-red-500/25"
+            >
+              MONITORING
+            </TabsTrigger>
+            <TabsTrigger 
+              value="security" 
+              className="text-red-400 hover:text-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-900/40 data-[state=active]:to-red-800/20 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide font-bold transition-all duration-300 data-[state=active]:shadow-lg data-[state=active]:shadow-red-500/25"
+            >
+              SECURITY
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="text-red-400 hover:text-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-900/40 data-[state=active]:to-red-800/20 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide font-bold transition-all duration-300 data-[state=active]:shadow-lg data-[state=active]:shadow-red-500/25"
+            >
+              ANALYTICS
+            </TabsTrigger>
+            <TabsTrigger 
+              value="tools" 
+              className="text-red-400 hover:text-red-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-red-900/40 data-[state=active]:to-red-800/20 data-[state=active]:text-red-300 data-[state=active]:border-red-500 font-mono tracking-wide font-bold transition-all duration-300 data-[state=active]:shadow-lg data-[state=active]:shadow-red-500/25"
+            >
+              TOOLS
+            </TabsTrigger>
           </TabsList>
 
           {/* Overview Tab */}
-          <TabsContent value="overview" className="mt-6">
-            {/* Key Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {dashboardMetrics.map((metric, index) => {
-                const IconComponent = metric.icon;
-                return (
-                  <Card key={index} className={`sei-card ${metric.bgColor} ${metric.borderColor}`}>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                      <CardTitle className="text-sm font-medium text-red-300 font-mono tracking-wide">{metric.label}</CardTitle>
-                      <IconComponent className={`h-4 w-4 ${metric.color}`} />
-                    </CardHeader>
-                    <CardContent>
-                      <div className={`text-2xl font-bold ${metric.color} font-mono tracking-wide`}>{metric.value}</div>
-                      <p className="text-xs text-red-600/70 font-mono tracking-wide">{metric.description}</p>
-                    </CardContent>
-                  </Card>
-                );
-              })}
+          <TabsContent value="overview" className="mt-8 space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* System Status */}
+              <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+                <CardHeader>
+                  <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                    <Activity className="w-6 h-6 text-red-400" />
+                    SYSTEM STATUS
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30">
+                      <span className="text-red-600/70 font-medium">Network Connectivity</span>
+                      <Badge variant="default" className="bg-green-600 text-white font-bold">ONLINE</Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30">
+                      <span className="text-red-600/70 font-medium">AI Agents</span>
+                      <Badge variant="default" className="bg-blue-600 text-white font-bold">ACTIVE</Badge>
+                    </div>
+                    <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30">
+                      <span className="text-red-600/70 font-medium">Security Protocols</span>
+                      <Badge variant="default" className="bg-green-600 text-white font-bold">ENABLED</Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Recent Activity */}
+              <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+                <CardHeader>
+                  <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                    <Clock className="w-6 h-6 text-red-400" />
+                    RECENT ACTIVITY
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-3 p-3 bg-red-900/20 rounded-lg border border-red-800/30">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span className="text-sm text-red-300">Agent Sentinel-01 completed security scan</span>
+                      <span className="text-xs text-red-600/70 ml-auto">2m ago</span>
+                    </div>
+                    <div className="flex items-center space-x-3 p-3 bg-red-900/20 rounded-lg border border-red-800/30">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                      <span className="text-sm text-red-300">New contract added to monitoring</span>
+                      <span className="text-xs text-red-600/70 ml-auto">5m ago</span>
+                    </div>
+                    <div className="flex items-center space-x-3 p-3 bg-red-900/20 rounded-lg border border-red-800/30">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                      <span className="text-sm text-red-300">Security alert resolved</span>
+                      <span className="text-xs text-red-600/70 ml-auto">12m ago</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
-            {/* Network Status Card */}
-            <Card className="mb-8 sei-card">
+            {/* Performance Metrics */}
+            <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                  <Shield className="w-5 h-5 text-red-500" />
-                  NETWORK STATUS
+                <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                  <BarChart3 className="w-6 h-6 text-red-400" />
+                  PERFORMANCE METRICS
                 </CardTitle>
-                <CardDescription className="text-red-600/70 font-mono tracking-wide">CURRENT SEI NETWORK METRICS AND PERFORMANCE</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {networkMetrics.map((metric, index) => {
-                    const IconComponent = metric.icon;
-                    return (
-                      <div key={index} className="p-4 rounded-lg bg-black/40 border border-red-500/10">
-                        <div className="flex items-center gap-2 mb-2">
-                          <IconComponent className={`w-4 h-4 ${metric.color}`} />
-                          <span className="text-xs text-red-600/70 font-mono tracking-wide">{metric.label}</span>
-                        </div>
-                        <div className={`text-lg font-bold ${metric.color} font-mono tracking-wide`}>
-                          {metric.value}
-                        </div>
-                        <p className="text-xs text-red-600/70 font-mono tracking-wide">{metric.description}</p>
-                      </div>
-                    );
-                  })}
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-red-600/70 font-medium">Response Time</span>
+                      <span className="text-red-300 font-bold">400ms</span>
+                    </div>
+                    <Progress value={85} className="h-2 bg-red-900/30">
+                      <div className="h-full bg-gradient-to-r from-red-600 to-red-700 rounded-full transition-all duration-500"></div>
+                    </Progress>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-red-600/70 font-medium">Uptime</span>
+                      <span className="text-red-300 font-bold">99.9%</span>
+                    </div>
+                    <Progress value={99} className="h-2 bg-red-900/30">
+                      <div className="h-full bg-gradient-to-r from-green-600 to-green-700 rounded-full transition-all duration-500"></div>
+                    </Progress>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-red-600/70 font-medium">Security Score</span>
+                      <span className="text-red-300 font-bold">94%</span>
+                    </div>
+                    <Progress value={94} className="h-2 bg-red-900/30">
+                      <div className="h-full bg-gradient-to-r from-red-600 to-red-700 rounded-full transition-all duration-500"></div>
+                    </Progress>
+                  </div>
                 </div>
               </CardContent>
             </Card>
-
-            {/* System Overview Summary */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Left Sidebar */}
-              <div className="lg:col-span-3 space-y-6">
-                <SystemOverview />
-                <NetworkMetrics stats={networkStats} />
-              </div>
-
-              {/* Center Content */}
-              <div className="lg:col-span-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <VulnerabilityRadar vulnerabilities={vulnerabilities} />
-                  <ContractHealthGrid contracts={contracts} />
-                </div>
-              </div>
-
-              {/* Right Sidebar */}
-              <div className="lg:col-span-3 space-y-6">
-                <ThreatIntelFeed />
-                <ToolsIntegrationPanel />
-              </div>
-            </div>
           </TabsContent>
 
           {/* Monitoring Tab */}
-          <TabsContent value="monitoring" className="mt-6">
-            <div className="space-y-6">
-              {/* Live Block Finality */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <Zap className="w-5 h-5 text-red-500" />
-                    ⚡ LIVE BLOCK FINALITY (TWIN-TURBO)
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-red-900/20 p-6 rounded-lg border border-red-500/20">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-red-400 mb-2 font-mono tracking-wide">
-                        BLOCK #8980916
-                      </div>
-                      <div className="text-lg text-red-500 font-mono tracking-wide">
-                        FINALITY LATENCY: 512 MS
-                      </div>
-                    </div>
+          <TabsContent value="monitoring" className="mt-8">
+            <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+              <CardHeader>
+                <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                  <Eye className="w-6 h-6 text-red-400" />
+                  LIVE MONITORING DASHBOARD
+                </CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  REAL-TIME SURVEILLANCE OF ALL MONITORED CONTRACTS AND NETWORK ACTIVITY
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Target className="w-8 h-8 text-white" />
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Real-Time Monitoring */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <Activity className="w-5 h-5 text-red-500" />
-                    REAL-TIME MONITORING
-                  </CardTitle>
-                  <CardDescription className="text-red-600/70 font-mono tracking-wide">LIVE SYSTEM MONITORING AND PERFORMANCE TRACKING</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <RealTimeMonitor contracts={contracts} />
-                </CardContent>
-              </Card>
-
-              {/* Network Performance Indicators */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <BarChart3 className="w-5 h-5 text-red-500" />
-                    NETWORK PERFORMANCE INDICATORS
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="text-center p-4 border border-red-500/20 rounded-lg">
-                      <div className="text-2xl mb-2">🟡</div>
-                      <div className="text-sm text-red-600/70 mb-1 font-mono tracking-wide">BLOCK TIME</div>
-                      <div className="font-bold text-red-300 font-mono tracking-wide">594MS</div>
-                    </div>
-                    <div className="text-center p-4 border border-red-500/20 rounded-lg">
-                      <div className="text-2xl mb-2">🟢</div>
-                      <div className="text-sm text-red-600/70 mb-1 font-mono tracking-wide">TPS</div>
-                      <div className="font-bold text-red-300 font-mono tracking-wide">15,415</div>
-                    </div>
-                    <div className="text-center p-4 border border-red-500/20 rounded-lg">
-                      <div className="text-2xl mb-2">⚪</div>
-                      <div className="text-sm text-red-600/70 mb-1 font-mono tracking-wide">VALIDATORS</div>
-                      <div className="font-bold text-red-300 font-mono tracking-wide">100</div>
-                    </div>
-                    <div className="text-center p-4 border border-red-500/20 rounded-lg">
-                      <div className="text-2xl mb-2">🟢</div>
-                      <div className="text-sm text-red-600/70 mb-1 font-mono tracking-wide">UTILIZATION</div>
-                      <div className="font-bold text-red-300 font-mono tracking-wide">68%</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <h3 className="text-xl font-bold text-red-300 mb-2">MONITORING ACTIVE</h3>
+                  <p className="text-red-600/70 font-medium tracking-wide">
+                    156 CONTRACTS UNDER SURVEILLANCE • 24 AGENTS DEPLOYED
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Security Tab */}
-          <TabsContent value="security" className="mt-6">
-            <div className="space-y-6">
-              {/* Vulnerability Types Grid */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <AlertTriangle className="w-5 h-5 text-red-500" />
-                    VULNERABILITY TYPES
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                    {vulnerabilityTypes.map((vuln, index) => (
-                      <div key={index} className="text-center p-4 border border-red-500/20 rounded-lg">
-                        <div className={`inline-block w-3 h-3 rounded-full ${vuln.color} mb-2`}></div>
-                        <div className="text-sm font-medium text-red-300 font-mono tracking-wide">{vuln.type}</div>
-                        <div className="text-xs text-red-600/70 font-mono tracking-wide">{vuln.severity}</div>
-                        <div className="text-lg font-bold text-red-500 font-mono tracking-wide">{vuln.count}</div>
-                      </div>
-                    ))}
+          <TabsContent value="security" className="mt-8">
+            <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+              <CardHeader>
+                <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                  <Shield className="w-6 h-6 text-red-400" />
+                  SECURITY CENTER
+                </CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  THREAT DETECTION, VULNERABILITY ASSESSMENT, AND INCIDENT RESPONSE
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-8 h-8 text-white" />
                   </div>
-                </CardContent>
-              </Card>
-
-              {/* Recent Auto-Scans */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <CheckCircle className="w-5 h-5 text-red-500" />
-                    🚀 RECENT AUTO‑SCANS
-                  </CardTitle>
-                  <CardDescription className="text-red-600/70 font-mono tracking-wide">
-                    LATEST SECURITY SCAN RESULTS FOR MONITORED CONTRACTS
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {recentScans.map((scan, index) => (
-                      <div key={index} className="border border-red-500/20 rounded-xl p-6 hover:shadow-lg hover:border-red-500/30 transition-all duration-200 bg-gradient-to-r from-black to-red-900/10">
-                        {/* Header Section */}
-                        <div className="flex items-start justify-between mb-4">
-                          <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-2">
-                              <h4 className="text-lg font-semibold text-red-300 font-mono tracking-wide">{scan.name}</h4>
-                              <Badge 
-                                className={`${getStatusColor(scan.status)} text-xs font-medium px-2 py-1 font-mono tracking-wide`}
-                              >
-                                {getStatusText(scan.status)}
-                              </Badge>
-                            </div>
-                            <p className="text-sm text-red-600/70 font-mono bg-red-900/20 px-3 py-1 rounded-md inline-block tracking-wide">
-                              {scan.address}
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-2xl font-bold text-red-300 mb-1 font-mono tracking-wide">{scan.tvl}</div>
-                            <div className="text-xs text-red-600/70 font-medium font-mono tracking-wide">TOTAL VALUE LOCKED</div>
-                          </div>
-                        </div>
-                        
-                        {/* Metrics Grid */}
-                        <div className="grid grid-cols-3 gap-6 mb-4">
-                          <div className="text-center p-3 bg-red-900/20 rounded-lg">
-                            <div className="text-xs text-red-600/70 mb-1 font-mono tracking-wide">LAST SCAN</div>
-                            <div className="font-semibold text-red-300 font-mono tracking-wide">{scan.lastScan}</div>
-                          </div>
-                          <div className="text-center p-3 bg-red-900/20 rounded-lg">
-                            <div className="text-xs text-red-600/70 mb-1 font-mono tracking-wide">VULNERABILITIES</div>
-                            <div className="font-semibold text-red-300 font-mono tracking-wide">{scan.vulnerabilities}</div>
-                          </div>
-                          <div className="text-center p-3 bg-red-900/20 rounded-lg">
-                            <div className="text-xs text-red-600/70 mb-1 font-mono tracking-wide">RISK LEVEL</div>
-                            <div className={`font-semibold ${scan.status === 'CRITICAL' ? 'text-red-500' : scan.status === 'WARNING' ? 'text-yellow-500' : 'text-green-500'} font-mono tracking-wide`}>
-                              {scan.status}
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Gas Optimization Status */}
-                        <div className="flex items-center justify-between pt-4 border-t border-red-500/20">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-red-600/70 font-mono tracking-wide">GAS OPTIMIZATION:</span>
-                            <span className={`text-sm font-medium ${scan.gasOptimized ? 'text-red-400' : 'text-orange-400'} font-mono tracking-wide`}>
-                              {scan.gasOptimized ? "YES" : "NO"}
-                            </span>
-                          </div>
-                          <Badge 
-                            variant={scan.gasOptimized ? "default" : "secondary"} 
-                            className={`text-xs font-medium px-3 py-1 ${scan.gasOptimized ? 'bg-red-600 text-white' : 'bg-orange-600 text-white'} font-mono tracking-wide`}
-                          >
-                            {scan.gasOptimized ? "OPTIMIZED" : "PENDING"}
-                          </Badge>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <h3 className="text-xl font-bold text-red-300 mb-2">SECURITY STATUS: EXCELLENT</h3>
+                  <p className="text-red-600/70 font-medium tracking-wide">
+                    NO ACTIVE THREATS DETECTED • ALL SYSTEMS SECURED
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Analytics Tab */}
-          <TabsContent value="analytics" className="mt-6">
-            <div className="space-y-6">
-              {/* Sei-Native Integration */}
-              <SeiNativeIntegration />
-              
-              {/* Infrastructure Monitoring */}
-              <InfrastructureMonitoring />
-              
-              {/* Cambrian Analytics */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <TrendingUp className="w-5 h-5 text-red-500" />
-                    ADVANCED ANALYTICS
-                  </CardTitle>
-                  <CardDescription className="text-red-600/70 font-mono tracking-wide">DEEP INSIGHTS AND PERFORMANCE ANALYSIS</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <CambrianAnalytics />
-                </CardContent>
-              </Card>
-            </div>
+          <TabsContent value="analytics" className="mt-8">
+            <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+              <CardHeader>
+                <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                  <BarChart3 className="w-6 h-6 text-red-400" />
+                  ANALYTICS & INSIGHTS
+                </CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  PERFORMANCE METRICS, TREND ANALYSIS, AND PREDICTIVE INSIGHTS
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-xl font-bold text-red-300 mb-2">ANALYTICS ENGINE</h3>
+                  <p className="text-red-600/70 font-medium tracking-wide">
+                    PROCESSING REAL-TIME DATA • GENERATING INSIGHTS
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           {/* Tools Tab */}
-          <TabsContent value="tools" className="mt-6">
-            <div className="space-y-6">
-              {/* Interactive Demo */}
-              <InteractiveDemo />
-              
-              {/* Developer Tooling */}
-              <DeveloperTooling />
-              
-              {/* Quick Actions */}
-              <Card className="sei-card">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-red-300 font-mono tracking-wide">
-                    <Zap className="w-5 h-5 text-red-500" />
-                    QUICK ACTIONS
-                  </CardTitle>
-                  <CardDescription className="text-red-600/70 font-mono tracking-wide">COMMON TASKS AND OPERATIONS</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-500/20 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide">
-                      <Shield className="w-6 h-6" />
-                      <span>RUN SECURITY SCAN</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-500/20 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide">
-                      <BarChart3 className="w-6 h-6" />
-                      <span>GENERATE REPORT</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-500/20 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide">
-                      <Database className="w-6 h-6" />
-                      <span>BACKUP DATA</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-500/20 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide">
-                      <Settings className="w-6 h-6" />
-                      <span>SYSTEM SETTINGS</span>
-                    </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-500/20 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide">
-                      <Activity className="w-6 h-6" />
-                      <span>ACTIVITY LOG</span>
-                    </Button>
+          <TabsContent value="tools" className="mt-8">
+            <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+              <CardHeader>
+                <CardTitle className="text-red-300 font-mono tracking-wide text-xl flex items-center space-x-3">
+                  <Zap className="w-6 h-6 text-red-400" />
+                  SECURITY TOOLS
+                </CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide">
+                  ADVANCED SECURITY TOOLS AND UTILITIES FOR THREAT MITIGATION
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Target className="w-8 h-8 text-white" />
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <h3 className="text-xl font-bold text-red-300 mb-2">TOOL SUITE READY</h3>
+                  <p className="text-red-600/70 font-medium tracking-wide">
+                    SCANNERS • ANALYZERS • RESPONSE TOOLS • DEPLOYED
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

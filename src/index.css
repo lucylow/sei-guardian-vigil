@@ -2,121 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap');
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-
-    /* SEI Sentinel Brand Colors */
-    --sei-neon-red: 0 100% 50%;
-    --sei-dark-red: 0 100% 25%;
-    --sei-light-red: 0 100% 75%;
-    --sei-red-900: 0 100% 15%;
-    --sei-red-800: 0 100% 20%;
-    --sei-red-700: 0 100% 30%;
-    --sei-red-600: 0 100% 40%;
-    --sei-red-500: 0 100% 50%;
-    --sei-red-400: 0 100% 60%;
-    --sei-red-300: 0 100% 70%;
-    --sei-red-200: 0 100% 80%;
-    --sei-red-100: 0 100% 90%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+/* CSS Variables for SEI Red Palette */
+:root {
+  --sei-neon-red: 0 100% 50%;
+  --sei-dark-red: 0 50% 25%;
+  --sei-light-red: 0 100% 75%;
+  --sei-accent-red: 0 80% 60%;
+  --sei-border-red: 0 40% 30%;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* Base Styles */
+body {
+  font-family: 'Source Code Pro', 'Courier New', monospace;
+  background: #000000;
+  color: #FF6666;
+  overflow-x: hidden;
+}
 
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Source Code Pro', 'Courier New', monospace;
-  }
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF3300, #800000);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #FF4400, #900000);
 }
 
 /* SEI Sentinel Custom Styles */
@@ -169,24 +90,214 @@ All colors MUST be HSL.
   .sei-badge {
     @apply bg-red-900/30 border-red-700/50 text-red-400 font-mono tracking-wide;
   }
+
+  /* Enhanced Animation Classes */
+  .sei-float {
+    animation: sei-float 6s ease-in-out infinite;
+  }
+  
+  .sei-pulse-glow {
+    animation: sei-pulse-glow 2s ease-in-out infinite alternate;
+  }
+  
+  .sei-slide-in-left {
+    animation: sei-slide-in-left 0.6s ease-out;
+  }
+  
+  .sei-slide-in-right {
+    animation: sei-slide-in-right 0.6s ease-out;
+  }
+  
+  .sei-fade-in {
+    animation: sei-fade-in 0.8s ease-out;
+  }
+  
+  .sei-scale-in {
+    animation: sei-scale-in 0.5s ease-out;
+  }
+  
+  /* Hover Effect Classes */
+  .sei-hover-lift {
+    @apply transition-all duration-300 transform hover:scale-105 hover:-translate-y-1;
+  }
+  
+  .sei-hover-glow {
+    @apply transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/40;
+  }
+  
+  .sei-hover-border {
+    @apply transition-all duration-300 hover:border-red-500/70 hover:bg-red-900/20;
+  }
+  
+  /* Interactive Elements */
+  .sei-interactive {
+    @apply cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25;
+  }
+  
+  .sei-button-primary {
+    @apply bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:-translate-y-1;
+  }
+  
+  .sei-button-secondary {
+    @apply border-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25;
+  }
+  
+  /* Card Enhancements */
+  .sei-card-enhanced {
+    @apply bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/30 transform hover:scale-105 hover:-translate-y-2;
+  }
+  
+  .sei-card-header {
+    @apply group-hover:bg-red-900/20 transition-all duration-300;
+  }
+  
+  /* Status Indicators */
+  .sei-status-online {
+    @apply bg-green-600/20 text-green-400 border-green-600/50;
+  }
+  
+  .sei-status-warning {
+    @apply bg-yellow-600/20 text-yellow-400 border-yellow-600/50;
+  }
+  
+  .sei-status-error {
+    @apply bg-red-600/20 text-red-400 border-red-600/50;
+  }
+  
+  .sei-status-info {
+    @apply bg-blue-600/20 text-blue-400 border-blue-600/50;
+  }
+  
+  /* Progress Bars */
+  .sei-progress {
+    @apply bg-red-900/30 rounded-full overflow-hidden;
+  }
+  
+  .sei-progress-bar {
+    @apply bg-gradient-to-r from-red-600 to-red-700 h-full rounded-full transition-all duration-500;
+  }
+  
+  .sei-progress-bar:hover {
+    @apply shadow-lg shadow-red-500/50;
+  }
+  
+  /* Navigation Enhancements */
+  .sei-nav-item {
+    @apply group flex items-center space-x-4 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1;
+  }
+  
+  .sei-nav-item-active {
+    @apply bg-gradient-to-r from-red-900/40 to-red-800/20 text-red-300 border-l-red-500 shadow-xl shadow-red-500/30 transform translate-x-1;
+  }
+  
+  .sei-nav-icon {
+    @apply p-2 rounded-lg transition-all duration-300;
+  }
+  
+  .sei-nav-icon-active {
+    @apply bg-red-500/20 text-red-400 shadow-lg shadow-red-500/20;
+  }
+  
+  .sei-nav-icon-inactive {
+    @apply bg-red-900/20 text-red-600/70 group-hover:bg-red-500/20 group-hover:text-red-400;
+  }
 }
 
-/* Custom scrollbar for SEI theme */
-@layer utilities {
-  .scrollbar-sei::-webkit-scrollbar {
-    width: 8px;
+/* Custom Animations */
+@keyframes sei-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes sei-pulse-glow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
+  }
+}
+
+@keyframes sei-slide-in-left {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sei-slide-in-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes sei-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes sei-scale-in {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .sei-responsive-hide {
+    @apply hidden;
   }
   
-  .scrollbar-sei::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.8);
+  .sei-mobile-stack {
+    @apply flex-col space-y-4;
   }
-  
-  .scrollbar-sei::-webkit-scrollbar-thumb {
-    background: rgba(255, 0, 0, 0.5);
-    border-radius: 4px;
-  }
-  
-  .scrollbar-sei::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 0, 0, 0.7);
-  }
+}
+
+/* Focus States for Accessibility */
+.sei-focus:focus {
+  @apply outline-none ring-2 ring-red-500 ring-offset-2 ring-offset-black;
+}
+
+/* Loading States */
+.sei-loading {
+  @apply animate-pulse bg-red-900/20;
+}
+
+.sei-loading-text {
+  @apply animate-pulse bg-red-900/20 h-4 rounded;
+}
+
+/* Selection Styles */
+::selection {
+  background: rgba(255, 0, 0, 0.3);
+  color: #FF6666;
+}
+
+::-moz-selection {
+  background: rgba(255, 0, 0, 0.3);
+  color: #FF6666;
 }

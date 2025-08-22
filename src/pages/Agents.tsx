@@ -1,180 +1,299 @@
 /* Navigation is now handled by the Layout component */
-import { AgentStatusPanel } from "@/components/AgentStatusPanel";
-import { MCPIntegration } from "@/components/MCPIntegration";
-import { AgenticWorkflow } from "@/components/AgenticWorkflow";
-import { MultiAgentOrchestrator } from "@/components/MultiAgentOrchestrator";
-import { Mem0MemorySystem } from "@/components/Mem0MemorySystem";
-import { HumanInTheLoopDashboard } from "@/components/HumanInTheLoopDashboard";
-import { OrchestrationEngine } from "@/components/OrchestrationEngine";
-import { HumanInterventionPanel } from "@/components/HumanInterventionPanel";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Activity, Brain, Shield, Search, MessageSquare, Eye, Zap, Database, CheckCircle } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  Users, 
+  Plus, 
+  Zap, 
+  Shield, 
+  Target, 
+  TrendingUp, 
+  Activity,
+  Star,
+  Crown,
+  Sword,
+  Brain,
+  Sparkles
+} from "lucide-react";
 
 export default function Agents() {
+  const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+
+  // Mock agent data
   const agents = [
-    { id: 1, name: "Orchestrator", status: "active", tasks: 12, icon: Brain, description: "Coordinates all agent activities" },
-    { id: 2, name: "Security Analyst", status: "active", tasks: 8, icon: Shield, description: "Performs vulnerability analysis" },
-    { id: 3, name: "Web Crawler", status: "active", tasks: 24, icon: Search, description: "Gathers external threat data" },
-    { id: 4, name: "Chatbot", status: "idle", tasks: 0, icon: MessageSquare, description: "Handles user interactions" },
-    { id: 5, name: "Monitor", status: "active", tasks: 15, icon: Eye, description: "Watches contract deployments" },
-    { id: 6, name: "Fix Generator", status: "busy", tasks: 3, icon: Zap, description: "Creates vulnerability patches" },
-    { id: 7, name: "RAG Agent", status: "active", tasks: 7, icon: Database, description: "Manages knowledge retrieval" },
-    { id: 8, name: "Guardrail", status: "active", tasks: 2, icon: CheckCircle, description: "Ensures system safety" },
+    {
+      id: "1",
+      name: "SENTINEL-01",
+      type: "SECURITY",
+      level: 8,
+      status: "ACTIVE",
+      performance: 94,
+      experience: 1250,
+      specializations: ["Smart Contracts", "Vulnerability Detection"],
+      avatar: "/agent-1.png"
+    },
+    {
+      id: "2",
+      name: "GUARDIAN-02",
+      type: "MONITORING",
+      level: 6,
+      status: "ACTIVE",
+      performance: 87,
+      experience: 890,
+      specializations: ["Network Analysis", "Threat Intelligence"],
+      avatar: "/agent-2.png"
+    },
+    {
+      id: "3",
+      name: "SENTINEL-03",
+      type: "RESPONSE",
+      level: 9,
+      status: "ACTIVE",
+      performance: 96,
+      experience: 2100,
+      specializations: ["Incident Response", "Forensics"],
+      avatar: "/agent-3.png"
+    }
   ];
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active": return "default";
-      case "busy": return "secondary";
-      case "idle": return "outline";
-      default: return "outline";
-    }
-  };
+  const agentTypes = [
+    { type: "SECURITY", icon: Shield, color: "text-red-400", bgColor: "bg-red-500/10" },
+    { type: "MONITORING", icon: Activity, color: "text-blue-400", bgColor: "bg-blue-500/10" },
+    { type: "RESPONSE", icon: Zap, color: "text-green-400", bgColor: "bg-green-500/10" },
+    { type: "ANALYSIS", icon: Brain, color: "text-purple-400", bgColor: "bg-purple-500/10" }
+  ];
 
   return (
-    <div className="min-h-screen bg-background">
-              {/* Navigation is now handled by the Layout component */}
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black font-mono text-red-400">
+      {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">AI Agent Development</h1>
-          <p className="text-muted-foreground">Build, deploy, and manage AI agents on Sei Network</p>
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text mb-3 tracking-wider">
+                AGENT MANAGEMENT
+              </h1>
+              <p className="text-lg text-red-600/70 font-medium tracking-wide">
+                DEPLOY, TRAIN, AND MANAGE YOUR AI SECURITY AGENTS
+              </p>
+            </div>
+            <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:-translate-y-1">
+              <Plus className="w-5 h-5 mr-2" />
+              DEPLOY AGENT
+            </Button>
+          </div>
         </div>
 
-        <Tabs defaultValue="orchestration" className="w-full">
-          <TabsList className="grid w-full grid-cols-7">
-            <TabsTrigger value="orchestration">Orchestration</TabsTrigger>
-            <TabsTrigger value="orchestrator">Multi-Agent</TabsTrigger>
-            <TabsTrigger value="memory">Mem0 Memory</TabsTrigger>
-            <TabsTrigger value="hitl">Human-in-Loop</TabsTrigger>
-            <TabsTrigger value="intervention">Intervention</TabsTrigger>
-            <TabsTrigger value="mcp">MCP Integration</TabsTrigger>
-            <TabsTrigger value="workflow">Workflows</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="orchestration" className="mt-6">
-            <OrchestrationEngine />
-          </TabsContent>
-
-          <TabsContent value="orchestrator" className="mt-6">
-            <MultiAgentOrchestrator />
-          </TabsContent>
-
-          <TabsContent value="memory" className="mt-6">
-            <Mem0MemorySystem />
-          </TabsContent>
-
-          <TabsContent value="hitl" className="mt-6">
-            <HumanInTheLoopDashboard />
-          </TabsContent>
-
-          <TabsContent value="intervention" className="mt-6">
-            <HumanInterventionPanel />
-          </TabsContent>
-
-          <TabsContent value="mcp" className="mt-6">
-            <MCPIntegration />
-          </TabsContent>
-
-          <TabsContent value="workflow" className="mt-6">
-            <AgenticWorkflow />
-          </TabsContent>
-
-          <TabsContent value="management" className="mt-6">
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Total Agents</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">8</div>
-                    <p className="text-xs text-muted-foreground">All systems operational</p>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Active Tasks</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">71</div>
-                    <p className="text-xs text-muted-foreground">Currently processing</p>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">System Load</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">82%</div>
-                    <p className="text-xs text-muted-foreground">Optimal performance</p>
-                  </CardContent>
-                </Card>
-                
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Uptime</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">99.9%</div>
-                    <p className="text-xs text-muted-foreground">24h availability</p>
-                  </CardContent>
-                </Card>
+        {/* Agent Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
+                <TrendingUp className="w-5 h-5 text-green-400" />
               </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">24</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">TOTAL AGENTS</div>
+              <div className="text-xs text-green-400 mt-2">+3 this week</div>
+            </CardContent>
+          </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {agents.map((agent) => {
-                  const IconComponent = agent.icon;
-                  return (
-                    <Card key={agent.id} className="hover:shadow-lg transition-shadow">
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <IconComponent className="w-5 h-5 text-primary" />
-                            <CardTitle className="text-lg">{agent.name}</CardTitle>
-                          </div>
-                          <Badge variant={getStatusColor(agent.status)}>
-                            {agent.status}
-                          </Badge>
-                        </div>
-                        <CardDescription>{agent.description}</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-3">
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Active Tasks:</span>
-                            <span className="font-medium">{agent.tasks}</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">Memory Usage:</span>
-                            <span className="font-medium">{Math.floor(Math.random() * 40 + 30)}%</span>
-                          </div>
-                          <div className="flex justify-between text-sm">
-                            <span className="text-muted-foreground">CPU Usage:</span>
-                            <span className="font-medium">{Math.floor(Math.random() * 50 + 20)}%</span>
-                          </div>
-                          <Button variant="outline" size="sm" className="w-full">
-                            <Activity className="w-4 h-4 mr-2" />
-                            View Details
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  );
-                })}
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Zap className="w-6 h-6 text-white" />
+                </div>
+                <Activity className="w-5 h-5 text-blue-400" />
               </div>
-            </div>
-          </TabsContent>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">18</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">ACTIVE AGENTS</div>
+              <div className="text-xs text-blue-400 mt-2">75% deployment</div>
+            </CardContent>
+          </Card>
 
-          <TabsContent value="status" className="mt-6">
-            <AgentStatusPanel />
-          </TabsContent>
-        </Tabs>
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Target className="w-6 h-6 text-white" />
+                </div>
+                <Star className="w-5 h-5 text-yellow-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">92%</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">AVG PERFORMANCE</div>
+              <div className="text-xs text-yellow-400 mt-2">+5% improvement</div>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Crown className="w-6 h-6 text-white" />
+                </div>
+                <Sparkles className="w-5 h-5 text-purple-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-red-300 mb-2">3</div>
+              <div className="text-sm text-red-600/70 font-medium tracking-wide">ELITE AGENTS</div>
+              <div className="text-xs text-purple-400 mt-2">Level 9+</div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Agent Type Filter */}
+        <div className="mb-8">
+          <h3 className="text-xl font-bold text-red-300 mb-4 tracking-wide">AGENT TYPES</h3>
+          <div className="flex flex-wrap gap-4">
+            {agentTypes.map((type) => (
+              <Button
+                key={type.type}
+                variant="outline"
+                className={`border-2 border-red-700/50 text-red-600/70 hover:border-red-600 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 ${type.bgColor}`}
+              >
+                <type.icon className="w-4 h-4 mr-2" />
+                {type.type}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Agents Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {agents.map((agent) => (
+            <Card 
+              key={agent.id}
+              className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-2 hover:border-red-500/50 transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/30 ${
+                selectedAgent === agent.id 
+                  ? 'border-red-500/70 bg-red-900/20 shadow-xl shadow-red-500/30' 
+                  : 'border-red-900/50'
+              }`}
+              onClick={() => setSelectedAgent(agent.id)}
+            >
+              <CardHeader className="pb-4">
+                <div className="flex items-start justify-between mb-4">
+                  <Avatar className="w-16 h-16 border-2 border-red-600/50 group-hover:border-red-500 transition-all duration-300">
+                    <AvatarImage src={agent.avatar} alt={agent.name} />
+                    <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-800 text-white font-bold text-lg">
+                      {agent.name.split('-')[1]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-right">
+                    <Badge 
+                      variant="secondary" 
+                      className={`text-xs font-bold tracking-wide px-3 py-1 ${
+                        agent.status === 'ACTIVE' 
+                          ? 'bg-green-600/20 text-green-400 border-green-600/50' 
+                          : 'bg-red-600/20 text-red-400 border-red-600/50'
+                      }`}
+                    >
+                      {agent.status}
+                    </Badge>
+                    <div className="text-xs text-red-600/70 mt-1 font-medium">LEVEL {agent.level}</div>
+                  </div>
+                </div>
+                <CardTitle className="text-red-300 font-mono tracking-wide text-xl group-hover:text-red-200 transition-colors duration-300">
+                  {agent.name}
+                </CardTitle>
+                <CardDescription className="text-red-600/70 font-mono tracking-wide font-medium">
+                  {agent.type} SPECIALIST
+                </CardDescription>
+              </CardHeader>
+              
+              <CardContent className="space-y-4">
+                {/* Performance Bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-red-600/70 font-medium">PERFORMANCE</span>
+                    <span className="text-red-300 font-bold">{agent.performance}%</span>
+                  </div>
+                  <div className="w-full bg-red-900/30 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-red-600 to-red-700 h-2 rounded-full transition-all duration-500 group-hover:shadow-lg group-hover:shadow-red-500/50"
+                      style={{ width: `${agent.performance}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* Experience */}
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-red-600/70 font-medium">EXPERIENCE</span>
+                  <span className="text-red-300 font-bold">{agent.experience.toLocaleString()} XP</span>
+                </div>
+
+                {/* Specializations */}
+                <div className="space-y-2">
+                  <span className="text-xs text-red-600/70 font-medium tracking-wide">SPECIALIZATIONS</span>
+                  <div className="flex flex-wrap gap-2">
+                    {agent.specializations.map((spec, index) => (
+                      <Badge 
+                        key={index}
+                        variant="outline" 
+                        className="text-xs bg-red-900/20 border-red-700/50 text-red-400 font-mono tracking-wide"
+                      >
+                        {spec}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex space-x-2 pt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
+                  >
+                    <Sword className="w-3 h-3 mr-1" />
+                    DEPLOY
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
+                  >
+                    <Brain className="w-3 h-3 mr-1" />
+                    TRAIN
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Empty State */}
+        {agents.length === 0 && (
+          <Card className="text-center py-16 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50">
+            <CardContent>
+              <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                <Users className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-red-300 mb-4 tracking-wide">NO AGENTS DEPLOYED</h3>
+              <p className="text-red-600/70 font-medium tracking-wide mb-6 max-w-md mx-auto">
+                DEPLOY YOUR FIRST AI SECURITY AGENT TO START PROTECTING THE SEI NETWORK
+              </p>
+              <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-8 py-4 transform hover:scale-105 hover:-translate-y-1">
+                <Plus className="w-5 h-5 mr-2" />
+                DEPLOY FIRST AGENT
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );
