@@ -13,13 +13,29 @@ import {
   Sword,
   Eye,
   Download,
-  Share2
+  Share2,
+  X,
+  Trophy,
+  Star,
+  Gift,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  AlertCircle,
+  Info
 } from 'lucide-react';
 
 const MatrixAgentArena = () => {
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [activeBattles, setActiveBattles] = useState([]);
   const [matrixRain, setMatrixRain] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showEventDetails, setShowEventDetails] = useState(false);
+  const [showNFTMinting, setShowNFTMinting] = useState(false);
+  const [mintingProgress, setMintingProgress] = useState(0);
+  const [achievements, setAchievements] = useState([]);
+  const [leaderboard, setLeaderboard] = useState([]);
   const [systemStats, setSystemStats] = useState({
     vulnerabilities: 847,
     exploitsBlocked: 156,
@@ -54,6 +70,58 @@ const MatrixAgentArena = () => {
       clearInterval(interval);
       window.removeEventListener('resize', createMatrixRain);
     };
+  }, []);
+
+  // Initialize achievements and leaderboard
+  useEffect(() => {
+    const initialAchievements = [
+      {
+        id: 1,
+        title: "First Blood",
+        description: "Detected your first vulnerability",
+        icon: "🩸",
+        reward: 100,
+        unlocked: true,
+        timestamp: Date.now() - 86400000
+      },
+      {
+        id: 2,
+        title: "Matrix Warrior",
+        description: "Win 10 battles",
+        icon: "⚔️",
+        reward: 500,
+        unlocked: true,
+        timestamp: Date.now() - 172800000
+      },
+      {
+        id: 3,
+        title: "Agent Collector",
+        description: "Own 3+ different agent types",
+        icon: "🎭",
+        reward: 250,
+        unlocked: false,
+        timestamp: null
+      },
+      {
+        id: 4,
+        title: "Vulnerability Hunter",
+        description: "Eliminate 50 vulnerabilities",
+        icon: "🎯",
+        reward: 1000,
+        unlocked: false,
+        timestamp: null
+      }
+    ];
+
+    const initialLeaderboard = [
+      { rank: 1, agent: "Neo Guardian", codename: "StaticGuardian", sentEarned: 12500, battlesWon: 156, level: 42 },
+      { rank: 2, agent: "Morpheus Scout", codename: "DarkWebScout", sentEarned: 9800, battlesWon: 134, level: 38 },
+      { rank: 3, agent: "Trinity Patch", codename: "PatchMaster", sentEarned: 7500, battlesWon: 98, level: 35 },
+      { rank: 4, agent: "Agent Compliance", codename: "ComplianceGuard", sentEarned: 4200, battlesWon: 67, level: 29 }
+    ];
+
+    setAchievements(initialAchievements);
+    setLeaderboard(initialLeaderboard);
   }, []);
 
   const agents = [
@@ -200,6 +268,84 @@ const MatrixAgentArena = () => {
     </div>
   );
 
+  // Add notification function
+  const addNotification = (message, type = 'info', duration = 5000) => {
+    const id = Date.now();
+    const notification = {
+      id,
+      message,
+      type,
+      timestamp: Date.now()
+    };
+    
+    setNotifications(prev => [...prev, notification]);
+    
+    // Auto-remove notification
+    setTimeout(() => {
+      setNotifications(prev => prev.filter(n => n.id !== id));
+    }, duration);
+  };
+
+  // Remove notification function
+  const removeNotification = (id) => {
+    setNotifications(prev => prev.filter(n => n.id !== id));
+  };
+
+  // NFT Minting function
+  const mintNFT = async (agentId, achievementType) => {
+    setShowNFTMinting(true);
+    setMintingProgress(0);
+    
+    // Simulate NFT minting process
+    const interval = setInterval(() => {
+      setMintingProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(interval);
+          setTimeout(() => {
+            setShowNFTMinting(false);
+            setMintingProgress(0);
+            addNotification(`🎉 NFT "${achievementType}" minted successfully!`, 'success');
+          }, 1000);
+          return 100;
+        }
+        return prev + 10;
+      });
+    }, 200);
+  };
+
+  // Battle start function
+  const startBattle = async (agent, vulnerability) => {
+    if (!agent || agent.status !== 'active') {
+      addNotification('Agent is not available for battle', 'error');
+      return;
+    }
+
+    // Show battle start notification
+    addNotification(`${agent.name} is entering the Matrix to battle vulnerabilities!`, 'info');
+    
+    // Update agent status
+    const updatedAgents = agents.map(a => 
+      a.id === agent.id ? { ...a, status: 'battling' } : a
+    );
+    
+    // Simulate battle progress
+    setTimeout(() => {
+      addNotification(`${agent.name} is scanning for vulnerabilities...`, 'info');
+    }, 2000);
+    
+    setTimeout(() => {
+      addNotification(`${agent.name} is engaging hostile code...`, 'info');
+    }, 5000);
+    
+    setTimeout(() => {
+      addNotification(`${agent.name} has completed the battle!`, 'success');
+      // Reset agent status
+      const resetAgents = agents.map(a => 
+        a.id === agent.id ? { ...a, status: 'active' } : a
+      );
+    }, 8000);
+  };
+
   const AgentCard = ({ agent }) => (
     <motion.div
       whileHover={{ scale: 1.05, rotateY: 5 }}
@@ -312,7 +458,11 @@ const MatrixAgentArena = () => {
         }`}
         onClick={(e) => {
           e.stopPropagation();
-          handleAgentAction(agent);
+          if (agent.status === 'active') {
+            addNotification(`${agent.name} is entering the Matrix to battle vulnerabilities!`, 'info');
+            // Start battle simulation
+            startBattle(agent, vulnerabilities[0]);
+          }
         }}
       >
         {agent.status === 'active' && <><Play className="inline w-4 h-4 mr-2" />Jack In</>}
@@ -366,7 +516,13 @@ const MatrixAgentArena = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm font-semibold"
-            onClick={() => handleBattleStart(selectedAgent, vulnerability)}
+            onClick={() => {
+              if (selectedAgent && selectedAgent.status === 'active') {
+                startBattle(selectedAgent, vulnerability);
+              } else {
+                addNotification('Please select an active agent first', 'warning');
+              }
+            }}
             disabled={!selectedAgent || selectedAgent.status !== 'active'}
           >
             <Sword className="inline w-4 h-4 mr-1" />
@@ -415,20 +571,6 @@ const MatrixAgentArena = () => {
     </motion.div>
   );
 
-  const handleAgentAction = (agent) => {
-    if (agent.status === 'active') {
-      console.log(`Jacking in ${agent.name}...`);
-      // Add battle logic here
-    }
-  };
-
-  const handleBattleStart = (agent, vulnerability) => {
-    if (!agent || agent.status !== 'active') return;
-    
-    console.log(`${agent.name} engaging ${vulnerability.name}...`);
-    // Add battle start logic here
-  };
-
   const battles = [
     {
       title: 'Reentrancy Battle',
@@ -450,9 +592,249 @@ const MatrixAgentArena = () => {
     }
   ];
 
+  // Notification Component
+  const Notification = ({ notification, onRemove }) => {
+    const getIcon = (type) => {
+      switch (type) {
+        case 'success': return <CheckCircle className="w-5 h-5 text-green-400" />;
+        case 'error': return <AlertCircle className="w-5 h-5 text-red-400" />;
+        case 'warning': return <AlertTriangle className="w-5 h-5 text-yellow-400" />;
+        default: return <Info className="w-5 h-5 text-blue-400" />;
+      }
+    };
+
+    const getBgColor = (type) => {
+      switch (type) {
+        case 'success': return 'bg-green-900/20 border-green-500/50';
+        case 'error': return 'bg-red-900/20 border-red-500/50';
+        case 'warning': return 'bg-yellow-900/20 border-yellow-500/50';
+        default: return 'bg-blue-900/20 border-blue-500/50';
+      }
+    };
+
+    return (
+      <motion.div
+        initial={{ opacity: 0, x: 300 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 300 }}
+        className={`${getBgColor(notification.type)} border rounded-lg p-4 mb-3 flex items-center space-x-3`}
+      >
+        {getIcon(notification.type)}
+        <span className="text-white flex-1">{notification.message}</span>
+        <button
+          onClick={() => onRemove(notification.id)}
+          className="text-gray-400 hover:text-white transition-colors"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </motion.div>
+    );
+  };
+
+  // Achievements Modal
+  const AchievementsModal = () => (
+    <AnimatePresence>
+      {showAchievements && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowAchievements(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-black border-2 border-green-500 rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-green-400">🏆 Achievements</h2>
+              <button
+                onClick={() => setShowAchievements(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {achievements.map((achievement) => (
+                <div
+                  key={achievement.id}
+                  className={`p-4 rounded-lg border-2 transition-all duration-300 ${
+                    achievement.unlocked
+                      ? 'border-green-500 bg-green-900/20'
+                      : 'border-gray-600 bg-gray-900/20 opacity-50'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3 mb-2">
+                    <span className="text-2xl">{achievement.icon}</span>
+                    <div>
+                      <h3 className={`font-bold ${
+                        achievement.unlocked ? 'text-green-400' : 'text-gray-400'
+                      }`}>
+                        {achievement.title}
+                      </h3>
+                      <p className="text-sm text-gray-400">{achievement.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <span className="text-yellow-400 font-bold">+{achievement.reward} $SENT</span>
+                    {achievement.unlocked ? (
+                      <span className="text-green-400 text-sm">✓ Unlocked</span>
+                    ) : (
+                      <span className="text-gray-500 text-sm">Locked</span>
+                    )}
+                  </div>
+                  
+                  {achievement.unlocked && achievement.timestamp && (
+                    <div className="text-xs text-gray-500 mt-2">
+                      Unlocked: {new Date(achievement.timestamp).toLocaleDateString()}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  // Event Details Modal
+  const EventDetailsModal = () => (
+    <AnimatePresence>
+      {showEventDetails && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowEventDetails(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-black border-2 border-purple-500 rounded-lg p-6 max-w-2xl w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-purple-400">🎯 Zion Uprising Event</h2>
+              <button
+                onClick={() => setShowEventDetails(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="bg-purple-900/20 border border-purple-500 rounded-lg p-4">
+                <h3 className="text-lg font-bold text-purple-400 mb-2">Event Overview</h3>
+                <p className="text-gray-300">
+                  The Zion Uprising is a special Matrix event where agents receive enhanced rewards 
+                  for achieving win streaks and eliminating high-threat vulnerabilities.
+                </p>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-purple-900/20 border border-purple-500 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-yellow-400">500%</div>
+                  <div className="text-sm text-gray-400">Reward Bonus</div>
+                </div>
+                <div className="bg-purple-900/20 border border-purple-500 rounded-lg p-4 text-center">
+                  <div className="text-2xl font-bold text-green-400">48h</div>
+                  <div className="text-sm text-gray-400">Time Remaining</div>
+                </div>
+              </div>
+              
+              <div className="bg-purple-900/20 border border-purple-500 rounded-lg p-4">
+                <h3 className="text-lg font-bold text-purple-400 mb-2">Requirements</h3>
+                <ul className="text-gray-300 space-y-2">
+                  <li>• Achieve 10+ win streaks</li>
+                  <li>• Eliminate 5+ Critical threats</li>
+                  <li>• Deploy 3+ agents simultaneously</li>
+                </ul>
+              </div>
+              
+              <button
+                onClick={() => {
+                  addNotification('🎉 Event participation activated!', 'success');
+                  setShowEventDetails(false);
+                }}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold transition-colors"
+              >
+                Join Event
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
+  // NFT Minting Modal
+  const NFTMintingModal = () => (
+    <AnimatePresence>
+      {showNFTMinting && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowNFTMinting(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            className="bg-black border-2 border-green-500 rounded-lg p-6 max-w-md w-full text-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-green-400 mb-2">🎨 Minting NFT</h2>
+              <p className="text-gray-300">Creating your Digital Sentinel NFT on the Sei blockchain...</p>
+            </div>
+            
+            <div className="mb-6">
+              <div className="w-full bg-gray-700 rounded-full h-3 mb-2">
+                <motion.div 
+                  className="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full"
+                  style={{ width: `${mintingProgress}%` }}
+                />
+              </div>
+              <div className="text-green-400 font-bold">{mintingProgress}%</div>
+            </div>
+            
+            <div className="text-sm text-gray-400">
+              {mintingProgress < 100 ? 'Processing transaction...' : 'NFT minted successfully!'}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
       <MatrixRainCanvas />
+      
+      {/* Notifications */}
+      <div className="fixed top-4 right-4 z-50 max-w-sm w-full">
+        <AnimatePresence>
+          {notifications.map((notification) => (
+            <Notification
+              key={notification.id}
+              notification={notification}
+              onRemove={removeNotification}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
       
       {/* Header */}
       <div className="relative z-10 container mx-auto px-4 py-6">
@@ -536,13 +918,72 @@ const MatrixAgentArena = () => {
               <p className="text-gray-300 text-sm mb-4">
                 Special rewards for agents who achieve 10+ win streaks during this event!
               </p>
-              <div className="text-yellow-400 font-bold">
+              <div className="text-yellow-400 font-bold mb-4">
                 Bonus: +500% $SENT rewards
+              </div>
+              <button
+                onClick={() => setShowEventDetails(true)}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold transition-colors"
+              >
+                View Event Details
+              </button>
+            </motion.div>
+
+            {/* Achievements */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-6 bg-gradient-to-br from-yellow-900/50 to-orange-900/50 border border-yellow-500 rounded-lg p-6"
+            >
+              <h3 className="text-xl font-bold text-yellow-400 mb-3 font-mono">
+                🏆 Achievements
+              </h3>
+              <p className="text-gray-300 text-sm mb-4">
+                Track your progress and unlock rewards!
+              </p>
+              <button
+                onClick={() => setShowAchievements(true)}
+                className="w-full bg-yellow-600 hover:bg-yellow-700 text-black py-2 rounded font-semibold transition-colors"
+              >
+                View All Achievements
+              </button>
+            </motion.div>
+
+            {/* Leaderboard */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-6 bg-gradient-to-br from-blue-900/50 to-cyan-900/50 border border-blue-500 rounded-lg p-6"
+            >
+              <h3 className="text-xl font-bold text-blue-400 mb-3 font-mono">
+                🏅 Top Sentinels
+              </h3>
+              <div className="space-y-2">
+                {leaderboard.slice(0, 3).map((entry) => (
+                  <div key={entry.rank} className="flex items-center justify-between text-sm">
+                    <div className="flex items-center space-x-2">
+                      <span className={`text-lg ${
+                        entry.rank === 1 ? 'text-yellow-400' :
+                        entry.rank === 2 ? 'text-gray-400' :
+                        'text-orange-400'
+                      }`}>
+                        {entry.rank === 1 ? '🥇' : entry.rank === 2 ? '🥈' : '🥉'}
+                      </span>
+                      <span className="text-white">{entry.agent}</span>
+                    </div>
+                    <span className="text-yellow-400 font-bold">{entry.sentEarned.toLocaleString()}</span>
+                  </div>
+                ))}
               </div>
             </motion.div>
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <AchievementsModal />
+      <EventDetailsModal />
+      <NFTMintingModal />
     </div>
   );
 };
