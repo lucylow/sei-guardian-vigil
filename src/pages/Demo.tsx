@@ -8,6 +8,7 @@ import DemoPlayground from "@/components/DemoPlayground";
 import PerformanceChart from "@/components/PerformanceChart";
 import AgentLeaderboard from "@/components/AgentLeaderboard";
 import DeveloperSDK from "@/components/DeveloperSDK";
+import ParallelAuditDemo from "@/components/ParallelAuditDemo";
 
 const Demo: React.FC = () => {
   return (
