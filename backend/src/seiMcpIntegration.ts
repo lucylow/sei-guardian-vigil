@@ -2,152 +2,81 @@ import express from "express";
 import axios from "axios";
 
 const router = express.Router();
+const MCP_SERVER = process.env.SEI_MCP_URL || "http://localhost:3001";
 
-// Configuration
-const MCP_SERVER = process.env['SEI_MCP_URL'] || "http://localhost:3001";
-
-// Helper function to call Sei MCP tools
 async function callSeiTool(toolName: string, params: any): Promise<any> {
   try {
-    const response = await axios.post(`${MCP_SERVER}/tool`, {
+    const res = await axios.post(`${MCP_SERVER}/tool`, {
       tool: toolName,
-      params: params
+      params,
     });
-    return response.data;
-  } catch (error: any) {
-    console.error(`Error calling MCP tool ${toolName}:`, error.message);
-    throw new Error(`Failed to call MCP tool ${toolName}: ${error.message}`);
+    return res.data;
+  } catch (error) {
+    console.error(`Error calling MCP tool ${toolName}:`, error);
+    throw new Error(`Failed to call MCP tool ${toolName}`);
   }
 }
 
-// Mint agent NFT
-router.post("/mint-agent-nft", async (req: express.Request, res: express.Response) => {
+// --- Backend API Endpoints for SEI Sentinel Features ---
+
+router.post("/mint-agent-nft", async (req, res) => {
+  const { agentWallet, metadataURI } = req.body;
+  const agentNFTContract = process.env.AGENT_NFT_CONTRACT;
+  if (!agentNFTContract) {
+    return res.status(500).json({ error: "AGENT_NFT_CONTRACT environment variable not set." });
+  }
   try {
-    const { walletAddress, metadataURI } = req.body;
-    
-    if (!walletAddress || !metadataURI) {
-      return res.status(400).json({ error: "Missing walletAddress or metadataURI" });
-    }
-
-    const agentNFTContract = process.env['AGENT_NFT_CONTRACT'];
-    if (!agentNFTContract) {
-      return res.status(500).json({ error: "AGENT_NFT_CONTRACT not configured" });
-    }
-
-    const result = await callSeiTool("write-contract", {
+    const mintResp = await callSeiTool("write-contract", {
       contractAddress: agentNFTContract,
-      abi: JSON.stringify([
-        "function mint(address to, string memory tokenURI) public returns (uint256)"
-      ]),
+      abi: "[YOUR_ERC721_ABI_HERE]", // Replace with your actual ERC721 ABI
       functionName: "mint",
-      args: [walletAddress, metadataURI],
-      network: "sei-testnet"
+      args: [agentWallet, metadataURI],
+      network: "sei",
     });
-
-    return res.json({
-      success: true,
-      tokenId: result.tokenId,
-      txHash: result.txHash,
-      message: "Agent NFT minted successfully"
-    });
-
+    res.json(mintResp);
   } catch (error: any) {
-    console.error("Error minting agent NFT:", error.message);
-    return res.status(500).json({ 
-      error: "Failed to mint agent NFT", 
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Reward agent with SEI tokens
-router.post("/reward-agent", async (req: express.Request, res: express.Response) => {
+router.post("/reward-agent", async (req, res) => {
+  const { toAddress, amount } = req.body;
   try {
-    const { agentAddress, amount, reason } = req.body;
-    
-    if (!agentAddress || !amount) {
-      return res.status(400).json({ error: "Missing agentAddress or amount" });
-    }
-
-    const result = await callSeiTool("transfer", {
-      to: agentAddress,
-      amount: amount.toString(),
-      network: "sei-testnet",
-      reason: reason || "Agent reward"
+    const txResp = await callSeiTool("transfer-sei", {
+      to: toAddress,
+      amount: amount,
+      network: "sei",
     });
-
-    return res.json({
-      success: true,
-      txHash: result.txHash,
-      message: `${amount} SEI transferred to agent ${agentAddress}`
-    });
-
+    res.json(txResp);
   } catch (error: any) {
-    console.error("Error rewarding agent:", error.message);
-    return res.status(500).json({ 
-      error: "Failed to reward agent", 
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Get agent NFT details
-router.get("/agent-nft/:tokenId", async (req: express.Request, res: express.Response) => {
+router.get("/agent-nft/:tokenId", async (req, res) => {
+  const { tokenId } = req.params;
+  const agentNFTContract = process.env.AGENT_NFT_CONTRACT;
+  if (!agentNFTContract) {
+    return res.status(500).json({ error: "AGENT_NFT_CONTRACT environment variable not set." });
+  }
   try {
-    const { tokenId } = req.params;
-    
-    const agentNFTContract = process.env['AGENT_NFT_CONTRACT'];
-    if (!agentNFTContract) {
-      return res.status(500).json({ error: "AGENT_NFT_CONTRACT not configured" });
-    }
-
-    const result = await callSeiTool("read-contract", {
-      contractAddress: agentNFTContract,
-      abi: JSON.stringify([
-        "function tokenURI(uint256 tokenId) public view returns (string memory)",
-        "function ownerOf(uint256 tokenId) public view returns (address)"
-      ]),
-      functionName: "tokenURI",
-      args: [tokenId],
-      network: "sei-testnet"
+    const resp = await callSeiTool("get-nft-info", {
+      tokenAddress: agentNFTContract,
+      tokenId,
+      network: "sei",
     });
-
-    return res.json({
-      success: true,
-      tokenId: tokenId,
-      metadataURI: result.data,
-      message: "Agent NFT details retrieved"
-    });
-
+    res.json(resp);
   } catch (error: any) {
-    console.error("Error getting agent NFT:", error.message);
-    return res.status(500).json({ 
-      error: "Failed to get agent NFT", 
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 
-// Get latest block information
-router.get("/block-latest", async (_req: express.Request, res: express.Response) => {
+router.get("/block-latest", async (req, res) => {
   try {
-    const result = await callSeiTool("get-block", {
-      network: "sei-testnet",
-      latest: true
-    });
-
-    return res.json({
-      success: true,
-      block: result.data,
-      message: "Latest block information retrieved"
-    });
-
+    const resp = await callSeiTool("get-chain-info", { network: "sei" });
+    res.json(resp);
   } catch (error: any) {
-    console.error("Error getting latest block:", error.message);
-    return res.status(500).json({ 
-      error: "Failed to get latest block", 
-      details: error.message 
-    });
+    res.status(500).json({ error: error.message });
   }
 });
 

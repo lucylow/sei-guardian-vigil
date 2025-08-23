@@ -6,11 +6,11 @@ import axios from "axios";
 const agentsDB: AgentRecord[] = [];
 
 // Configuration
-const MCP_SERVER = process.env['SEI_MCP_URL'] || "http://localhost:3001";
-const AGENT_NFT_CONTRACT = process.env['AGENT_NFT_CONTRACT'] || "0xYourAgentNFTContractAddress";
+const MCP_SERVER = process.env.SEI_MCP_URL || "http://localhost:3001";
+const AGENT_NFT_CONTRACT = process.env.AGENT_NFT_CONTRACT || "0xYourAgentNFTContractAddress";
 const GOAT_CONFIG = {
-  network: process.env['SEI_NETWORK'] || "sei-testnet",
-  rpcUrl: process.env['SEI_RPC_URL'] || "https://rpc-testnet.sei.io"
+  network: process.env.SEI_NETWORK || "sei-testnet",
+  rpcUrl: process.env.SEI_RPC_URL || "https://rpc-testnet.sei.io"
 };
 
 // Helper function to interact with Sei MCP Server
@@ -49,7 +49,7 @@ export class AgentService {
       status: "Pending",
       createdAt: Date.now(),
       lastUpdated: Date.now(),
-      avatarUrl: config.avatarUrl || "",
+      avatarUrl: config.avatarUrl,
     };
 
     // Add to database
@@ -135,21 +135,14 @@ export class AgentService {
     }
 
     // Update agent
-    const existingAgent = agentsDB[agentIndex];
-    if (!existingAgent) {
-      throw new Error("Agent not found.");
-    }
-    
-    const updatedAgent: AgentRecord = { 
-      ...existingAgent, 
+    agentsDB[agentIndex] = { 
+      ...agentsDB[agentIndex], 
       ...updates, 
-      lastUpdated: Date.now(),
-      avatarUrl: existingAgent.avatarUrl || "" // Ensure avatarUrl is always a string
+      lastUpdated: Date.now() 
     };
 
-    agentsDB[agentIndex] = updatedAgent;
     console.log(`Agent ${agentId} updated successfully`);
-    return updatedAgent;
+    return agentsDB[agentIndex];
   }
 
   /**
@@ -162,10 +155,6 @@ export class AgentService {
     }
 
     const agentToDelete = agentsDB[agentIndex];
-    if (!agentToDelete) {
-      throw new Error("Agent not found.");
-    }
-    
     console.log(`Deleting agent: ${agentToDelete.name} (ID: ${agentId})`);
 
     // Burn NFT if it exists
@@ -235,7 +224,7 @@ export class AgentService {
         const taskHash = "0x" + Math.random().toString(16).substr(2, 32).padStart(32, "0");
         
         await callSeiTool("write-contract", {
-          contractAddress: process.env['MEMORY_ANCHOR_CONTRACT'] || "0xYourMemoryAnchorContractAddress",
+          contractAddress: process.env.MEMORY_ANCHOR_CONTRACT || "0xYourMemoryAnchorContractAddress",
           abi: JSON.stringify([
             "function recordDecision(bytes32 taskHash, string memory action, string memory rationale) public"
           ]),

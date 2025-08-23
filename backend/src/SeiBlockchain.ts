@@ -1,175 +1,114 @@
 import axios from "axios";
+import { WebSocket } from "ws";
+import { Kafka } from "kafkajs";
 
-// WebSocket type for Node.js environment
-declare global {
-  interface WebSocket {
-    readyState: number;
-    OPEN: number;
-    send(data: string): void;
-    close(): void;
-    onopen: ((event: any) => void) | null;
-    onmessage: ((event: any) => void) | null;
-    onerror: ((event: any) => void) | null;
-    onclose: ((event: any) => void) | null;
-  }
-  
-  var WebSocket: {
-    new(url: string): WebSocket;
-    readonly OPEN: number;
-  };
-}
+const MCP_SERVER = process.env.SEI_MCP_URL || "http://localhost:3001";
+const SEI_WS_URL = process.env.SEI_WS_URL || "wss://sei-testnet-rpc.polkachu.com/websocket";
 
-// Configuration
-const MCP_SERVER = process.env['SEI_MCP_URL'] || "http://localhost:3001";
-const SEI_WS_URL = process.env['SEI_WS_URL'] || "wss://sei-testnet-rpc.polkachu.com/websocket";
+const KAFKA_BROKERS = process.env.KAFKA_BROKERS?.split(",") || ["localhost:9092"];
+const kafka = new Kafka({ clientId: "sei-sentinel", brokers: KAFKA_BROKERS });
+const kafkaProducer = kafka.producer();
 
-// Mock mode flag
-let mockMode = false;
+let isMock = false;
+let wsConnection = null;
 
-// WebSocket connection for real-time updates
-let wsConnection: WebSocket | null = null;
-
-// Mock blockchain data for development
-const mockBlockchain = {
-  balance: 1000,
-  transactions: [],
-  contracts: []
-};
-
-// Initialize WebSocket connection
-function initWebSocketListener(callback: (data: any) => void): void {
+async function sendKafkaEvent(topic: string, payload: any) {
   try {
-    wsConnection = new WebSocket(SEI_WS_URL);
-    
-    wsConnection.onopen = () => {
-      console.log("🔗 Connected to Sei WebSocket");
-      mockMode = false;
-    };
-    
-    wsConnection.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        callback(data);
-      } catch (err) {
-        console.error("Failed to parse WebSocket message:", err);
-      }
-    };
-    
-    wsConnection.onerror = (err) => {
-      console.error("WebSocket error:", err);
-      mockMode = true;
-    };
-    
-    wsConnection.onclose = () => {
-      console.log("WebSocket connection closed, switching to mock mode");
-      mockMode = true;
-    };
-    
-  } catch (err: any) {
-    console.error("Failed to initialize WebSocket:", err.message);
-    mockMode = true;
-  }
-}
-
-// Test MCP server connection
-async function testMcpConnection(): Promise<boolean> {
-  try {
-    const response = await axios.get(`${MCP_SERVER}/health`);
-    return response.status === 200;
-  } catch (err: any) {
-    console.error("MCP call failed, switching to mock mode", err.message);
-    mockMode = true;
-    return false;
-  }
-}
-
-// Transfer SEI tokens
-async function transferSent(toAddress: string, amount: number): Promise<any> {
-  if (mockMode) {
-    console.log(`💰 Mock transfer: ${amount} SEI to ${toAddress}`);
-    return { success: true, txHash: `mock_${Date.now()}` };
-  }
-
-  try {
-    const response = await axios.post(`${MCP_SERVER}/tool`, {
-      tool: "transfer",
-      params: {
-        to: toAddress,
-        amount: amount.toString(),
-        contractAddress: process.env['AGENT_NFT_CONTRACT'],
-        network: "sei-testnet"
-      }
+    await kafkaProducer.connect();
+    await kafkaProducer.send({
+      topic,
+      messages: [{ value: JSON.stringify(payload) }]
     });
-    
-    return response.data;
-  } catch (err: any) {
-    console.error("Transfer failed:", err.message);
-    throw new Error(`Transfer failed: ${err.message}`);
-  }
-}
-
-// Send real-time update
-function sendUpdate(data: any): void {
-  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
-    wsConnection.send(JSON.stringify({
-      type: "update",
-      data: data,
-      timestamp: Date.now()
-    }));
-  }
-}
-
-// Get blockchain status
-function getStatus(): any {
-  if (mockMode) {
-    return {
-      mode: "mock",
-      balance: mockBlockchain.balance,
-      transactions: mockBlockchain.transactions.length,
-      contracts: mockBlockchain.contracts.length
-    };
-  }
-  
-  return {
-    mode: "live",
-    mcpServer: MCP_SERVER,
-    websocket: wsConnection?.readyState === WebSocket.OPEN ? "connected" : "disconnected"
-  };
-}
-
-// Check if mock mode is active
-function isMockActive(): boolean {
-  return mockMode;
-}
-
-// Cleanup function
-function cleanup(): void {
-  if (wsConnection) wsConnection.close();
-}
-
-// Initialize blockchain
-async function init(): Promise<void> {
-  console.log("🚀 Initializing Sei Blockchain integration...");
-  
-  // Test MCP connection
-  const mcpConnected = await testMcpConnection();
-  
-  if (mcpConnected) {
-    console.log("✅ MCP server connected, using live mode");
-    initWebSocketListener((data) => {
-      console.log("📡 Blockchain update:", data);
-    });
-  } else {
-    console.log("⚠️ Using mock mode for development");
+  } catch (err) {
+    console.error("Kafka send error:", err.message);
   }
 }
 
 export const Blockchain = {
-  init,
-  initWebSocketListener,
-  transferSent,
-  sendUpdate,
-  getStatus,
-  isMockActive,
-  cleanup
+  async callMcp(tool: string, params: any, mockResponse: any) {
+    if (isMock) return mockResponse;
+    try {
+      const resp = await axios.post(`${MCP_SERVER}/tool`, { tool, params });
+      return resp.data;
+    } catch (err) {
+      console.error("MCP call failed, switching to mock mode", err.message);
+      isMock = true;
+      return mockResponse;
+    }
+  },
+
+  async mintAgentNFT(wallet: string, metadataURI: string) {
+    return this.callMcp(
+      "write-contract",
+      {
+        contractAddress: process.env.AGENT_NFT_CONTRACT,
+        abi: "[ERC721 ABI]",
+        functionName: "mint",
+        args: [wallet, metadataURI],
+        network: "sei",
+      },
+      {
+        txHash: `MOCK_TX_MINT_${Date.now()}`,
+        tokenId: `mock-${Math.random().toString(36).substring(2, 9)}`
+      }
+    );
+  },
+
+  async transferSent(to: string, amount: number) {
+    return this.callMcp(
+      "transfer-sei",
+      { to, amount, network: "sei" },
+      { txHash: `MOCK_TX_TRANSFER_${Date.now()}` }
+    );
+  },
+
+  initWebSocketListener(eventHandler?: (txData: any) => void) {
+    const connect = () => {
+      wsConnection = new WebSocket(SEI_WS_URL);
+
+      wsConnection.on("open", () => {
+        console.log("Connected to Sei WebSocket");
+        wsConnection.send(JSON.stringify({
+          jsonrpc: "2.0",
+          method: "subscribe",
+          params: { query: "tm.event = 'Tx' AND message.action='/cosmwasm.wasm.v1.MsgExecuteContract'" },
+          id: 1
+        }));
+      });
+
+      wsConnection.on("message", async (data: any) => {
+        try {
+          const msg = JSON.parse(data);
+          if (msg.result?.data?.type === "tx" && eventHandler) {
+            eventHandler(msg.result.data.value);
+            // Distributed event: push to Kafka for scalable processing
+            await sendKafkaEvent("contract-deployments", msg.result.data.value);
+          }
+        } catch (e) {
+          console.error("Error processing WS message:", e);
+        }
+      });
+
+      wsConnection.on("close", () => {
+        console.log("Disconnected. Reconnecting in 3s...");
+        setTimeout(connect, 3000);
+      });
+
+      wsConnection.on("error", (err: any) => {
+        console.error("WebSocket error:", err.message);
+      });
+    };
+
+    connect();
+  },
+
+  resetMock() {
+    isMock = false;
+    if (wsConnection) wsConnection.close();
+    this.initWebSocketListener();
+  },
+
+  isMockActive() {
+    return isMock;
+  }
 };

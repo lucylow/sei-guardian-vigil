@@ -1,31 +1,20 @@
 import express from "express";
 import http from "http";
 import { Server as SocketIO } from "socket.io";
-import cors from "cors";
-import dotenv from "dotenv";
 import { Blockchain } from "./SeiBlockchain";
 import AgentManager from "./AgentManager";
 import BattleEngine from "./BattleEngine";
-// import RewardSystem from "./RewardSystem"; // Commented out until needed
+import RewardSystem from "./RewardSystem";
 import seiMcpRouter from "./seiMcpIntegration";
-// import visualAgentRouter from "../api/visualAgent.js"; // Commented out until file exists
+import visualAgentRouter from "../api/visualAgent.js";
 import agentRouter from "./agentRoutes"; // Import the new agent router
-
-// Load environment variables
-dotenv.config();
 
 const app = express();
 app.use(express.json()); // <-- Ensure body parser is enabled
 
-// Enable CORS for frontend
-app.use(cors({
-  origin: process.env['FRONTEND_URL'] || "http://localhost:5173",
-  credentials: true
-}));
-
 // API Routes
 app.use("/api/sei", seiMcpRouter);
-// app.use("/api/visual-agent", visualAgentRouter); // Commented out until file exists
+app.use("/api/visual-agent", visualAgentRouter);
 app.use("/api/agents", agentRouter); // Add the new agent routes
 
 const server = http.createServer(app);
@@ -34,7 +23,7 @@ const io = new SocketIO(server, { cors: { origin: "*" } });
 // Instantiate modules
 const agentManager = new AgentManager();
 const battleEngine = new BattleEngine(agentManager, io);
-// const rewardSystem = new RewardSystem(agentManager, io); // Commented out until needed
+const rewardSystem = new RewardSystem(agentManager, io);
 
 // Real-time vulnerability battle system
 const activeBattles = new Map();
@@ -67,7 +56,7 @@ Blockchain.initWebSocketListener((txData) => {
 });
 
 // API Endpoints
-app.get("/api/status", (_req: express.Request, res: express.Response) => {
+app.get("/api/status", (req, res) => {
   res.json({
     status: "operational",
     mockMode: Blockchain.isMockActive(),
@@ -81,9 +70,9 @@ app.get("/api/status", (_req: express.Request, res: express.Response) => {
   });
 });
 
-app.post("/api/scan", async (req: express.Request, res: express.Response) => {
+app.post("/api/scan", async (req, res) => {
   // ...simulate scan logic...
-      const { metadata } = req.body;
+  const { contract, metadata } = req.body;
   try {
     const start = Date.now();
     // Replace with your scan logic
@@ -98,27 +87,27 @@ app.post("/api/scan", async (req: express.Request, res: express.Response) => {
         attacks: [],
         createdAt: Date.now()
       });
-      (result as any).battleId = battleId;
+      result.battleId = battleId;
     }
     res.json(result);
     io.emit("scan-completed", { metadata, result });
   } catch (error) {
-    res.status(500).json({ error: "Scan failed", details: (error as any).message });
+    res.status(500).json({ error: "Scan failed", details: error.message });
   }
 });
 
-app.post("/api/battle/reward", async (req: express.Request, res: express.Response) => {
+app.post("/api/battle/reward", async (req, res) => {
   const { agentId, vulnerabilityId } = req.body;
   try {
     const reward = await Blockchain.transferSent(agentId, 100);
     res.json({ reward });
     io.emit("reward-distributed", { agentId, vulnerabilityId, reward });
   } catch (error) {
-    res.status(500).json({ error: "Reward failed", details: (error as any).message });
+    res.status(500).json({ error: "Reward failed", details: error.message });
   }
 });
 
-const PORT = process.env['PORT'] || 4000;
+const PORT = process.env.PORT || 4000;
 server.listen(PORT, () => {
   console.log(`🚀 SEI SENTINEL API running on port ${PORT}`);
   console.log(`Mode: ${Blockchain.isMockActive() ? "MOCK" : "LIVE"}`);

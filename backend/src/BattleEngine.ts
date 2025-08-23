@@ -1,109 +1,81 @@
-import { Server as SocketIO } from "socket.io";
-
-interface Battle {
-  id: string;
-  agentId: string;
-  vulnType: string;
-  severity: string;
-  status: string;
-  createdAt: number;
-}
-
-interface Vulnerability {
-  id: string;
-  name: string;
-  description: string;
-  severity: string;
-  reward: number;
-}
-
-class BattleEngine {
-  private agentManager: any;
-  private io: SocketIO;
-  private battles: Battle[] = [];
-  private vulnerabilities: Vulnerability[] = [
-    { id: "reentrancy", name: "Reentrancy Attack", description: "Contract can be called multiple times", severity: "Critical", reward: 100 },
-    { id: "overflow", name: "Integer Overflow", description: "Numeric overflow vulnerability", severity: "High", reward: 75 },
-    { id: "access-control", name: "Access Control", description: "Unauthorized access to functions", severity: "Medium", reward: 50 }
-  ];
-
-  constructor(agentManager: any, io: SocketIO) {
+export default class BattleEngine {
+  constructor(agentManager, io) {
     this.agentManager = agentManager;
     this.io = io;
+    this.battles = [];
+    this.vulnerabilities = [
+      { id: "v1", name: "Reentrancy", difficulty: 8 },
+      { id: "v2", name: "Integer Overflow", difficulty: 6 },
+      { id: "v3", name: "Access Control", difficulty: 5 },
+      { id: "v4", name: "Oracle Manipulation", difficulty: 9 },
+      { id: "v5", name: "Front-Running", difficulty: 7 }
+    ];
   }
-
-  createBattle(agentId: string, vulnType: string, severity: string): Battle {
+  createBattle(agentId, vulnType, severity) {
+    const id = `battle-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
     const vulnerability = this.vulnerabilities.find(v => v.id === vulnType) || this.vulnerabilities[0];
-    
-    if (!vulnerability) {
-      throw new Error(`Vulnerability type ${vulnType} not found`);
-    }
-    
-    const battle: Battle = {
-      id: `battle-${Date.now()}`,
+    const battle = {
+      id,
       agentId,
       vulnType: vulnerability.id,
+      vulnName: vulnerability.name,
       severity,
-      status: "active",
-      createdAt: Date.now()
+      status: "started",
+      progress: 0,
+      steps: ["Analyzing", "Exploiting", "Patching", "Verifying"],
+      startTime: Date.now(),
+      difficulty: vulnerability.difficulty * severity
     };
-
     this.battles.push(battle);
-    this.io.emit("battle:created", battle);
-    
+    this.progressBattle(id);
     return battle;
   }
-
-  progressBattle(battleId: string): void {
+  progressBattle(battleId) {
     const battle = this.battles.find(b => b.id === battleId);
     if (!battle) return;
-
-    const agent = this.agentManager.getAgent(battle.agentId);
-    if (!agent) return;
-
-    // Simulate battle progress
-    battle.status = "in-progress";
-    this.io.emit("battle:update", battle);
-
-    // Simulate battle completion after some time
-    setTimeout(() => {
-      const xp = Math.floor(Math.random() * 50) + 25;
-      const sent = Math.floor(Math.random() * 20) + 10;
-      
+    if (battle.progress < battle.steps.length) {
+      const agent = this.agentManager.getAgent(battle.agentId);
+      const speed = Math.max(1, Math.floor(agent.level / battle.difficulty * 1000));
+      battle.progress++;
+      battle.currentStep = battle.steps[battle.progress - 1];
+      this.io.emit("battle:update", battle);
+      setTimeout(() => this.progressBattle(battleId), speed);
+    } else {
+      battle.status = "completed";
+      battle.endTime = Date.now();
+      battle.duration = battle.endTime - battle.startTime;
+      const rewardMultiplier = Math.max(0.5, 10 - (battle.duration / 1000));
+      const xp = Math.floor(battle.difficulty * 5 * rewardMultiplier);
+      const sent = Math.floor(battle.difficulty * 2 * rewardMultiplier);
       const leveledUp = this.agentManager.addExperience(battle.agentId, xp, sent);
-      
       this.io.emit("battle:complete", { ...battle, xp, sent });
-      
       if (leveledUp) {
         this.io.emit("agent:levelup", {
           agentId: battle.agentId,
           level: this.agentManager.getAgent(battle.agentId).level
         });
       }
-
-      // Remove completed battle
-      this.battles = this.battles.filter(b => b.id !== battleId);
-    }, 5000);
+      setTimeout(() => {
+        this.battles = this.battles.filter(b => b.id !== battleId);
+      }, 10000);
+    }
   }
-
-  handleAction({ battleId, agentId: _agentId, action }: { battleId: string; agentId: string; action: string }): void {
+  handleAction({ battleId, agentId, action }) {
     const battle = this.battles.find(b => b.id === battleId);
-    if (!battle) return;
-
-    // Handle different actions
-    switch (action) {
-      case "attack":
-        battle.status = "attacking";
-        this.io.emit("battle:update", battle);
+    if (!battle || battle.agentId !== agentId) return;
+    switch(action) {
+      case "boost":
+        if (battle.progress < battle.steps.length) {
+          battle.progress++;
+          this.io.emit("battle:update", battle);
+        }
         break;
-      case "defend":
-        battle.status = "defending";
-        this.io.emit("battle:update", battle);
+      case "fix":
+        clearTimeout(battle.timeout);
+        this.progressBattle(battleId);
         break;
       default:
-        console.log(`Unknown action: ${action}`);
+        break;
     }
   }
 }
-
-export default BattleEngine;
