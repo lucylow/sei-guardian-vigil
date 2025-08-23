@@ -1,101 +1,271 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 /* Navigation is now handled by the Layout component */
 import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Play, Code, Zap, Rocket, Brain, Shield, TrendingUp } from "lucide-react";
+import { ArrowRight, Play, Code, Zap, Rocket, Brain, Shield, TrendingUp, Wallet, ExternalLink } from "lucide-react";
+import { seiTestnetService } from "@/services/seiTestnetService";
+import { useToast } from "@/hooks/use-toast";
 
 export default function NoCodeStudio() {
   const [activeTab, setActiveTab] = useState('get-started');
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
   const [deploymentStatus, setDeploymentStatus] = useState<string>('');
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [walletAddress, setWalletAddress] = useState<string>('');
+  const [isConnectingWallet, setIsConnectingWallet] = useState(false);
+  const [backendStatus, setBackendStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+  const { toast } = useToast();
+
+  // Check backend status on component mount
+  useEffect(() => {
+    const checkBackend = async () => {
+      try {
+        const isOnline = await seiTestnetService.checkBackendStatus();
+        setBackendStatus(isOnline ? 'online' : 'offline');
+        if (!isOnline) {
+          toast({
+            title: "Backend Offline",
+            description: "Please start the backend server on port 4000 to deploy agents.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        setBackendStatus('offline');
+      }
+    };
+
+    checkBackend();
+    
+    // Check wallet connection status
+    const walletStatus = seiTestnetService.getConnectionStatus();
+    setIsWalletConnected(walletStatus.isConnected);
+    setWalletAddress(walletStatus.address);
+  }, [toast]);
+
+  // Connect Keplr wallet
+  const connectKeplrWallet = async () => {
+    setIsConnectingWallet(true);
+    try {
+      const result = await seiTestnetService.connectKeplrWallet();
+      setIsWalletConnected(result.isConnected);
+      setWalletAddress(result.address);
+      
+      toast({
+        title: "Wallet Connected",
+        description: `Connected to ${result.address.slice(0, 12)}...`,
+      });
+    } catch (error) {
+      toast({
+        title: "Connection Failed",
+        description: error instanceof Error ? error.message : "Failed to connect wallet",
+        variant: "destructive",
+      });
+    } finally {
+      setIsConnectingWallet(false);
+    }
+  };
+
+  // Disconnect wallet
+  const disconnectWallet = () => {
+    seiTestnetService.disconnectWallet();
+    setIsWalletConnected(false);
+    setWalletAddress('');
+    toast({
+      title: "Wallet Disconnected",
+      description: "Keplr wallet has been disconnected",
+    });
+  };
 
   // Deployment functions
   const deployToTestnet = async () => {
     if (!selectedTemplate) {
-      alert('Please select a template first before deploying!');
+      toast({
+        title: "No Template Selected",
+        description: "Please select a template first before deploying!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!isWalletConnected) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your Keplr wallet first!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (backendStatus !== 'online') {
+      toast({
+        title: "Backend Offline",
+        description: "Backend server must be running on port 4000 to deploy agents.",
+        variant: "destructive",
+      });
       return;
     }
     
     setIsDeploying(true);
-    setDeploymentStatus('Deploying to SEI Testnet...');
+    setDeploymentStatus('🚀 Connecting to SEI Testnet...');
     
     try {
-      // Simulate deployment to testnet
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Update status
+      setDeploymentStatus('📝 Preparing agent configuration...');
       
-      // Generate realistic testnet contract address
-      const contractAddress = "sei1" + Array.from({length: 38}, () => 
-        Math.floor(Math.random() * 16).toString(16)
-      ).join('');
-      
-      // Generate realistic transaction hash
-      const txHash = "sei" + Array.from({length: 64}, () => 
-        Math.floor(Math.random() * 16).toString(16)
-      ).join('');
-      
-      setDeploymentStatus(`✅ Successfully deployed to SEI Testnet!\nContract: ${contractAddress}\nTransaction: ${txHash}`);
-      
-      // Store deployment info
-      const deploymentInfo = {
-        network: "testnet",
-        contractAddress: contractAddress,
-        txHash: txHash,
-        timestamp: new Date().toISOString(),
-        template: selectedTemplate,
-        status: "success"
+      // Create agent configuration based on selected template
+      const getAgentType = (template: string): 'SecurityAuditor' | 'ThreatResponder' | 'ComplianceGuard' | 'Custom' => {
+        if (template === 'security-scanner') return 'SecurityAuditor';
+        if (template === 'SecurityAuditor') return 'SecurityAuditor';
+        if (template === 'ThreatResponder') return 'ThreatResponder';
+        if (template === 'ComplianceGuard') return 'ComplianceGuard';
+        return 'Custom';
       };
+
+      const agentConfig = {
+        name: `${selectedTemplate} Agent`,
+        description: `AI security agent created from ${selectedTemplate} template`,
+        agentType: getAgentType(selectedTemplate),
+        configuration: {
+          template: selectedTemplate,
+          createdAt: new Date().toISOString(),
+          network: 'sei-testnet',
+          capabilities: getTemplateCapabilities(selectedTemplate),
+        },
+        avatarUrl: `https://api.dicebear.com/7.x/bottts/svg?seed=${selectedTemplate}`,
+        ownerWalletAddress: walletAddress
+      };
+
+      setDeploymentStatus('🔗 Deploying to SEI Testnet blockchain...');
       
-      localStorage.setItem('sei-agent-deployment', JSON.stringify(deploymentInfo));
+      // Deploy agent using SEI testnet service
+      const result = await seiTestnetService.deployAgentToTestnet(agentConfig);
+      
+      if (result.success) {
+        setDeploymentStatus(`✅ Successfully deployed to SEI Testnet!
+Agent ID: ${result.agentId}
+NFT Token: ${result.nftTokenId}
+Transaction: ${result.seiTxHash}
+Network: ${result.network}`);
+        
+        toast({
+          title: "Agent Deployed Successfully!",
+          description: `Your ${selectedTemplate} agent is now live on SEI testnet`,
+        });
+
+        // Store deployment info
+        const deploymentInfo = {
+          ...result,
+          template: selectedTemplate,
+        };
+        
+        localStorage.setItem('sei-agent-deployment', JSON.stringify(deploymentInfo));
+      } else {
+        throw new Error(result.message);
+      }
       
     } catch (error) {
-      setDeploymentStatus(`❌ Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setDeploymentStatus(`❌ Deployment failed: ${errorMessage}`);
+      
+      toast({
+        title: "Deployment Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setIsDeploying(false);
     }
   };
 
+  // Helper function to get template capabilities
+  const getTemplateCapabilities = (template: string): string[] => {
+    switch (template) {
+      case 'SecurityAuditor':
+        return ['vulnerability-scanning', 'code-analysis', 'security-reporting'];
+      case 'ThreatResponder':
+        return ['threat-detection', 'incident-response', 'automated-blocking'];
+      case 'ComplianceGuard':
+        return ['compliance-checking', 'regulatory-monitoring', 'audit-trails'];
+      default:
+        return ['general-monitoring', 'custom-logic'];
+    }
+  };
+
   const deployToMainnet = async () => {
     if (!selectedTemplate) {
-      alert('Please select a template first before deploying!');
+      toast({
+        title: "No Template Selected",
+        description: "Please select a template first before deploying!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!isWalletConnected) {
+      toast({
+        title: "Wallet Not Connected",
+        description: "Please connect your Keplr wallet first!",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (backendStatus !== 'online') {
+      toast({
+        title: "Backend Offline",
+        description: "Backend server must be running on port 4000 to deploy agents.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Show warning for mainnet deployment
+    const confirmed = confirm(
+      "⚠️ MAINNET DEPLOYMENT WARNING ⚠️\n\n" +
+      "You are about to deploy to SEI mainnet with real tokens!\n" +
+      "This action cannot be undone and will cost real SEI tokens.\n\n" +
+      "Are you sure you want to continue?"
+    );
+
+    if (!confirmed) {
       return;
     }
     
     setIsDeploying(true);
-    setDeploymentStatus('Deploying to SEI Mainnet...');
+    setDeploymentStatus('🚀 Preparing for SEI Mainnet deployment...');
     
     try {
-      // Simulate deployment to mainnet
-      await new Promise(resolve => setTimeout(resolve, 4000));
+      setDeploymentStatus('⚠️ MAINNET DEPLOYMENT - Using real SEI tokens!');
       
-      // Generate realistic mainnet contract address
-      const contractAddress = "sei1" + Array.from({length: 38}, () => 
-        Math.floor(Math.random() * 16).toString(16)
-      ).join('');
+      // For now, show that mainnet deployment is not yet implemented
+      // In production, you would change the service to use mainnet
+      setDeploymentStatus(`⚠️ MAINNET DEPLOYMENT NOT YET IMPLEMENTED
       
-      // Generate realistic transaction hash
-      const txHash = "sei" + Array.from({length: 64}, () => 
-        Math.floor(Math.random() * 16).toString(16)
-      ).join('');
+This is a demo/testnet version. Mainnet deployment requires:
+- Production-ready smart contracts
+- Mainnet SEI tokens for gas fees
+- Additional security audits
+
+Please use testnet deployment for now.`);
       
-      setDeploymentStatus(`✅ Successfully deployed to SEI Mainnet!\nContract: ${contractAddress}\nTransaction: ${txHash}`);
-      
-      // Store deployment info
-      const deploymentInfo = {
-        network: "mainnet",
-        contractAddress: contractAddress,
-        txHash: txHash,
-        timestamp: new Date().toISOString(),
-        template: selectedTemplate,
-        status: "success"
-      };
-      
-      localStorage.setItem('sei-agent-deployment', JSON.stringify(deploymentInfo));
+      toast({
+        title: "Mainnet Not Available",
+        description: "Use testnet deployment for now. Mainnet coming soon!",
+        variant: "destructive",
+      });
       
     } catch (error) {
-      setDeploymentStatus(`❌ Deployment failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setDeploymentStatus(`❌ Mainnet deployment failed: ${errorMessage}`);
+      
+      toast({
+        title: "Deployment Failed",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setIsDeploying(false);
     }
@@ -509,6 +679,86 @@ export default function NoCodeStudio() {
               <p className="text-lg text-muted-foreground">
                 Test your agent on testnet first, then deploy to mainnet with confidence.
               </p>
+            </div>
+
+            {/* Wallet Connection & Backend Status */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border mb-6">
+              <h3 className="text-xl font-bold mb-4">Prerequisites</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Wallet Connection */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Keplr Wallet</span>
+                    <div className={`px-2 py-1 rounded-full text-xs ${
+                      isWalletConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}>
+                      {isWalletConnected ? '✅ Connected' : '❌ Not Connected'}
+                    </div>
+                  </div>
+                  
+                  {isWalletConnected ? (
+                    <div className="space-y-2">
+                      <div className="text-sm text-gray-600">
+                        Address: {walletAddress.slice(0, 12)}...{walletAddress.slice(-8)}
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={disconnectWallet}
+                        className="w-full"
+                      >
+                        Disconnect Wallet
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button
+                      onClick={connectKeplrWallet}
+                      disabled={isConnectingWallet}
+                      className="w-full"
+                    >
+                      {isConnectingWallet ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                          Connecting...
+                        </>
+                      ) : (
+                        <>
+                          <Wallet className="w-4 h-4 mr-2" />
+                          Connect Keplr Wallet
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
+
+                {/* Backend Status */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Backend Server</span>
+                    <div className={`px-2 py-1 rounded-full text-xs ${
+                      backendStatus === 'online' ? 'bg-green-100 text-green-800' : 
+                      backendStatus === 'offline' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
+                    }`}>
+                      {backendStatus === 'online' ? '✅ Online' : 
+                       backendStatus === 'offline' ? '❌ Offline' : '🔄 Checking...'}
+                    </div>
+                  </div>
+                  
+                  <div className="text-sm text-gray-600">
+                    {backendStatus === 'online' ? 
+                      'Backend is ready for agent deployment' :
+                      backendStatus === 'offline' ?
+                      'Start backend server on port 4000' :
+                      'Checking backend connection...'}
+                  </div>
+                  
+                  {backendStatus === 'offline' && (
+                    <div className="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-200">
+                      Run: <code className="bg-red-100 px-1 rounded">cd backend && npm run dev</code>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Quick Deploy from Builder */}
