@@ -179,6 +179,10 @@ router.get("/owner/:walletAddress", async (req, res) => {
 router.put("/:id", validateWalletAddress, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ success: false, error: "Agent ID is required" });
+    }
+    
     const updates = req.body;
     console.log(`Updating agent ${id} with:`, updates);
     
@@ -210,6 +214,10 @@ router.put("/:id", validateWalletAddress, async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ success: false, error: "Agent ID is required" });
+    }
+    
     console.log(`Deleting agent with ID: ${id}`);
     
     await AgentService.deleteAgent(id);
@@ -236,6 +244,10 @@ router.delete("/:id", async (req, res) => {
 router.post("/:id/execute-task", async (req: express.Request, res: express.Response) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ success: false, error: "Agent ID is required" });
+    }
+    
     const taskPayload = req.body;
     console.log(`Executing task for agent ${id}:`, taskPayload);
     
@@ -264,6 +276,10 @@ router.post("/:id/execute-task", async (req: express.Request, res: express.Respo
 router.post("/:id/activate", async (req: express.Request, res: express.Response) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ success: false, error: "Agent ID is required" });
+    }
+    
     console.log(`Activating agent ${id}`);
     
     const activatedAgent = await AgentService.activateAgent(id);
@@ -291,6 +307,10 @@ router.post("/:id/activate", async (req: express.Request, res: express.Response)
 router.post("/:id/pause", async (req: express.Request, res: express.Response) => {
   try {
     const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ success: false, error: "Agent ID is required" });
+    }
+    
     console.log(`Pausing agent ${id}`);
     
     const pausedAgent = await AgentService.pauseAgent(id);

@@ -86,7 +86,7 @@ class BattleEngine {
     }, 5000);
   }
 
-  handleAction({ battleId, agentId, action }: { battleId: string; agentId: string; action: string }): void {
+  handleAction({ battleId, agentId: _agentId, action }: { battleId: string; agentId: string; action: string }): void {
     const battle = this.battles.find(b => b.id === battleId);
     if (!battle) return;
 

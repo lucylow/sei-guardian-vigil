@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 import { Blockchain } from "./SeiBlockchain";
 import AgentManager from "./AgentManager";
 import BattleEngine from "./BattleEngine";
-import RewardSystem from "./RewardSystem";
+// import RewardSystem from "./RewardSystem"; // Commented out until needed
 import seiMcpRouter from "./seiMcpIntegration";
 // import visualAgentRouter from "../api/visualAgent.js"; // Commented out until file exists
 import agentRouter from "./agentRoutes"; // Import the new agent router

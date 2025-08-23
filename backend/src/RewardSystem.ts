@@ -31,32 +31,35 @@ class RewardSystem {
     });
   }
 
-  recordReward(agentId: string, amount: number, txHash: string): void {
+  recordReward(agentId: string, amount: number, _txHash: string): void {
     const agent = this.agentManager.getAgent(agentId);
     if (!agent) return;
 
-    const stats = this.agentStats[agentId];
-    const achievements = this.agentAchievements[agentId];
+    if (!this.agentStats[agentId]) {
+      this.agentStats[agentId] = { criticals: 0, fixes: 0, fastFixes: 0, firstFix: false };
+    }
+    
+    const currentStats = this.agentStats[agentId]!;
 
     // Update stats
-    stats.fixes += 1;
-    if (!stats.firstFix) {
-      stats.firstFix = true;
+    currentStats.fixes += 1;
+    if (!currentStats.firstFix) {
+      currentStats.firstFix = true;
       this.unlock(agentId, "first-fix");
     }
 
     // Check for speed demon achievement
     if (amount > 50) { // High reward indicates fast fix
-      stats.fastFixes += 1;
-      if (stats.fastFixes >= 5) {
+      currentStats.fastFixes += 1;
+      if (currentStats.fastFixes >= 5) {
         this.unlock(agentId, "speed-demon");
       }
     }
 
     // Check for critical hunter achievement
     if (amount > 75) { // High reward indicates critical vulnerability
-      stats.criticals += 1;
-      if (stats.criticals >= 10) {
+      currentStats.criticals += 1;
+      if (currentStats.criticals >= 10) {
         this.unlock(agentId, "critical-hunter");
       }
     }

@@ -44,7 +44,7 @@ router.post("/mint-agent-nft", async (req: express.Request, res: express.Respons
       network: "sei-testnet"
     });
 
-    res.json({
+    return res.json({
       success: true,
       tokenId: result.tokenId,
       txHash: result.txHash,
@@ -76,7 +76,7 @@ router.post("/reward-agent", async (req: express.Request, res: express.Response)
       reason: reason || "Agent reward"
     });
 
-    res.json({
+    return res.json({
       success: true,
       txHash: result.txHash,
       message: `${amount} SEI transferred to agent ${agentAddress}`
@@ -112,7 +112,7 @@ router.get("/agent-nft/:tokenId", async (req: express.Request, res: express.Resp
       network: "sei-testnet"
     });
 
-    res.json({
+    return res.json({
       success: true,
       tokenId: tokenId,
       metadataURI: result.data,
@@ -136,7 +136,7 @@ router.get("/block-latest", async (req: express.Request, res: express.Response) 
       latest: true
     });
 
-    res.json({
+    return res.json({
       success: true,
       block: result.data,
       message: "Latest block information retrieved"
