@@ -732,7 +732,7 @@ export default function Governance() {
                     <li>• Minimum 100 SEI tokens staked to submit</li>
                     <li>• Proposal must receive 2,000 votes to reach quorum</li>
                     <li>• Voting period: 7 days from submission</li>
-                    <li>• Simple majority (>50%) required to pass</li>
+                    <li>• Simple majority (&gt;50%) required to pass</li>
                   </ul>
                 </div>
 

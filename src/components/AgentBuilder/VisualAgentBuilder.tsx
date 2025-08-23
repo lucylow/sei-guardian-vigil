@@ -670,47 +670,12 @@ const nodeTypes = {
     </div>
   ),
   
-  // Additional node types used in templates
-  seiOracle: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-pink-700 text-white rounded-lg border-2 border-pink-500 relative min-w-[120px]">
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
-      <div className="font-semibold text-xs">SEI Oracle</div>
-      <div className="text-xs opacity-90">{data.label}</div>
-    </div>
-  ),
-  seiMempool: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-teal-700 text-white rounded-lg border-2 border-teal-500 relative min-w-[120px]">
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
-      <div className="font-semibold text-xs">SEI Mempool</div>
-      <div className="text-xs opacity-90">{data.label}</div>
-    </div>
-  ),
-  seiSwap: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-green-700 text-white rounded-lg border-2 border-green-500 relative min-w-[120px]">
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
-      <div className="font-semibold text-xs">SEI Swap</div>
-      <div className="text-xs opacity-90">{data.label}</div>
-    </div>
-  ),
-  seiStaking: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-yellow-700 text-white rounded-lg border-2 border-yellow-500 relative min-w-[120px]">
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
-      <div className="font-semibold text-xs">SEI Staking</div>
-      <div className="text-xs opacity-90">{data.label}</div>
-    </div>
-  ),
-  seiAlert: ({ data }: { data: any }) => (
-    <div className="px-4 py-2 bg-rose-700 text-white rounded-lg border-2 border-rose-500 relative min-w-[120px]">
-      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
-      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
-      <div className="font-semibold text-xs">SEI Alert</div>
-      <div className="text-xs opacity-90">{data.label}</div>
-    </div>
-  ),
+
+
+
+
+
+
 
 };
 
