@@ -18,6 +18,7 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export const useWallet = () => {
   const context = useContext(WalletContext);
   if (context === undefined) {
+    console.error('useWallet must be used within a WalletProvider');
     throw new Error('useWallet must be used within a WalletProvider');
   }
   return context;
@@ -38,6 +39,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
 
   // Check for existing wallet connection on mount
   useEffect(() => {
+    console.log('WalletProvider: Checking for existing connection...');
     const checkExistingConnection = async () => {
       try {
         if (window.keplr && window.keplr.getKey) {
@@ -49,6 +51,7 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
           
           const key = await window.keplr.getKey(seiConfig.chainId);
           if (key) {
+            console.log('WalletProvider: Found existing connection:', key.bech32Address);
             setAccount(key.bech32Address);
             setNetworkInfo({
               chainId: seiConfig.chainId,
@@ -56,15 +59,21 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
               rpc: seiConfig.rpc
             });
             setIsConnected(true);
+          } else {
+            console.log('WalletProvider: No existing connection found');
           }
+        } else {
+          console.log('WalletProvider: Keplr not available');
         }
       } catch (error) {
-        console.log("No existing connection found");
+        console.log("WalletProvider: Error checking existing connection:", error);
       }
     };
 
     checkExistingConnection();
   }, []);
+
+  console.log('WalletProvider: Rendering with state:', { isConnected, account: account ? 'connected' : 'not connected' });
 
   const value = {
     isConnected,

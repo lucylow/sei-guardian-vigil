@@ -30,65 +30,87 @@ const App = () => (
       <Sonner />
       <WalletProvider>
         <BrowserRouter>
-          <Layout>
-            <Routes>
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/dashboard" element={
+          <Routes>
+            {/* Landing page route - no layout */}
+            <Route path="/" element={<LandingPage />} />
+            
+            {/* App routes - with layout */}
+            <Route path="/dashboard" element={
+              <Layout>
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
-              } />
-              <Route path="/agents" element={
+              </Layout>
+            } />
+            <Route path="/agents" element={
+              <Layout>
                 <ProtectedRoute>
                   <Agents />
                 </ProtectedRoute>
-              } />
-              <Route path="/audits" element={
+              </Layout>
+            } />
+            <Route path="/audits" element={
+              <Layout>
                 <ProtectedRoute>
                   <Audits />
                 </ProtectedRoute>
-              } />
-              <Route path="/security" element={
+              </Layout>
+            } />
+            <Route path="/security" element={
+              <Layout>
                 <ProtectedRoute>
                   <Security />
                 </ProtectedRoute>
-              } />
-              <Route path="/no-code-studio" element={
+              </Layout>
+            } />
+            <Route path="/no-code-studio" element={
+              <Layout>
                 <ProtectedRoute>
                   <NoCodeStudio />
                 </ProtectedRoute>
-              } />
-              <Route path="/agent-arena" element={
+              </Layout>
+            } />
+            <Route path="/agent-arena" element={
+              <Layout>
                 <ProtectedRoute>
                   <AgentArena />
                 </ProtectedRoute>
-              } />
-              <Route path="/governance" element={
+              </Layout>
+            } />
+            <Route path="/governance" element={
+              <Layout>
                 <ProtectedRoute>
                   <Governance />
                 </ProtectedRoute>
-              } />
-              <Route path="/demo" element={
+              </Layout>
+            } />
+            <Route path="/demo" element={
+              <Layout>
                 <ProtectedRoute>
                   <Demo />
                 </ProtectedRoute>
-              } />
-              <Route path="/docs" element={
+              </Layout>
+            } />
+            <Route path="/docs" element={
+              <Layout>
                 <ProtectedRoute>
                   <Docs />
                 </ProtectedRoute>
-              } />
-              <Route path="/settings" element={
+              </Layout>
+            } />
+            <Route path="/settings" element={
+              <Layout>
                 <ProtectedRoute>
                   <Settings />
                 </ProtectedRoute>
-              } />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            {/* Place this outside your page routing/components so it's always present */}
-            <SentinelChatbot />
-          </Layout>
+              </Layout>
+            } />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          
+          {/* SentinelChatbot - always present */}
+          <SentinelChatbot />
         </BrowserRouter>
       </WalletProvider>
     </TooltipProvider>

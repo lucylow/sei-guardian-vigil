@@ -29,7 +29,20 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
-  const { isConnected } = useWallet();
+  
+  console.log('Layout: Rendering, location:', location.pathname);
+  
+  // Safely get wallet state
+  let isConnected = false;
+  
+  try {
+    const walletData = useWallet();
+    isConnected = walletData.isConnected;
+    console.log('Layout: useWallet successful, isConnected:', isConnected);
+  } catch (error) {
+    console.error('Layout: useWallet failed:', error);
+    isConnected = false;
+  }
 
   const navItems = [
     { to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" },
@@ -60,7 +73,7 @@ export function Layout({ children }: LayoutProps) {
           <div className="flex items-center justify-between h-16">
             <Link to={isConnected ? "/dashboard" : "/"} className="flex items-center space-x-3 group">
               <div className="w-12 h-12 bg-gradient-to-br from-red-600 via-red-700 to-red-800 rounded-2xl flex items-center justify-center group-hover:shadow-2xl group-hover:shadow-red-500/40 transition-all duration-500 transform group-hover:scale-105">
-                <Shield className="w-6 h-6 text-white group-hover:animate-pulse" />
+                <Shield className="w-6 h-5 text-red-500" />
               </div>
               <div className="transform group-hover:scale-105 transition-transform duration-300">
                 <span className="font-bold text-2xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent tracking-wider">
@@ -183,7 +196,8 @@ export function Layout({ children }: LayoutProps) {
         </main>
       )}
 
-      {/* Footer */}
+      {/* Footer - Only show when NOT on landing page */}
+      {/* The footer is now always visible as the landing page is removed */}
       <footer className="border-t-2 border-red-900/50 bg-gradient-to-r from-black/80 via-black/60 to-black/80 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">
         <div className="container mx-auto px-6 py-8">
           <div className="flex items-center justify-between text-sm text-red-600/70">

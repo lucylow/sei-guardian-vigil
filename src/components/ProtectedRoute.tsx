@@ -7,11 +7,22 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { isConnected } = useWallet();
-
-  if (!isConnected) {
+  console.log('ProtectedRoute: Rendering');
+  
+  try {
+    const { isConnected } = useWallet();
+    console.log('ProtectedRoute: useWallet successful, isConnected:', isConnected);
+    
+    if (!isConnected) {
+      console.log('ProtectedRoute: Not connected, redirecting to landing page');
+      return <Navigate to="/" replace />;
+    }
+    
+    console.log('ProtectedRoute: Connected, rendering children');
+    return <>{children}</>;
+  } catch (error) {
+    console.error('ProtectedRoute: useWallet failed:', error);
+    console.log('ProtectedRoute: Error occurred, redirecting to landing page');
     return <Navigate to="/" replace />;
   }
-
-  return <>{children}</>;
 };
