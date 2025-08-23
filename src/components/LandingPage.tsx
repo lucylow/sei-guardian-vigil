@@ -412,6 +412,32 @@ export default function LandingPage() {
           </Card>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t-2 border-red-900/50 bg-gradient-to-r from-black/80 via-black/60 to-black/80 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">
+        <div className="container mx-auto px-6 py-8">
+          <div className="flex items-center justify-between text-sm text-red-600/70">
+            <div className="flex items-center space-x-6">
+              <span className="tracking-wide font-medium">© 2024 SEI SENTINEL. BUILT ON SEI NETWORK.</span>
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-2 h-2 bg-red-500 rounded-full shadow-lg shadow-red-500/50"></div>
+                  <div className="absolute inset-0 w-2 h-2 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                </div>
+                <span className="tracking-wide font-medium">NETWORK: HEALTHY</span>
+              </div>
+            </div>
+            <div className="flex items-center space-x-6">
+              <Link to="/dashboard" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
+                DASHBOARD
+              </Link>
+              <a href="https://github.com/sei-network" target="_blank" rel="noopener noreferrer" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
+                GITHUB
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

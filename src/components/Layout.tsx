@@ -10,7 +10,6 @@ import {
   ShieldCheck, 
   Sword, 
   Code, 
-  BookOpen,
   Settings,
   Wallet,
   Zap,
@@ -45,7 +44,6 @@ export function Layout({ children }: LayoutProps) {
     { to: "/agent-arena", label: "Agent Arena", icon: Sword, description: "Agent battles & training" },
     { to: "/no-code-studio", label: "No-Code Studio", icon: Code, description: "Visual agent builder" },
 
-    { to: "/docs", label: "Documentation", icon: BookOpen, description: "Developer guides & API docs" },
     { to: "/settings", label: "Settings", icon: Settings, description: "Configuration & preferences" },
   ];
 
@@ -203,9 +201,6 @@ export function Layout({ children }: LayoutProps) {
               </div>
             </div>
             <div className="flex items-center space-x-6">
-              <Link to="/docs" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
-                DOCUMENTATION
-              </Link>
               <Link to="/settings" className="hover:text-red-400 transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
                 SETTINGS
               </Link>

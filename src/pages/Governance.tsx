@@ -403,24 +403,24 @@ export default function Governance() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList variant="governance" className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview" variant="governance" className="flex items-center gap-2">
+          <TabsList variant="security" className="grid w-full grid-cols-6">
+            <TabsTrigger value="overview" variant="security" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="proposals" variant="governance" className="flex items-center gap-2">
+            <TabsTrigger value="proposals" variant="security" className="flex items-center gap-2">
               <Vote className="w-4 h-4" />
               Proposals
             </TabsTrigger>
-            <TabsTrigger value="create" variant="governance" className="flex items-center gap-2">
+            <TabsTrigger value="create" variant="security" className="flex items-center gap-2">
               <PlusCircle className="w-4 h-4" />
               Create
             </TabsTrigger>
-            <TabsTrigger value="treasury" variant="governance" className="flex items-center gap-2">
+            <TabsTrigger value="treasury" variant="security" className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
               Treasury
             </TabsTrigger>
-            <TabsTrigger value="roles" variant="governance" className="flex items-center gap-2">
+            <TabsTrigger value="roles" variant="security" className="flex items-center gap-2">
               <Crown className="w-4 h-4" />
               Roles
             </TabsTrigger>
@@ -428,7 +428,7 @@ export default function Governance() {
           
           {/* Tab Description */}
           <TabDescription 
-            variant="governance" 
+            variant="security" 
             descriptions={{
               overview: "Governance overview with recent activity and quick actions",
               proposals: "View and interact with active governance proposals",
@@ -439,7 +439,7 @@ export default function Governance() {
           />
           
           {/* Connection Line */}
-          <TabConnectionLine variant="governance" />
+          <TabConnectionLine variant="security" />
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">

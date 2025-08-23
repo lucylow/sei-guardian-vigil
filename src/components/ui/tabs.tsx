@@ -51,7 +51,7 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
       default: "bg-muted/50 border border-border/50 backdrop-blur-sm",
       security: "bg-black/40 border-2 border-red-900/60 backdrop-blur-xl shadow-2xl shadow-red-500/20",
       matrix: "bg-gray-900/60 border border-green-500/60 backdrop-blur-xl shadow-2xl shadow-green-500/20",
-      governance: "bg-black/40 border-2 border-blue-900/60 backdrop-blur-xl shadow-2xl shadow-blue-500/20"
+      governance: "bg-black/40 border-2 border-slate-700/60 backdrop-blur-xl shadow-2xl shadow-slate-500/20"
     }
 
     return (
@@ -100,8 +100,8 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
       },
       governance: {
         base: "relative flex-1 flex items-center justify-center space-x-3 py-4 px-6 rounded-lg transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:shadow-lg",
-        active: "bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-2xl shadow-blue-500/50 border-2 border-blue-500 transform scale-105",
-        inactive: "text-blue-400 hover:text-blue-300 hover:bg-blue-900/30 border-2 border-transparent hover:border-blue-600/50 hover:shadow-lg hover:shadow-blue-500/20"
+        active: "bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-2xl shadow-slate-500/50 border-2 border-slate-500 transform scale-105",
+        inactive: "text-slate-400 hover:text-slate-300 hover:bg-slate-900/30 border-2 border-transparent hover:border-slate-600/50 hover:shadow-lg hover:shadow-slate-500/20"
       }
     }
 
@@ -127,7 +127,7 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
             "absolute inset-0 rounded-lg opacity-20 blur-xl transition-all duration-300",
             variant === "security" ? "bg-red-500" : 
             variant === "matrix" ? "bg-green-500" : 
-            variant === "governance" ? "bg-blue-500" : "bg-gray-500"
+            variant === "governance" ? "bg-slate-500" : "bg-gray-500"
           )}></div>
         )}
         
@@ -155,7 +155,7 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
             "absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-4 rotate-45 border-b-2 border-r-2 shadow-lg tab-indicator-bounce",
             variant === "security" ? "bg-red-600 border-red-500 shadow-red-500/50" : 
             variant === "matrix" ? "bg-green-600 border-green-500 shadow-green-500/50" : 
-            variant === "governance" ? "bg-blue-600 border-blue-500 shadow-blue-500/50" : 
+            variant === "governance" ? "bg-slate-600 border-slate-500 shadow-slate-500/50" : 
             "bg-gray-600 border-gray-500"
           )}></div>
         )}
@@ -166,7 +166,7 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
             "absolute inset-0 rounded-lg opacity-0 group-hover:opacity-10 transition-opacity duration-300",
             variant === "security" ? "bg-red-500" : 
             variant === "matrix" ? "bg-green-500" : 
-            variant === "governance" ? "bg-blue-500" : "bg-gray-500"
+            variant === "governance" ? "bg-slate-500" : "bg-gray-500"
           )}></div>
         )}
       </button>
@@ -222,7 +222,7 @@ const TabDescription = React.forwardRef<HTMLParagraphElement, TabDescriptionProp
     const variantClasses = {
       security: "text-red-400/80 font-medium tracking-wide bg-red-900/20 border border-red-800/30 rounded-lg px-4 py-3 backdrop-blur-sm",
       matrix: "text-green-400/80 font-medium tracking-wide bg-green-900/20 border border-green-800/30 rounded-lg px-4 py-3 backdrop-blur-sm",
-      governance: "text-blue-400/80 font-medium tracking-wide bg-blue-900/20 border border-blue-800/30 rounded-lg px-4 py-3 backdrop-blur-sm"
+      governance: "text-slate-400/80 font-medium tracking-wide bg-slate-900/20 border border-slate-800/30 rounded-lg px-4 py-3 backdrop-blur-sm"
     }
 
     return (
@@ -250,7 +250,7 @@ const TabConnectionLine = React.forwardRef<HTMLDivElement, TabConnectionLineProp
     const variantClasses = {
       security: "bg-gradient-to-r from-red-600/60 via-red-500/60 to-red-600/60 shadow-lg shadow-red-500/30",
       matrix: "bg-gradient-to-r from-green-600/60 via-green-500/60 to-green-600/60 shadow-lg shadow-green-500/30",
-      governance: "bg-gradient-to-r from-blue-600/60 via-blue-500/60 to-blue-600/60 shadow-lg shadow-blue-500/30"
+      governance: "bg-gradient-to-r from-slate-600/60 via-slate-500/60 to-slate-600/60 shadow-lg shadow-slate-500/30"
     }
 
     return (
