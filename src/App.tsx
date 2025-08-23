@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Layout } from "@/components/Layout";
 import LandingPage from "./components/LandingPage";
-import Index from "./pages/Index";
+
 import Dashboard from "./pages/Dashboard";
 import Agents from "./pages/Agents";
 import Audits from "./pages/Audits";
@@ -14,7 +14,7 @@ import NoCodeStudio from "./pages/NoCodeStudio";
 import AgentArena from "./pages/AgentArena";
 import Governance from "./pages/Governance";
 import NotFound from "./pages/NotFound";
-import Demo from "./pages/Demo";
+
 import Docs from "./pages/Docs";
 import Settings from "./pages/Settings";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
@@ -84,13 +84,7 @@ const App = () => (
                 </ProtectedRoute>
               </Layout>
             } />
-            <Route path="/demo" element={
-              <Layout>
-                <ProtectedRoute>
-                  <Demo />
-                </ProtectedRoute>
-              </Layout>
-            } />
+
             <Route path="/docs" element={
               <Layout>
                 <ProtectedRoute>

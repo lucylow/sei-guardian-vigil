@@ -168,7 +168,7 @@ const sdk = new SeiAgentSDK('https://rpc.sei.io');`,
             </a>
           </Button>
           <Button variant="outline" asChild>
-            <a href="/demo" className="flex items-center">
+            <a href="/" className="flex items-center">
               <Play className="w-4 h-4 mr-2" />
               Try Demo
             </a>
@@ -376,7 +376,7 @@ print(f"Current TPS: {metrics['current_tps']}")`}
               <h4 className="font-medium">Documentation</h4>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <a href="/demo" className="text-blue-600 hover:underline flex items-center">
+                  <a href="/" className="text-blue-600 hover:underline flex items-center">
                     <Play className="w-3 h-3 mr-2" />
                     Interactive Demo
                   </a>

@@ -53,7 +53,7 @@ export function Layout({ children }: LayoutProps) {
     { to: "/security", label: "Security", icon: ShieldCheck, description: "Threat detection & response" },
     { to: "/agent-arena", label: "Agent Arena", icon: Sword, description: "Agent battles & training" },
     { to: "/no-code-studio", label: "No-Code Studio", icon: Code, description: "Visual agent builder" },
-    { to: "/demo", label: "Demo", icon: Zap, description: "Interactive demonstrations" },
+
     { to: "/docs", label: "Documentation", icon: BookOpen, description: "Developer guides & API docs" },
     { to: "/settings", label: "Settings", icon: Settings, description: "Configuration & preferences" },
   ];
