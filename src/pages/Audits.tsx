@@ -26,10 +26,12 @@ import {
   BarChart3,
   Settings
 } from "lucide-react";
+import { SmartContractUploader } from "@/components/SmartContractUploader";
 
 export default function Audits() {
   const [selectedAudit, setSelectedAudit] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
+  const [showNewAudit, setShowNewAudit] = useState(false);
 
   // Tab descriptions for each audit section
   const tabDescriptions = {
@@ -119,12 +121,42 @@ export default function Audits() {
                 SMART CONTRACT SECURITY AUDITS AND VULNERABILITY ASSESSMENT
               </p>
             </div>
-            <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:-translate-y-1">
+            <Button 
+              onClick={() => setShowNewAudit(true)}
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:-translate-y-1"
+            >
               <FileSearch className="w-5 h-5 mr-2" />
               NEW AUDIT
             </Button>
           </div>
         </div>
+
+        {/* New Audit Form */}
+        {showNewAudit && (
+          <div className="mb-8">
+            <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-red-300 font-mono tracking-wide text-xl">
+                    CREATE NEW AUDIT
+                  </CardTitle>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowNewAudit(false)}
+                    className="border-red-600/50 text-red-400 hover:bg-red-900/20"
+                  >
+                    <XCircle className="w-4 h-4 mr-2" />
+                    Close
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <SmartContractUploader />
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Audit Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
