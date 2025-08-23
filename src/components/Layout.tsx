@@ -15,7 +15,6 @@ import {
   Zap,
   TrendingUp,
   Activity,
-  Home,
   Gavel
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -34,8 +33,6 @@ export function Layout({ children }: LayoutProps) {
   console.log('Layout: useWallet successful, isConnected:', isConnected);
 
   const navItems = [
-    // Only show Home when not connected
-    ...(isConnected ? [] : [{ to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" }]),
     { to: "/dashboard", label: "Dashboard", icon: BarChart3, description: "System overview & metrics" },
     { to: "/agents", label: "Agents", icon: Users, description: "AI agent management" },
     { to: "/agent-arena", label: "Agent Arena", icon: Sword, description: "Agent battles & training" },
@@ -151,23 +148,7 @@ export function Layout({ children }: LayoutProps) {
             </div>
           </div>
           
-          {/* Back to Landing */}
-          <div className="p-6 border-t border-red-900/50">
-            <Link
-              to="/"
-              className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1 text-red-600/70 hover:border-l-red-700/50"
-            >
-              <div className="p-2 rounded-lg transition-all duration-300 bg-red-900/20 text-red-600/70 hover:bg-red-500/20 hover:text-red-400">
-                <Home className="w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <div className="font-bold tracking-wide text-base">BACK TO LANDING</div>
-                <div className="text-xs text-red-600/50 hidden lg:block tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  Return to landing page
-                </div>
-              </div>
-            </Link>
-          </div>
+
           </aside>
 
           {/* Main Content */}
