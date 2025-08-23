@@ -1,12 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* Google Fonts Import */
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600;700&display=swap');
 
 /* Matrix Effects Import */
 @import './styles/matrix-effects.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Enhanced CSS Variables for Better Readability */
 :root {
