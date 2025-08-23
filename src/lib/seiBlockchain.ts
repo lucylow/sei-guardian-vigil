@@ -1,7 +1,7 @@
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 import { SigningCosmWasmClient, CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { SigningStargateClient, StargateClient } from "@cosmjs/stargate";
-import { ethers } from "ethers";
+import { ethers, JsonRpcProvider, BrowserProvider, formatEther, parseEther, isAddress } from "ethers";
 
 // SEI Network configurations
 export const SEI_NETWORKS = {
@@ -107,7 +107,7 @@ export class SeiBlockchainService {
   async connectEVMWallet() {
     try {
       if (typeof window !== 'undefined' && (window as any).ethereum) {
-        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+        const provider = new BrowserProvider((window as any).ethereum);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         
@@ -347,20 +347,20 @@ export class SeiBlockchainService {
 }
 
 export class SeiEVMService {
-  private provider: ethers.providers.JsonRpcProvider | null = null;
+  private provider: JsonRpcProvider | null = null;
   private signer: ethers.Signer | null = null;
   private currentNetwork: keyof typeof SEI_NETWORKS = "evm";
 
   constructor(rpcUrl?: string) {
     if (rpcUrl) {
-      this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+      this.provider = new JsonRpcProvider(rpcUrl);
     }
   }
 
   async connectWallet() {
     try {
       if (typeof window !== 'undefined' && (window as any).ethereum) {
-        const provider = new ethers.providers.Web3Provider((window as any).ethereum);
+        const provider = new BrowserProvider((window as any).ethereum);
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         
@@ -384,7 +384,7 @@ export class SeiEVMService {
       }
 
       const balance = await this.provider.getBalance(address);
-      return ethers.utils.formatEther(balance);
+      return formatEther(balance);
     } catch (error) {
       console.error('Failed to get EVM balance:', error);
       throw error;
@@ -399,7 +399,7 @@ export class SeiEVMService {
 
       const tx = await this.signer.sendTransaction({
         to,
-        value: ethers.utils.parseEther(amount)
+        value: parseEther(amount)
       });
 
       return await tx.wait();
@@ -429,7 +429,7 @@ export const validateSEIAddress = (address: string): boolean => {
 };
 
 export const validateEVMAddress = (address: string): boolean => {
-  return ethers.utils.isAddress(address);
+  return isAddress(address);
 };
 
 // Export singleton instances
