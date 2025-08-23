@@ -669,6 +669,49 @@ const nodeTypes = {
       <div className="text-sm">{data.label}</div>
     </div>
   ),
+  
+  // Additional node types used in templates
+  seiOracle: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-pink-700 text-white rounded-lg border-2 border-pink-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Oracle</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiMempool: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-700 text-white rounded-lg border-2 border-teal-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Mempool</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiSwap: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-green-700 text-white rounded-lg border-2 border-green-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Swap</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiStaking: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-yellow-700 text-white rounded-lg border-2 border-yellow-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Staking</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiAlert: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-rose-700 text-white rounded-lg border-2 border-rose-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Alert</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+
 };
 
 const networkOptions = [
@@ -701,9 +744,14 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
   // Load template when selectedTemplate prop changes
   useEffect(() => {
     console.log('VisualAgentBuilder: selectedTemplate changed to:', selectedTemplate);
+    console.log('VisualAgentBuilder: Available templates:', Object.keys(agentTemplates));
+    
     if (selectedTemplate && agentTemplates[selectedTemplate]) {
       console.log('VisualAgentBuilder: Loading template:', agentTemplates[selectedTemplate]);
       loadTemplate(selectedTemplate);
+    } else if (selectedTemplate) {
+      console.error('VisualAgentBuilder: Template not found:', selectedTemplate);
+      console.log('VisualAgentBuilder: Available templates:', Object.keys(agentTemplates));
     }
   }, [selectedTemplate]);
 
@@ -713,26 +761,74 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
     if (template) {
       console.log('VisualAgentBuilder: Setting nodes and edges for template:', template.name);
       
-      // Ensure all nodes have proper data structure
-      const processedNodes = template.nodes.map(node => ({
+      // Ensure all nodes have proper data structure and unique IDs
+      const processedNodes = template.nodes.map((node, index) => ({
         ...node,
+        id: `${templateId}-${node.id}-${index}`, // Ensure unique IDs
         data: {
           ...node.data,
           label: node.data.label || node.type,
-          config: node.data.config || {}
+          config: node.data.config || {},
+          description: node.data.description || `Node for ${template.name}`
+        },
+        position: {
+          x: node.position.x + (index * 50), // Spread nodes slightly
+          y: node.position.y + (index * 30)
         }
       }));
       
+      // Update edge IDs and source/target to match new node IDs
+      const processedEdges = template.edges.map((edge, index) => {
+        const sourceNode = processedNodes.find(n => n.id.includes(edge.source));
+        const targetNode = processedNodes.find(n => n.id.includes(edge.target));
+        
+        if (sourceNode && targetNode) {
+          return {
+            ...edge,
+            id: `${templateId}-edge-${index}`,
+            source: sourceNode.id,
+            target: targetNode.id,
+            style: { 
+              stroke: '#3b82f6', 
+              strokeWidth: 3,
+              strokeDasharray: '5,5',
+              filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
+            },
+            animated: true
+          };
+        }
+        return edge;
+      }).filter(edge => edge.source && edge.target); // Only include valid edges
+      
       setNodes(processedNodes);
-      setEdges(template.edges);
+      setEdges(processedEdges);
       setCurrentTemplate(templateId);
       
       toast({
         title: `📋 Template Loaded: ${template.name}`,
-        description: template.description,
+        description: `${template.description} - ${processedNodes.length} nodes, ${processedEdges.length} connections`,
       });
+      
+      console.log('VisualAgentBuilder: Template loaded successfully:', {
+        template: template.name,
+        nodes: processedNodes.length,
+        edges: processedEdges.length,
+        nodeTypes: processedNodes.map(n => n.type)
+      });
+      
+      // Notify parent component that template is ready
+      if (onNavigateToDeploy) {
+        setTimeout(() => {
+          onNavigateToDeploy();
+        }, 1000); // Small delay to show the success message
+      }
     } else {
       console.error('VisualAgentBuilder: Template not found for ID:', templateId);
+      toast({
+        title: "❌ Template Not Found",
+        description: `Template "${templateId}" could not be loaded. Please try another template.`,
+        variant: "destructive",
+      });
     }
   }, [setNodes, setEdges, toast]);
 
