@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BrowserProvider, Contract, parseEther, JsonRpcProvider, formatUnits } from 'ethers';
 
 // Core interfaces for agent management
 export interface AgentMetadata {
@@ -55,7 +55,7 @@ export interface SeiNetworkMetrics {
  * Leverages Sei's parallelized EVM, fast finality, and native order matching
  */
 export class SeiAgentSDK {
-  private provider: ethers.providers.JsonRpcProvider;
+  private provider: JsonRpcProvider;
   private registryAddress: string;
   private agentABI: any;
   private apiBaseUrl: string;
@@ -65,7 +65,7 @@ export class SeiAgentSDK {
     registryAddress: string = '0x...', // Deployed registry contract
     apiBaseUrl: string = 'https://api.sei-guardian.com'
   ) {
-    this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+    this.provider = new JsonRpcProvider(rpcUrl);
     this.registryAddress = registryAddress;
     this.apiBaseUrl = apiBaseUrl;
     
@@ -92,11 +92,11 @@ export class SeiAgentSDK {
     agentName: string, 
     metadataURI: string, 
     owner: string,
-    signer?: ethers.Signer
+    signer?: BrowserProvider
   ): Promise<string> {
     try {
-      const signerToUse = signer || this.provider.getSigner();
-      const registry = new ethers.Contract(
+      const signerToUse = signer || this.provider;
+      const registry = new Contract(
         this.registryAddress, 
         this.agentABI, 
         signerToUse
@@ -124,7 +124,7 @@ export class SeiAgentSDK {
    */
   async getAgentInfo(agentAddress: string): Promise<AgentMetadata> {
     try {
-      const registry = new ethers.Contract(
+      const registry = new Contract(
         this.registryAddress, 
         this.agentABI, 
         this.provider
@@ -163,11 +163,11 @@ export class SeiAgentSDK {
     agentAddress: string,
     contractAddress: string,
     priority: 'low' | 'medium' | 'high' | 'critical' = 'medium',
-    signer?: ethers.Signer
+    signer?: BrowserProvider
   ): Promise<string> {
     try {
-      const signerToUse = signer || this.provider.getSigner();
-      const registry = new ethers.Contract(
+      const signerToUse = signer || this.provider;
+      const registry = new Contract(
         this.registryAddress, 
         this.agentABI, 
         signerToUse
@@ -205,7 +205,7 @@ export class SeiAgentSDK {
    */
   async getAuditResult(auditId: string): Promise<AuditResult> {
     try {
-      const registry = new ethers.Contract(
+      const registry = new Contract(
         this.registryAddress, 
         this.agentABI, 
         this.provider
@@ -303,7 +303,7 @@ export class SeiAgentSDK {
         avgFinalityTimeMs,
         currentTPS,
         networkLatencyMs: Date.now() - (block.timestamp * 1000),
-        gasPrice: ethers.utils.formatUnits(await this.provider.getGasPrice(), 'gwei') + ' gwei'
+        gasPrice: formatUnits(await this.provider.getFeeData().then(f => f.gasPrice || 0n), 'gwei') + ' gwei'
       };
     } catch (error) {
       console.error('Failed to get Sei network metrics:', error);
