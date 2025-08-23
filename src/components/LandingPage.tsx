@@ -23,20 +23,27 @@ export default function LandingPage() {
   
   // Auto-redirect to dashboard when wallet connects
   useEffect(() => {
-    if (isConnected) {
+    console.log('LandingPage: Wallet connection state changed:', { isConnected, isRedirecting });
+    
+    if (isConnected && !isRedirecting) {
+      console.log('LandingPage: Wallet connected, starting redirect to dashboard...');
       setIsRedirecting(true);
       // Small delay to ensure wallet state is fully updated
       const timer = setTimeout(() => {
+        console.log('LandingPage: Redirecting to dashboard now');
         navigate('/dashboard');
-      }, 500);
+      }, 1000); // Increased delay to ensure wallet state is stable
       
       return () => clearTimeout(timer);
     }
-  }, [isConnected, navigate]);
+  }, [isConnected, navigate, isRedirecting]);
 
   // Also redirect if user is already connected (e.g., page refresh)
   useEffect(() => {
+    console.log('LandingPage: Checking if already connected:', { isConnected, isRedirecting });
+    
     if (isConnected && !isRedirecting) {
+      console.log('LandingPage: Already connected, redirecting to dashboard...');
       navigate('/dashboard');
     }
   }, [isConnected, isRedirecting, navigate]);

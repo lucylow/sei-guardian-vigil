@@ -51,14 +51,9 @@ function WalletProvider({ children }: WalletProviderProps) {
           
           const key = await window.keplr.getKey(seiConfig.chainId);
           if (key) {
-            console.log('WalletProvider: Found existing connection:', key.bech32Address);
-            setAccount(key.bech32Address);
-            setNetworkInfo({
-              chainId: seiConfig.chainId,
-              chainName: seiConfig.chainName,
-              rpc: seiConfig.rpc
-            });
-            setIsConnected(true);
+            console.log('WalletProvider: Found existing key but not auto-connecting:', key.bech32Address);
+            // Don't automatically set isConnected to true
+            // The user should explicitly connect through the connect button
           } else {
             console.log('WalletProvider: No existing connection found');
           }
@@ -89,17 +84,20 @@ function WalletProvider({ children }: WalletProviderProps) {
       console.log('WalletProvider: setIsConnected called with:', connected);
       console.log('WalletProvider: Previous isConnected:', isConnected);
       setIsConnected(connected);
+      console.log('WalletProvider: isConnected state updated to:', connected);
     },
     setAccount: (account: string | null) => {
       console.log('WalletProvider: setAccount called with:', account);
       console.log('WalletProvider: Previous account:', account);
       setAccount(account);
+      console.log('WalletProvider: account state updated to:', account);
     },
     setNetworkInfo: (info: any) => {
       console.log('WalletProvider: setNetworkInfo called with:', info);
       console.log('WalletProvider: Previous networkInfo:', networkInfo);
       setNetworkInfo(info);
-    },
+      console.log('WalletProvider: networkInfo state updated to:', info);
+    }
   };
 
   return (

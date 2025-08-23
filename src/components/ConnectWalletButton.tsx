@@ -65,12 +65,9 @@ export default function ConnectWalletButton() {
       if (window.keplr && window.keplr.getKey) {
         const key = await window.keplr.getKey(seiConfig.chainId);
         if (key) {
-          setAccount(key.bech32Address);
-          setNetworkInfo({
-            chainId: seiConfig.chainId,
-            chainName: seiConfig.chainName,
-            rpc: seiConfig.rpc
-          });
+          // Only set the account and network info, don't set isConnected to true
+          // The user should explicitly connect through the connect button
+          console.log("Found existing key but not auto-connecting:", key.bech32Address);
         }
       }
     } catch (error) {
@@ -90,7 +87,6 @@ export default function ConnectWalletButton() {
         toast({
           title: "Wallet Not Found",
           description: "Please install Keplr wallet extension to connect to Sei Network.",
-          variant: "destructive",
         });
         return;
       }
@@ -111,6 +107,13 @@ export default function ConnectWalletButton() {
       
       if (key && key.bech32Address) {
         console.log('ConnectWalletButton: Setting wallet state...');
+        console.log('ConnectWalletButton: Account:', key.bech32Address);
+        console.log('ConnectWalletButton: Network Info:', {
+          chainId: seiConfig.chainId,
+          chainName: seiConfig.chainName,
+          rpc: seiConfig.rpc
+        });
+        
         setAccount(key.bech32Address);
         setNetworkInfo({
           chainId: seiConfig.chainId,
@@ -120,6 +123,8 @@ export default function ConnectWalletButton() {
         setIsConnected(true);
         
         console.log('ConnectWalletButton: Wallet state updated, showing toast...');
+        console.log('ConnectWalletButton: isConnected should now be true');
+        
         toast({
           title: "Wallet Connected!",
           description: `Successfully connected to ${seiConfig.chainName}. Redirecting to dashboard...`,
@@ -137,7 +142,6 @@ export default function ConnectWalletButton() {
       toast({
         title: "Connection Failed",
         description: errorMessage,
-        variant: "destructive",
       });
     } finally {
       setIsConnecting(false);
@@ -181,7 +185,7 @@ export default function ConnectWalletButton() {
     }
   };
 
-  if (account) {
+  if (isConnected && account) {
     return (
       <div className="flex items-center space-x-3">
         {/* Network Info */}
