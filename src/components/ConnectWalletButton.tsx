@@ -79,11 +79,13 @@ export default function ConnectWalletButton() {
   };
 
   const connectKeplr = async () => {
+    console.log('ConnectWalletButton: Starting wallet connection...');
     setIsConnecting(true);
     setError(null);
     
     try {
       if (!window.keplr) {
+        console.log('ConnectWalletButton: Keplr not found');
         setError("Keplr wallet is not installed");
         toast({
           title: "Wallet Not Found",
@@ -93,18 +95,24 @@ export default function ConnectWalletButton() {
         return;
       }
 
+      console.log('ConnectWalletButton: Keplr found, suggesting chain...');
       // Suggest chain configuration
       await window.keplr.experimentalSuggestChain(seiConfig);
       
+      console.log('ConnectWalletButton: Chain suggested, enabling...');
       // Enable the chain
       await window.keplr.enable(seiConfig.chainId);
       
+      console.log('ConnectWalletButton: Chain enabled, getting offline signer...');
       // Get offline signer
       const offlineSigner = window.getOfflineSigner(seiConfig.chainId);
       const accounts = await offlineSigner.getAccounts();
       
+      console.log('ConnectWalletButton: Got accounts:', accounts);
+      
       if (accounts.length > 0) {
         const account = accounts[0];
+        console.log('ConnectWalletButton: Setting wallet state...');
         setAccount(account.bech32Address);
         setNetworkInfo({
           chainId: seiConfig.chainId,
@@ -113,14 +121,19 @@ export default function ConnectWalletButton() {
         });
         setIsConnected(true);
         
+        console.log('ConnectWalletButton: Wallet state updated, showing toast...');
         toast({
           title: "Wallet Connected!",
           description: `Successfully connected to ${seiConfig.chainName}`,
         });
+        
+        console.log('ConnectWalletButton: Wallet connection complete');
       } else {
+        console.log('ConnectWalletButton: No accounts found');
         setError("No accounts found in wallet");
       }
     } catch (err: any) {
+      console.error('ConnectWalletButton: Error during connection:', err);
       const errorMessage = err.message || "Failed to connect wallet";
       setError(errorMessage);
       toast({

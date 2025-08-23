@@ -29,20 +29,10 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const { isConnected } = useWallet();
   
   console.log('Layout: Rendering, location:', location.pathname);
-  
-  // Safely get wallet state
-  let isConnected = false;
-  
-  try {
-    const walletData = useWallet();
-    isConnected = walletData.isConnected;
-    console.log('Layout: useWallet successful, isConnected:', isConnected);
-  } catch (error) {
-    console.error('Layout: useWallet failed:', error);
-    isConnected = false;
-  }
+  console.log('Layout: useWallet successful, isConnected:', isConnected);
 
   const navItems = [
     { to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" },
