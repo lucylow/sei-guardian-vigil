@@ -19,7 +19,8 @@ import {
   BarChart3,
   Settings,
   Vote,
-  Eye
+  Eye,
+  FileSearch
 } from "lucide-react";
 
 // Navigation is now handled by the Layout component

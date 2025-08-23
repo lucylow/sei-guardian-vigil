@@ -400,7 +400,7 @@ const setupAgentCommands = () => {
         console.log(chalk.white('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━'));
         console.log(chalk.white(`  Contracts Audited: ${chalk.cyan(contractCount)}`));
         console.log(chalk.white(`  Total Time:        ${chalk.cyan(totalTime)}ms`));
-        console.log(chalk.white(`  Average per Contract: ${chalk.cyan(Math.round(totalTime / contractCount)}ms`));
+        console.log(chalk.white(`  Average per Contract: ${chalk.cyan(Math.round(totalTime / contractCount))}ms`));
         console.log(chalk.white(`  Sei Advantage:     ${chalk.yellow(`~${Math.round(contractCount * 0.8)}x faster than sequential!`)}`));
         console.log(chalk.white('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'));
         
