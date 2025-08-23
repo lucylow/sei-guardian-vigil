@@ -276,4 +276,5 @@ class NFTService {
 
 export const nftService = new NFTService();
 
-// Export types for use in components (removing duplicates)
+// Export types for use in components
+export type { NFTMetadata, MintingResult, AgentUpgrade };

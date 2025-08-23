@@ -7,8 +7,6 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import SeiWalletConnector from "@/components/SeiWalletConnector";
-import OnChainGovernance from "@/components/OnChainGovernance";
 import { 
   Vote, 
   Users, 
@@ -405,7 +403,7 @@ export default function Governance() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-7">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               Overview
@@ -425,10 +423,6 @@ export default function Governance() {
             <TabsTrigger value="roles" className="flex items-center gap-2">
               <Crown className="w-4 h-4" />
               Roles
-            </TabsTrigger>
-            <TabsTrigger value="onchain" className="flex items-center gap-2">
-              <Zap className="w-4 h-4" />
-              On-Chain
             </TabsTrigger>
           </TabsList>
 
@@ -883,21 +877,6 @@ export default function Governance() {
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
-
-          {/* On-Chain Governance Tab */}
-          <TabsContent value="onchain" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {/* Wallet Connector */}
-              <div>
-                <SeiWalletConnector />
-              </div>
-              
-              {/* On-Chain Governance Interface */}
-              <div>
-                <OnChainGovernance />
-              </div>
-            </div>
           </TabsContent>
         </Tabs>
       </div>

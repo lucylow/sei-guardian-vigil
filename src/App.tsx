@@ -16,7 +16,6 @@ import NotFound from "./pages/NotFound";
 import Demo from "./pages/Demo";
 import Docs from "./pages/Docs";
 import Settings from "./pages/Settings";
-import MetaMaskDemo from "./pages/MetaMaskDemo";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
 
 const queryClient = new QueryClient();
@@ -40,7 +39,6 @@ const App = () => (
             <Route path="/demo" element={<Demo />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/metamask-demo" element={<MetaMaskDemo />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
