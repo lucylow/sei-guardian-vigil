@@ -11,8 +11,6 @@ export default function NoCodeStudio() {
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [isDeploying, setIsDeploying] = useState(false);
   const [deploymentStatus, setDeploymentStatus] = useState<string>('');
-  const [templateLoading, setTemplateLoading] = useState(false);
-  const [templateError, setTemplateError] = useState<string | null>(null);
 
   // Deployment functions
   const deployToTestnet = async () => {
@@ -262,12 +260,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('defi-arbitrage');
                     setActiveTab('build');
-                    // Reset loading state after a short delay
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -287,11 +281,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('security-scanner');
                     setActiveTab('build');
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -311,11 +302,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('portfolio-manager');
                     setActiveTab('build');
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -335,11 +323,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('data-aggregator');
                     setActiveTab('build');
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -359,11 +344,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('yield-optimizer');
                     setActiveTab('build');
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -383,11 +365,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('cross-chain-bridge');
                     setActiveTab('build');
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -407,11 +386,8 @@ export default function NoCodeStudio() {
                 <Button 
                   className="w-full" 
                   onClick={() => {
-                    setTemplateLoading(true);
-                    setTemplateError(null);
                     setSelectedTemplate('sei-defi-bot');
                     setActiveTab('build');
-                    setTimeout(() => setTemplateLoading(false), 2000);
                   }}
                 >
                   Use This Template
@@ -427,26 +403,6 @@ export default function NoCodeStudio() {
               <p className="text-lg text-muted-foreground">
                 Use our visual builder to customize your agent. Drag and drop components, configure logic, and preview your creation.
               </p>
-              
-              {/* Template Loading Status */}
-              {templateLoading && (
-                <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg max-w-md mx-auto">
-                  <div className="flex items-center justify-center space-x-2">
-                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-blue-700 text-sm">Loading template...</span>
-                  </div>
-                </div>
-              )}
-              
-              {/* Template Error Display */}
-              {templateError && (
-                <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg max-w-md mx-auto">
-                  <div className="flex items-center space-x-2">
-                    <div className="text-red-600">❌</div>
-                    <span className="text-red-700 text-sm">{templateError}</span>
-                  </div>
-                </div>
-              )}
               
               {/* Template Info Display */}
               {selectedTemplate && (
