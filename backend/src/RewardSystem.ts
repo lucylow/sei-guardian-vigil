@@ -1,67 +1,101 @@
-export default class RewardSystem {
-  constructor(agentManager, io) {
+import { Server as SocketIO } from "socket.io";
+
+interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  badge: string;
+  requirement: string;
+}
+
+class RewardSystem {
+  private agentManager: any;
+  private io: SocketIO;
+  private achievements: Achievement[] = [
+    { id: "first-fix", name: "First Fix", description: "Fix your first vulnerability", badge: "🥇", requirement: "1 fix" },
+    { id: "speed-demon", name: "Speed Demon", description: "Fix a vulnerability in under 5 seconds", badge: "⚡", requirement: "Fast fix" },
+    { id: "critical-hunter", name: "Critical Hunter", description: "Fix 10 critical vulnerabilities", badge: "🔴", requirement: "10 critical fixes" },
+    { id: "veteran", name: "Veteran", description: "Reach level 10", badge: "🎖️", requirement: "Level 10" }
+  ];
+  private agentAchievements: Record<string, string[]> = {};
+  private agentStats: Record<string, { criticals: number; fixes: number; fastFixes: number; firstFix: boolean }> = {};
+
+  constructor(agentManager: any, io: SocketIO) {
     this.agentManager = agentManager;
     this.io = io;
-    this.achievements = [
-      { id: "a1", name: "Critical Slayer", criteria: 5, type: "critical" },
-      { id: "a2", name: "Speed Demon", criteria: 300, type: "speed" },
-      { id: "a3", name: "First Fix", criteria: 1, type: "first" },
-      { id: "a4", name: "Patch Master", criteria: 10, type: "patches" },
-      { id: "a5", name: "Veteran Agent", criteria: 5, type: "level" }
-    ];
-    this.agentAchievements = {};
-    this.agentStats = {};
-    this.agentManager.list().forEach(agent => {
+    
+    // Initialize stats for existing agents
+    this.agentManager.list().forEach((agent: any) => {
       this.agentStats[agent.id] = { criticals: 0, fixes: 0, fastFixes: 0, firstFix: false };
       this.agentAchievements[agent.id] = [];
     });
   }
-  recordReward(agentId, amount, txHash) {
+
+  recordReward(agentId: string, amount: number, txHash: string): void {
     const agent = this.agentManager.getAgent(agentId);
     if (!agent) return;
+
     const stats = this.agentStats[agentId];
     const achievements = this.agentAchievements[agentId];
-    if (amount >= 50) {
-      stats.criticals++;
-      if (stats.criticals >= this.getAchievement("a1").criteria) {
-        this.unlock(agentId, "a1");
-      }
-    }
-    if (amount >= 30) {
-      stats.fastFixes++;
-      if (stats.fastFixes >= this.getAchievement("a2").criteria) {
-        this.unlock(agentId, "a2");
-      }
-    }
+
+    // Update stats
+    stats.fixes += 1;
     if (!stats.firstFix) {
       stats.firstFix = true;
-      this.unlock(agentId, "a3");
+      this.unlock(agentId, "first-fix");
     }
-    stats.fixes++;
-    if (stats.fixes >= this.getAchievement("a4").criteria) {
-      this.unlock(agentId, "a4");
+
+    // Check for speed demon achievement
+    if (amount > 50) { // High reward indicates fast fix
+      stats.fastFixes += 1;
+      if (stats.fastFixes >= 5) {
+        this.unlock(agentId, "speed-demon");
+      }
     }
-    if (agent.level >= this.getAchievement("a5").criteria) {
-      this.unlock(agentId, "a5");
+
+    // Check for critical hunter achievement
+    if (amount > 75) { // High reward indicates critical vulnerability
+      stats.criticals += 1;
+      if (stats.criticals >= 10) {
+        this.unlock(agentId, "critical-hunter");
+      }
     }
+
+    // Check for veteran achievement
+    if (agent.level >= 10) {
+      this.unlock(agentId, "veteran");
+    }
+
+    // Emit leaderboard update
     this.io.emit("leaderboard:update", this.agentManager.getLeaderboard());
   }
-  getAchievement(id) {
+
+  getAchievement(id: string): Achievement | undefined {
     return this.achievements.find(a => a.id === id);
   }
-  unlock(agentId, achievementId) {
+
+  unlock(agentId: string, achievementId: string): void {
     if (!this.agentAchievements[agentId]) {
       this.agentAchievements[agentId] = [];
     }
+
     if (!this.agentAchievements[agentId].includes(achievementId)) {
       this.agentAchievements[agentId].push(achievementId);
+      
       const achievement = this.getAchievement(achievementId);
-      this.io.emit("achievement:unlock", { agentId, achievement: achievement.name, badge: achievementId });
-      return true;
+      if (achievement) {
+        this.io.emit("achievement:unlock", { agentId, achievement: achievement.name, badge: achievementId });
+      }
     }
-    return false;
   }
-  getAgentAchievements(agentId) {
-    return (this.agentAchievements[agentId] || []).map(id => this.getAchievement(id));
+
+  getAgentAchievements(agentId: string): Achievement[] {
+    return (this.agentAchievements[agentId] || []).map(id => this.getAchievement(id)).filter(Boolean) as Achievement[];
+  }
+
+  getAgentStats(agentId: string): any {
+    return this.agentStats[agentId] || { criticals: 0, fixes: 0, fastFixes: 0, firstFix: false };
   }
 }
+
+export default RewardSystem;
