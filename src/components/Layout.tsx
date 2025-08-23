@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import ConnectWalletButton from "./ConnectWalletButton";
+import { useWallet } from "@/contexts/WalletContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ interface LayoutProps {
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const { isConnected } = useWallet();
 
   const navItems = [
     { to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" },
@@ -89,70 +91,77 @@ export function Layout({ children }: LayoutProps) {
         </div>
       </header>
 
-      <div className="flex">
-        {/* Sidebar Navigation */}
-        <aside className="w-72 min-h-screen border-r-2 border-red-900/50 bg-gradient-to-b from-black/80 via-black/60 to-black/40 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">
-          <nav className="p-6 space-y-3">
-            {navItems.map(({ to, label, icon: Icon, description }) => (
-              <Link
-                key={to}
-                to={to}
-                className={cn(
-                  "group flex items-center space-x-4 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1",
-                  isActive(to) 
-                    ? "bg-gradient-to-r from-red-900/40 to-red-800/20 text-red-300 border-l-red-500 shadow-xl shadow-red-500/30 transform translate-x-1" 
-                    : "text-red-600/70 hover:border-l-red-700/50"
-                )}
-              >
-                <div className={cn(
-                  "p-2 rounded-lg transition-all duration-300",
-                  isActive(to) 
-                    ? "bg-red-500/20 text-red-400 shadow-lg shadow-red-500/20" 
-                    : "bg-red-900/20 text-red-600/70 group-hover:bg-red-500/20 group-hover:text-red-400"
-                )}>
-                  <Icon className="w-5 h-5" />
-                </div>
-                <div className="flex-1">
-                  <div className="font-bold tracking-wide text-base">{label}</div>
-                  <div className="text-xs text-red-600/50 hidden lg:block tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {description}
+      {isConnected ? (
+        <div className="flex">
+          {/* Sidebar Navigation */}
+          <aside className="w-72 min-h-screen border-r-2 border-red-900/50 bg-gradient-to-b from-black/80 via-black/60 to-black/40 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">
+            <nav className="p-6 space-y-3">
+              {navItems.map(({ to, label, icon: Icon, description }) => (
+                <Link
+                  key={to}
+                  to={to}
+                  className={cn(
+                    "group flex items-center space-x-4 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1",
+                    isActive(to) 
+                      ? "bg-gradient-to-r from-red-900/40 to-red-800/20 text-red-300 border-l-red-500 shadow-xl shadow-red-500/30 transform translate-x-1" 
+                      : "text-red-600/70 hover:border-l-red-700/50"
+                  )}
+                >
+                  <div className={cn(
+                    "p-2 rounded-lg transition-all duration-300",
+                    isActive(to) 
+                      ? "bg-red-500/20 text-red-400 shadow-lg shadow-red-500/20" 
+                      : "bg-red-900/20 text-red-600/70 group-hover:bg-red-500/20 group-hover:text-red-400"
+                  )}>
+                    <Icon className="w-5 h-5" />
                   </div>
-                </div>
-              </Link>
-            ))}
-          </nav>
+                  <div className="flex-1">
+                    <div className="font-bold tracking-wide text-base">{label}</div>
+                    <div className="text-xs text-red-600/50 hidden lg:block tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {description}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </nav>
 
-          {/* Quick Stats */}
-          <div className="p-6 border-t border-red-900/50">
-            <div className="space-y-4">
-              <div className="text-xs font-bold text-red-600/70 uppercase tracking-wider">
-                QUICK STATS
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
-                  <span className="text-red-600/70 font-medium">Active Agents</span>
-                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">8</Badge>
+            {/* Quick Stats */}
+            <div className="p-6 border-t border-red-900/50">
+              <div className="space-y-4">
+                <div className="text-xs font-bold text-red-600/70 uppercase tracking-wider">
+                  QUICK STATS
                 </div>
-                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
-                  <span className="text-red-600/70 font-medium">Contracts Monitored</span>
-                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">24</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
-                  <span className="text-red-600/70 font-medium">Security Score</span>
-                  <Badge variant="default" className="text-xs bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg shadow-green-500/25 font-bold">94%</Badge>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                    <span className="text-red-600/70 font-medium">Active Agents</span>
+                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">8</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                    <span className="text-red-600/70 font-medium">Contracts Monitored</span>
+                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">24</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                    <span className="text-red-600/70 font-medium">Security Score</span>
+                    <Badge variant="default" className="text-xs bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg shadow-green-500/25 font-bold">94%</Badge>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </aside>
+          </aside>
 
-        {/* Main Content */}
-        <main className="flex-1 min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black">
-          <div className="container mx-auto p-8">
-            {children}
-          </div>
+          {/* Main Content */}
+          <main className="flex-1 min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black">
+            <div className="container mx-auto p-8">
+              {children}
+            </div>
+          </main>
+        </div>
+      ) : (
+        /* Main Content without sidebar for landing page */
+        <main className="min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black">
+          {children}
         </main>
-      </div>
+      )}
 
       {/* Footer */}
       <footer className="border-t-2 border-red-900/50 bg-gradient-to-r from-black/80 via-black/60 to-black/80 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">

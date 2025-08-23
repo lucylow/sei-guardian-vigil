@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Wallet, Copy, ExternalLink, AlertCircle, CheckCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useWallet } from "@/contexts/WalletContext";
 
 declare global {
   interface Window {
@@ -13,14 +14,9 @@ declare global {
 }
 
 export default function ConnectWalletButton() {
-  const [account, setAccount] = useState<string | null>(null);
+  const { isConnected, account, networkInfo, setIsConnected, setAccount, setNetworkInfo } = useWallet();
   const [isConnecting, setIsConnecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [networkInfo, setNetworkInfo] = useState<{
-    chainId: string;
-    chainName: string;
-    rpc: string;
-  } | null>(null);
   const [copied, setCopied] = useState(false);
 
   // Sei Network configuration
@@ -59,8 +55,10 @@ export default function ConnectWalletButton() {
 
   // Check if wallet is already connected on mount
   useEffect(() => {
-    checkExistingConnection();
-  }, []);
+    if (!isConnected) {
+      checkExistingConnection();
+    }
+  }, [isConnected]);
 
   const checkExistingConnection = async () => {
     try {
@@ -113,6 +111,7 @@ export default function ConnectWalletButton() {
           chainName: seiConfig.chainName,
           rpc: seiConfig.rpc
         });
+        setIsConnected(true);
         
         toast({
           title: "Wallet Connected!",
@@ -137,6 +136,7 @@ export default function ConnectWalletButton() {
   const disconnectWallet = () => {
     setAccount(null);
     setNetworkInfo(null);
+    setIsConnected(false);
     setError(null);
     toast({
       title: "Wallet Disconnected",
