@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 /* Navigation is now handled by the Layout component */
-import VisualAgentBuilder from "@/components/VisualAgentBuilder";
+import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
