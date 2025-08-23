@@ -227,7 +227,16 @@ export default function LandingPage() {
               </Button>
               <Button 
                 size="sm" 
-                onClick={() => navigate('/no-code-studio')}
+                onClick={() => {
+                  if (isConnected) {
+                    navigate('/no-code-studio');
+                  } else {
+                    toast({
+                      title: "Wallet Required",
+                      description: "Please connect your wallet to access the No-Code Studio",
+                    });
+                  }
+                }}
                 className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-4 py-2 font-semibold shadow-lg shadow-purple-500/25 hover:shadow-xl hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105"
               >
                 <Code className="w-4 h-4 mr-2" />
@@ -538,141 +547,16 @@ export default function LandingPage() {
               
               <Button 
                 size="lg" 
-                onClick={() => navigate('/no-code-studio')}
-                className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-4 text-lg font-semibold shadow-xl shadow-purple-500/25 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105"
-              >
-                <Code className="w-5 h-5 mr-2" />
-                Launch No-Code Studio
-              </Button>
-            </div>
-            
-            <div className="relative">
-              <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-3xl p-8 border border-gray-700/50 shadow-2xl">
-                <div className="text-center space-y-6">
-                  <div className="w-24 h-24 mx-auto bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center shadow-xl">
-                    <Code className="h-12 w-12 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Visual Programming</h3>
-                  <p className="text-gray-400">
-                    Build complex AI workflows using our intuitive node-based editor
-                  </p>
-                  <div className="grid grid-cols-2 gap-4 text-center">
-                    <div>
-                      <div className="text-2xl font-bold text-purple-400">50+</div>
-                      <div className="text-sm text-gray-500">Node Types</div>
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-pink-400">∞</div>
-                      <div className="text-sm text-gray-500">Possibilities</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Floating Elements */}
-              <div className="absolute -top-4 -right-4 w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full animate-bounce shadow-lg shadow-purple-500/50"></div>
-              <div className="absolute -bottom-4 -left-4 w-6 h-6 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full animate-pulse shadow-lg shadow-blue-500/50"></div>
-              <div className="absolute top-1/2 -right-8 w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-ping shadow-lg shadow-green-500/50"></div>
-            </div>
-          </div>
-
-          {/* Feature Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            {[
-              {
-                icon: Zap,
-                title: "Lightning Fast",
-                description: "Build and deploy agents in under 2 minutes",
-                color: "from-yellow-500 to-orange-500"
-              },
-              {
-                icon: Shield,
-                title: "Enterprise Ready",
-                description: "Production-grade security agents for real-world use",
-                color: "from-blue-500 to-purple-500"
-              },
-              {
-                icon: Users,
-                title: "Team Collaboration",
-                description: "Work together with your team in real-time",
-                color: "from-green-500 to-emerald-500"
-              }
-            ].map((feature, index) => (
-              <Card key={index} className="group bg-gradient-to-br from-gray-800/50 to-gray-900/50 border border-gray-700/50 hover:border-purple-600/50 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 hover:-translate-y-2">
-                <CardHeader className="text-center pb-4">
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${feature.color} flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300`}>
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <CardTitle className="text-xl font-bold text-white group-hover:text-purple-100 transition-colors">
-                    {feature.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="text-center">
-                  <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* No-Code Studio Section */}
-      <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-black to-gray-900 border-t border-gray-800/50">
-        <div className="container mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-              <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text">NO-CODE STUDIO</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-4xl mx-auto leading-relaxed">
-              Build AI Security Agents with <span className="text-purple-400 font-semibold">Zero Code</span> - Just Drag, Drop, and Deploy
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <Code className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Visual Agent Builder</h3>
-                    <p className="text-gray-400 leading-relaxed">
-                      Create sophisticated AI agents using our intuitive drag-and-drop interface. No programming knowledge required!
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <Brain className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">AI-Powered Templates</h3>
-                    <p className="text-gray-400 leading-relaxed">
-                      Choose from hundreds of pre-built agent templates for common security tasks. Customize them to fit your needs.
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
-                    <Rocket className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-2">Instant Deployment</h3>
-                    <p className="text-gray-400 leading-relaxed">
-                      Deploy your agents directly to the Sei Network in seconds. Watch them go live and start protecting contracts immediately.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              
-              <Button 
-                size="lg" 
-                onClick={() => navigate('/no-code-studio')}
+                onClick={() => {
+                  if (isConnected) {
+                    navigate('/no-code-studio');
+                  } else {
+                    toast({
+                      title: "Wallet Required",
+                      description: "Please connect your wallet to access the No-Code Studio",
+                    });
+                  }
+                }}
                 className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-8 py-4 text-lg font-semibold shadow-xl shadow-purple-500/25 hover:shadow-2xl hover:shadow-purple-500/40 transition-all duration-300 transform hover:scale-105"
               >
                 <Code className="w-5 h-5 mr-2" />
@@ -1209,7 +1093,7 @@ print(f"Current TPS: {metrics['current_tps']}")`}
             </p>
           </div>
 
-          <Tabs value={activeDemo || "playground"} onValueChange={setActiveDemo} className="space-y-6">
+          <Tabs value={activeDemo || "playground"} defaultValue="playground" onValueChange={setActiveDemo} className="space-y-6">
             <TabsList variant="security" className="w-full">
               <TabsTrigger value="playground" variant="security" icon={<Play className="w-4 h-4" />}>
                 INTERACTIVE PLAYGROUND
