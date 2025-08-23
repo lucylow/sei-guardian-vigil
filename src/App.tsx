@@ -16,7 +16,6 @@ import Demo from "./pages/Demo";
 import Docs from "./pages/Docs";
 import Settings from "./pages/Settings";
 import { SentinelChatbot } from "@/components/SentinelChatbot";
-import { SeiWalletProvider } from "@/contexts/SeiWalletContext";
 
 const queryClient = new QueryClient();
 
@@ -33,11 +32,7 @@ const App = () => (
             <Route path="/agents" element={<Agents />} />
             <Route path="/audits" element={<Audits />} />
             <Route path="/security" element={<Security />} />
-            <Route path="/no-code-studio" element={
-              <SeiWalletProvider>
-                <NoCodeStudio />
-              </SeiWalletProvider>
-            } />
+            <Route path="/no-code-studio" element={<NoCodeStudio />} />
             <Route path="/agent-arena" element={<AgentArena />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/docs" element={<Docs />} />

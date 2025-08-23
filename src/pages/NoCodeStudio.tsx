@@ -2,12 +2,9 @@ import React, { useState } from "react";
 /* Navigation is now handled by the Layout component */
 import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
-import { SeiWalletIntegration } from "@/components/SeiWalletIntegration";
-import { OnChainDeployment } from "@/components/OnChainDeployment";
-import { SeiWalletProvider } from "@/contexts/SeiWalletContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRight, Play, Code, Zap, Rocket, Brain, Shield, TrendingUp, Network } from "lucide-react";
+import { ArrowRight, Play, Code, Zap, Rocket, Brain, Shield, TrendingUp } from "lucide-react";
 
 export default function NoCodeStudio() {
   const [activeTab, setActiveTab] = useState('get-started');
@@ -16,8 +13,6 @@ export default function NoCodeStudio() {
   const [deploymentStatus, setDeploymentStatus] = useState<string>('');
   const [templateLoading, setTemplateLoading] = useState(false);
   const [templateError, setTemplateError] = useState<string | null>(null);
-  
-
 
   // Deployment functions
   const deployToTestnet = async () => {
@@ -140,7 +135,7 @@ export default function NoCodeStudio() {
 
         {/* Main Content Tabs */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-6 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="get-started" className="flex items-center">
               <Rocket className="w-4 h-4 mr-2" />
               1. Get Started
@@ -157,13 +152,9 @@ export default function NoCodeStudio() {
               <Shield className="w-4 h-4 mr-2" />
               4. Deploy & Test
             </TabsTrigger>
-            <TabsTrigger value="blockchain" className="flex items-center">
-              <Network className="w-4 h-4 mr-2" />
-              5. Blockchain
-            </TabsTrigger>
             <TabsTrigger value="manage" className="flex items-center">
               <TrendingUp className="w-4 h-4 mr-2" />
-              6. Manage
+              5. Manage
             </TabsTrigger>
           </TabsList>
 
@@ -207,7 +198,7 @@ export default function NoCodeStudio() {
             {/* How It Works */}
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h3 className="text-2xl font-bold mb-6 text-center">How It Works</h3>
-              <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div className="text-center">
                   <div className="w-12 h-12 bg-blue-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">1</div>
                   <h4 className="font-semibold mb-2">Get Started</h4>
@@ -229,12 +220,7 @@ export default function NoCodeStudio() {
                   <p className="text-sm text-gray-600">Test on testnet, deploy to mainnet</p>
                 </div>
                 <div className="text-center">
-                  <div className="w-12 h-12 bg-indigo-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">5</div>
-                  <h4 className="font-semibold mb-2">Blockchain</h4>
-                  <p className="text-sm text-gray-600">Connect wallet and deploy on-chain</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">6</div>
+                  <div className="w-12 h-12 bg-red-500 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">5</div>
                   <h4 className="font-semibold mb-2">Manage</h4>
                   <p className="text-sm text-gray-600">Monitor performance and optimize</p>
                 </div>
@@ -704,36 +690,7 @@ export default function NoCodeStudio() {
             </div>
           </TabsContent>
 
-          {/* Step 5: Blockchain Integration */}
-          <TabsContent value="blockchain" className="space-y-6">
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold mb-4">Blockchain Integration</h2>
-              <p className="text-lg text-muted-foreground">
-                Connect your wallet and deploy agents directly to the Sei blockchain
-              </p>
-            </div>
-            
-            <div className="space-y-6">
-              {/* Wallet Integration */}
-              <SeiWalletIntegration />
-              
-              {/* On-Chain Deployment */}
-              <OnChainDeployment 
-                agentWorkflow={selectedTemplate ? {
-                  nodes: [], // This will be populated from VisualAgentBuilder
-                  edges: [],
-                  metadata: {
-                    name: `Agent from ${selectedTemplate}`,
-                    description: `Deployed agent based on ${selectedTemplate} template`,
-                    version: "1.0.0",
-                    author: "Unknown" // Will be populated from wallet context
-                  }
-                } : null}
-              />
-            </div>
-          </TabsContent>
-
-          {/* Step 6: Manage */}
+          {/* Step 5: Manage */}
           <TabsContent value="manage" className="space-y-6">
             <div className="text-center mb-6">
               <h2 className="text-3xl font-bold mb-4">Manage Your Agents</h2>
