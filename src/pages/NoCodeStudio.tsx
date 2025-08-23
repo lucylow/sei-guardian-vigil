@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 /* Navigation is now handled by the Layout component */
-import VisualAgentBuilder from "@/components/AgentBuilder/VisualAgentBuilder";
+import VisualAgentBuilder from "@/components/VisualAgentBuilder";
 import { AgentDevelopmentStudio } from "@/components/AgentDevelopmentStudio";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -103,7 +103,7 @@ export default function NoCodeStudio() {
 
   return (
     <div className="min-h-screen bg-background">
-              {/* Navigation is now handled by the Layout component */}
+      {/* Navigation is now handled by the Layout component */}
       <div className="container mx-auto px-4 py-6">
         {/* Header */}
         <div className="mb-8 text-center">
@@ -492,10 +492,10 @@ export default function NoCodeStudio() {
                 </div>
               )}
               
-              <VisualAgentBuilder 
-                selectedTemplate={selectedTemplate} 
-                onNavigateToDeploy={() => setActiveTab('deploy')}
-              />
+              {/* Visual Agent Builder Component */}
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <VisualAgentBuilder />
+              </div>
             </div>
           </TabsContent>
 
