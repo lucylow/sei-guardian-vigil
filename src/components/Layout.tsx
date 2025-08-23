@@ -58,7 +58,7 @@ export function Layout({ children }: LayoutProps) {
       <header className="sticky top-0 z-50 border-b-2 border-red-900/50 bg-black/95 backdrop-blur-xl supports-[backdrop-filter]:bg-black/80 shadow-2xl shadow-red-500/10">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center space-x-3 group">
+            <Link to={isConnected ? "/dashboard" : "/"} className="flex items-center space-x-3 group">
               <div className="w-12 h-12 bg-gradient-to-br from-red-600 via-red-700 to-red-800 rounded-2xl flex items-center justify-center group-hover:shadow-2xl group-hover:shadow-red-500/40 transition-all duration-500 transform group-hover:scale-105">
                 <Shield className="w-6 h-6 text-white group-hover:animate-pulse" />
               </div>
@@ -66,7 +66,9 @@ export function Layout({ children }: LayoutProps) {
                 <span className="font-bold text-2xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent tracking-wider">
                   SEI SENTINEL
                 </span>
-                <div className="text-xs text-red-600/70 tracking-wider font-medium">GUARDIAN VIGIL</div>
+                <div className="text-xs text-red-600/70 tracking-wider font-medium">
+                  {isConnected ? "APP" : "GUARDIAN VIGIL"}
+                </div>
               </div>
             </Link>
             
@@ -125,28 +127,46 @@ export function Layout({ children }: LayoutProps) {
               ))}
             </nav>
 
-            {/* Quick Stats */}
-            <div className="p-6 border-t border-red-900/50">
-              <div className="space-y-4">
-                <div className="text-xs font-bold text-red-600/70 uppercase tracking-wider">
-                  QUICK STATS
+                      {/* Quick Stats */}
+          <div className="p-6 border-t border-red-900/50">
+            <div className="space-y-4">
+              <div className="text-xs font-bold text-red-600/70 uppercase tracking-wider">
+                QUICK STATS
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                  <span className="text-red-600/70 font-medium">Active Agents</span>
+                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">8</Badge>
                 </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
-                    <span className="text-red-600/70 font-medium">Active Agents</span>
-                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">8</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
-                    <span className="text-red-600/70 font-medium">Contracts Monitored</span>
-                    <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">24</Badge>
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
-                    <span className="text-red-600/70 font-medium">Security Score</span>
-                    <Badge variant="default" className="text-xs bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg shadow-green-500/25 font-bold">94%</Badge>
-                  </div>
+                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                  <span className="text-red-600/70 font-medium">Contracts Monitored</span>
+                  <Badge variant="secondary" className="text-xs bg-gradient-to-r from-red-600 to-red-700 text-white shadow-lg shadow-red-500/25 font-bold">24</Badge>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-red-900/20 rounded-lg border border-red-800/30 hover:bg-red-900/30 transition-colors duration-300">
+                  <span className="text-red-600/70 font-medium">Security Score</span>
+                  <Badge variant="default" className="text-xs bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg shadow-green-500/25 font-bold">94%</Badge>
                 </div>
               </div>
             </div>
+          </div>
+          
+          {/* Back to Landing */}
+          <div className="p-6 border-t border-red-900/50">
+            <Link
+              to="/"
+              className="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1 text-red-600/70 hover:border-l-red-700/50"
+            >
+              <div className="p-2 rounded-lg transition-all duration-300 bg-red-900/20 text-red-600/70 hover:bg-red-500/20 hover:text-red-400">
+                <Home className="w-5 h-5" />
+              </div>
+              <div className="flex-1">
+                <div className="font-bold tracking-wide text-base">BACK TO LANDING</div>
+                <div className="text-xs text-red-600/50 hidden lg:block tracking-wide opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  Return to landing page
+                </div>
+              </div>
+            </Link>
+          </div>
           </aside>
 
           {/* Main Content */}

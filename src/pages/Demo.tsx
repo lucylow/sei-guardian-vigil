@@ -286,6 +286,7 @@ const Demo: React.FC = () => {
             </div>
           </CardContent>
         </Card>
+        </div>
       </div>
     </div>
   );

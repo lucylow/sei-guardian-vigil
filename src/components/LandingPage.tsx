@@ -3,8 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2, Sparkles, Zap, TrendingUp, Globe, Lock } from "lucide-react";
 import ConnectWalletButton from "./ConnectWalletButton";
+import { useWallet } from "@/contexts/WalletContext";
+import { Link } from "react-router-dom";
 
 export default function LandingPage() {
+  const { isConnected } = useWallet();
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/20 to-black font-mono text-red-400">
       {/* Header */}
@@ -77,10 +81,19 @@ export default function LandingPage() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
-            <div className="flex items-center space-x-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white border-2 border-red-500 shadow-2xl shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold text-lg px-8 py-6 rounded-lg transform hover:scale-105 hover:-translate-y-1">
-              <span>CONNECT WALLET TO START</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-            </div>
+            {isConnected ? (
+              <Button asChild size="lg" className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-700 hover:via-red-800 hover:to-red-900 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold text-lg px-8 py-6 transform hover:scale-105 hover:-translate-y-1">
+                <Link to="/dashboard" className="flex items-center space-x-3">
+                  <span>ACCESS SEI SENTINEL APP</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                </Link>
+              </Button>
+            ) : (
+              <div className="flex items-center space-x-3 bg-gradient-to-r from-red-600 via-red-700 to-red-800 text-white border-2 border-red-500 shadow-2xl shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold text-lg px-8 py-6 rounded-lg transform hover:scale-105 hover:-translate-y-1">
+                <span>CONNECT WALLET TO START</span>
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+              </div>
+            )}
           </div>
 
           {/* Stats Bar */}
@@ -127,9 +140,15 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-red-600/70 font-mono tracking-wide font-bold">
-                  CONNECT WALLET TO ACCESS →
-                </div>
+                {isConnected ? (
+                  <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105">
+                    <Link to="/dashboard">VIEW MONITOR →</Link>
+                  </Button>
+                ) : (
+                  <div className="text-red-600/70 font-mono tracking-wide font-bold">
+                    CONNECT WALLET TO ACCESS →
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -144,9 +163,15 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-red-600/70 font-mono tracking-wide font-bold">
-                  CONNECT WALLET TO ACCESS →
-                </div>
+                {isConnected ? (
+                  <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105">
+                    <Link to="/agents">MANAGE AGENTS →</Link>
+                  </Button>
+                ) : (
+                  <div className="text-red-600/70 font-mono tracking-wide font-bold">
+                    CONNECT WALLET TO ACCESS →
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -161,9 +186,15 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-red-600/70 font-mono tracking-wide font-bold">
-                  CONNECT WALLET TO ACCESS →
-                </div>
+                {isConnected ? (
+                  <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105">
+                    <Link to="/audits">VIEW AUDITS →</Link>
+                  </Button>
+                ) : (
+                  <div className="text-red-600/70 font-mono tracking-wide font-bold">
+                    CONNECT WALLET TO ACCESS →
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -178,9 +209,15 @@ export default function LandingPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="pt-0">
-                <div className="text-red-600/70 font-mono tracking-wide font-bold">
-                  CONNECT WALLET TO ACCESS →
-                </div>
+                {isConnected ? (
+                  <Button variant="ghost" size="sm" asChild className="text-red-600/70 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105">
+                    <Link to="/security">SECURITY CENTER →</Link>
+                  </Button>
+                ) : (
+                  <div className="text-red-600/70 font-mono tracking-wide font-bold">
+                    CONNECT WALLET TO ACCESS →
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -191,15 +228,36 @@ export default function LandingPage() {
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-red-300 tracking-wider mb-6">
-              READY TO PROTECT THE SEI ECOSYSTEM?
-            </h2>
-            <p className="text-xl text-red-600/70 mb-8 tracking-wide leading-relaxed">
-              CONNECT YOUR WALLET TO ACCESS THE FULL SEI SENTINEL PLATFORM AND JOIN THE GUARDIAN VIGIL
-            </p>
-            <div className="flex justify-center">
-              <ConnectWalletButton />
-            </div>
+            {isConnected ? (
+              <>
+                <h2 className="text-4xl md:text-5xl font-bold text-red-300 tracking-wider mb-6">
+                  WELCOME TO SEI SENTINEL!
+                </h2>
+                <p className="text-xl text-red-600/70 mb-8 tracking-wide leading-relaxed">
+                  YOUR WALLET IS CONNECTED. READY TO ACCESS THE FULL PLATFORM?
+                </p>
+                <div className="flex justify-center">
+                  <Button asChild size="lg" className="bg-gradient-to-r from-red-600 via-red-700 to-red-800 hover:from-red-700 hover:via-red-800 hover:to-red-900 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold text-lg px-8 py-6 transform hover:scale-105 hover:-translate-y-1">
+                    <Link to="/dashboard" className="flex items-center space-x-3">
+                      <span>GO TO APP</span>
+                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+                    </Link>
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="text-4xl md:text-5xl font-bold text-red-300 tracking-wider mb-6">
+                  READY TO PROTECT THE SEI ECOSYSTEM?
+                </h2>
+                <p className="text-xl text-red-600/70 mb-8 tracking-wide leading-relaxed">
+                  CONNECT YOUR WALLET TO ACCESS THE FULL SEI SENTINEL PLATFORM AND JOIN THE GUARDIAN VIGIL
+                </p>
+                <div className="flex justify-center">
+                  <ConnectWalletButton />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </section>
