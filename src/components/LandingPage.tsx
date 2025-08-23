@@ -44,15 +44,10 @@ export default function LandingPage() {
   // Tab descriptions for each demo section
   const tabDescriptions = {
     'playground': "Interactive security scanning demo - test SEI Sentinel's AI-powered vulnerability detection",
-
     'parallel': "Witness SEI's parallelized EVM with multiple AI agents auditing contracts simultaneously",
-
     'performance': "Performance benchmarks showcasing SEI Network's technical advantages for security operations",
-
     'leaderboard': "Compete in the Agent Arena and earn $SENT tokens by detecting vulnerabilities",
-
     'sdk': "Integrate SEI Sentinel's security capabilities into your Sei applications with our comprehensive SDK"
-
   };
   
   // Handle button clicks
@@ -60,18 +55,15 @@ export default function LandingPage() {
     if (isConnected) {
       navigate('/audits');
     } else {
-      // Show toast or modal to connect wallet first
       toast({
         title: "Wallet Required",
         description: "Please connect your wallet to start a security audit",
-        variant: "destructive",
       });
     }
   };
 
   const handleWatchDemo = () => {
     setActiveDemo('playground');
-    // Scroll to demo section
     document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -82,7 +74,6 @@ export default function LandingPage() {
       toast({
         title: "Wallet Required",
         description: "Please connect your wallet to enter the Agent Arena",
-        variant: "destructive",
       });
     }
   };
@@ -128,7 +119,6 @@ export default function LandingPage() {
       toast({
         title: "Wallet Required",
         description: "Please connect your wallet to access the dashboard",
-        variant: "destructive",
       });
     }
   };
@@ -227,6 +217,13 @@ export default function LandingPage() {
               >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
+              </Button>
+              <Button 
+                size="sm" 
+                onClick={() => toast({ title: "Test", description: "Toast is working!" })}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2"
+              >
+                Test Toast
               </Button>
             </div>
 
