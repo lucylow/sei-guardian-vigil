@@ -49,6 +49,33 @@ interface WalletConfig {
   connectFunction: () => Promise<WalletInfo>;
 }
 
+// Sei Network Configurations
+const SEI_NETWORKS = {
+  mainnet: {
+    chainId: 'sei-1',
+    rpc: 'https://rpc.sei.juno.deuslabs.fi',
+    rest: 'https://lcd.sei.juno.deuslabs.fi',
+    prefix: 'sei'
+  },
+  testnet: {
+    chainId: 'sei-testnet-1',
+    rpc: 'https://testnet-rpc.sei.juno.deuslabs.fi',
+    rest: 'https://testnet-lcd.sei.juno.deuslabs.fi',
+    prefix: 'sei'
+  },
+  evm: {
+    chainId: '0xAE4C3', // 713715 in hex
+    rpc: 'https://evm-rpc.sei.juno.deuslabs.fi',
+    chainName: 'Sei EVM',
+    nativeCurrency: {
+      name: 'SEI',
+      symbol: 'SEI',
+      decimals: 18
+    },
+    blockExplorer: 'https://sei.evmscan.io'
+  }
+};
+
 declare global {
   interface Window {
     keplr?: any;
@@ -75,28 +102,56 @@ export function MultiWalletConnect() {
           throw new Error('Keplr wallet not found');
         }
         
-        // Enable Keplr for Sei Testnet (updated chain ID)
-        await window.keplr.enable('sei-testnet-1');
-        
-        // Get account info
-        const offlineSigner = window.keplr.getOfflineSigner('sei-testnet-1');
-        const accounts = await offlineSigner.getAccounts();
-        
-        // Get balance (mock for demo)
-        const mockBalance = '1,234.56 SEI';
-        
-        return {
-          address: accounts[0].address,
-          balance: mockBalance,
-          network: 'Sei Testnet',
-          type: 'keplr' as WalletType
-        };
+        try {
+          // Enable Keplr for Sei Testnet
+          await window.keplr.enable(SEI_NETWORKS.testnet.chainId);
+          
+          // Get account info
+          const offlineSigner = window.keplr.getOfflineSigner(SEI_NETWORKS.testnet.chainId);
+          const accounts = await offlineSigner.getAccounts();
+          
+          if (accounts.length === 0) {
+            throw new Error('No accounts found in Keplr wallet');
+          }
+          
+          // Get balance using RPC
+          try {
+            const response = await fetch(`${SEI_NETWORKS.testnet.rest}/cosmos/bank/v1beta1/balances/${accounts[0].address}/by_denom?denom=usei`);
+            const balanceData = await response.json();
+            const balance = balanceData.balance?.amount || '0';
+            const balanceInSei = (parseInt(balance) / 1000000).toFixed(6);
+            
+            return {
+              address: accounts[0].address,
+              balance: `${balanceInSei} SEI`,
+              network: 'Sei Testnet',
+              type: 'keplr' as WalletType
+            };
+          } catch (balanceError) {
+            // Fallback to mock balance if RPC fails
+            console.warn('Failed to fetch balance, using mock:', balanceError);
+            return {
+              address: accounts[0].address,
+              balance: '0.000000 SEI',
+              network: 'Sei Testnet',
+              type: 'keplr' as WalletType
+            };
+          }
+        } catch (error: any) {
+          if (error.message.includes('User rejected')) {
+            throw new Error('User rejected the connection request');
+          } else if (error.message.includes('No accounts found')) {
+            throw new Error('No accounts found in Keplr wallet');
+          } else {
+            throw new Error(`Failed to connect Keplr: ${error.message}`);
+          }
+        }
       }
     },
     metamask: {
       name: 'MetaMask',
       icon: '🦊',
-      description: 'Popular Ethereum wallet with SEI Testnet EVM support',
+      description: 'Popular Ethereum wallet with SEI EVM support',
       installUrl: 'https://metamask.io/',
       checkFunction: () => !!window.ethereum?.isMetaMask,
       connectFunction: async () => {
@@ -104,51 +159,63 @@ export function MultiWalletConnect() {
           throw new Error('MetaMask not found');
         }
         
-        // Request account access
-        const accounts = await window.ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        
-        // Switch to Sei network if needed
         try {
-          await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0xAE516' }], // Sei Testnet chain ID (713710)
+          // Request account access
+          const accounts = await window.ethereum.request({
+            method: 'eth_requestAccounts',
           });
-        } catch (switchError: any) {
-          // If network doesn't exist, add it
-          if (switchError.code === 4902) {
+          
+          if (!accounts || accounts.length === 0) {
+            throw new Error('No accounts found in MetaMask');
+          }
+          
+          // Switch to Sei EVM network if needed
+          try {
             await window.ethereum.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0xAE516', // Sei Testnet chain ID (713710)
-                chainName: 'Sei Testnet',
-                nativeCurrency: {
-                  name: 'SEI',
-                  symbol: 'SEI',
-                  decimals: 18
-                },
-                rpcUrls: ['https://testnet-rpc.sei.juno.deuslabs.fi'],
-                blockExplorerUrls: ['https://testnet.seitrace.com']
-              }]
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: SEI_NETWORKS.evm.chainId }],
             });
+          } catch (switchError: any) {
+            // If network doesn't exist, add it
+            if (switchError.code === 4902) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: SEI_NETWORKS.evm.chainId,
+                  chainName: SEI_NETWORKS.evm.chainName,
+                  nativeCurrency: SEI_NETWORKS.evm.nativeCurrency,
+                  rpcUrls: [SEI_NETWORKS.evm.rpc],
+                  blockExplorerUrls: [SEI_NETWORKS.evm.blockExplorer]
+                }]
+              });
+            } else {
+              throw switchError;
+            }
+          }
+          
+          // Get balance
+          const balance = await window.ethereum.request({
+            method: 'eth_getBalance',
+            params: [accounts[0], 'latest'],
+          });
+          
+          const balanceInSei = (parseInt(balance, 16) / 1e18).toFixed(6);
+          
+          return {
+            address: accounts[0],
+            balance: `${balanceInSei} SEI`,
+            network: 'Sei EVM',
+            type: 'metamask' as WalletType
+          };
+        } catch (error: any) {
+          if (error.message.includes('User rejected')) {
+            throw new Error('User rejected the connection request');
+          } else if (error.message.includes('No accounts found')) {
+            throw new Error('No accounts found in MetaMask');
+          } else {
+            throw new Error(`Failed to connect MetaMask: ${error.message}`);
           }
         }
-        
-        // Get balance
-        const balance = await window.ethereum.request({
-          method: 'eth_getBalance',
-          params: [accounts[0], 'latest'],
-        });
-        
-        const balanceInSei = (parseInt(balance, 16) / 1e18).toFixed(4);
-        
-        return {
-          address: accounts[0],
-          balance: `${balanceInSei} SEI`,
-          network: 'Sei Devnet (EVM)',
-          type: 'metamask' as WalletType
-        };
       }
     },
     compass: {
@@ -162,18 +229,49 @@ export function MultiWalletConnect() {
           throw new Error('Compass wallet not found');
         }
         
-        // Enable Compass for Sei Testnet
-        await window.compass.enable('sei-testnet-1');
-        
-        const accounts = await window.compass.getAccounts('sei-testnet-1');
-        const mockBalance = '987.65 SEI';
-        
-        return {
-          address: accounts[0].address,
-          balance: mockBalance,
-          network: 'Sei Testnet',
-          type: 'compass' as WalletType
-        };
+        try {
+          // Enable Compass for Sei Testnet
+          await window.compass.enable(SEI_NETWORKS.testnet.chainId);
+          
+          // Get accounts
+          const accounts = await window.compass.getAccounts(SEI_NETWORKS.testnet.chainId);
+          
+          if (!accounts || accounts.length === 0) {
+            throw new Error('No accounts found in Compass wallet');
+          }
+          
+          // Get balance using RPC
+          try {
+            const response = await fetch(`${SEI_NETWORKS.testnet.rest}/cosmos/bank/v1beta1/balances/${accounts[0].address}/by_denom?denom=usei`);
+            const balanceData = await response.json();
+            const balance = balanceData.balance?.amount || '0';
+            const balanceInSei = (parseInt(balance) / 1000000).toFixed(6);
+            
+            return {
+              address: accounts[0].address,
+              balance: `${balanceInSei} SEI`,
+              network: 'Sei Testnet',
+              type: 'compass' as WalletType
+            };
+          } catch (balanceError) {
+            // Fallback to mock balance if RPC fails
+            console.warn('Failed to fetch balance, using mock:', balanceError);
+            return {
+              address: accounts[0].address,
+              balance: '0.000000 SEI',
+              network: 'Sei Testnet',
+              type: 'compass' as WalletType
+            };
+          }
+        } catch (error: any) {
+          if (error.message.includes('User rejected')) {
+            throw new Error('User rejected the connection request');
+          } else if (error.message.includes('No accounts found')) {
+            throw new Error('No accounts found in Compass wallet');
+          } else {
+            throw new Error(`Failed to connect Compass: ${error.message}`);
+          }
+        }
       }
     }
   };
@@ -243,7 +341,7 @@ export function MultiWalletConnect() {
       // Check Keplr
       if (window.keplr) {
         try {
-          const offlineSigner = window.keplr.getOfflineSigner('sei-testnet-1');
+          const offlineSigner = window.keplr.getOfflineSigner(SEI_NETWORKS.testnet.chainId);
           const accounts = await offlineSigner.getAccounts();
           if (accounts.length > 0) {
             const info = await walletConfigs.keplr.connectFunction();
@@ -261,6 +359,20 @@ export function MultiWalletConnect() {
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           if (accounts.length > 0) {
             const info = await walletConfigs.metamask.connectFunction();
+            setWalletInfo(info);
+            return;
+          }
+        } catch (error) {
+          // Not connected
+        }
+      }
+      
+      // Check Compass
+      if (window.compass) {
+        try {
+          const accounts = await window.compass.getAccounts(SEI_NETWORKS.testnet.chainId);
+          if (accounts && accounts.length > 0) {
+            const info = await walletConfigs.compass.connectFunction();
             setWalletInfo(info);
             return;
           }
@@ -357,7 +469,7 @@ export function MultiWalletConnect() {
             <span>Connect Your Wallet</span>
           </DialogTitle>
           <DialogDescription>
-            Choose a wallet to connect to SEI Guardian Vigil. All wallets support Sei Testnet for development and testing.
+            Choose a wallet to connect to SEI Guardian Vigil. All wallets support Sei networks for development and testing.
           </DialogDescription>
         </DialogHeader>
         
@@ -412,8 +524,8 @@ export function MultiWalletConnect() {
           <div className="flex items-start space-x-2">
             <AlertCircle className="w-4 h-4 text-muted-foreground mt-0.5" />
             <div className="text-sm text-muted-foreground">
-              <strong>Note:</strong> Make sure your wallet is connected to Sei Testnet. 
-              MetaMask users will be prompted to add/switch to Sei Testnet automatically.
+              <strong>Note:</strong> Make sure your wallet is connected to the correct Sei network. 
+              MetaMask users will be prompted to add/switch to Sei EVM automatically.
             </div>
           </div>
         </div>
