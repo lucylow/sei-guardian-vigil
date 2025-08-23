@@ -29,7 +29,7 @@ const validateWalletAddress = (req: express.Request, res: express.Response, next
  * POST /api/agents/create
  * Creates and deploys a new agent to the Sei blockchain
  */
-router.post("/create", validateWalletAddress, async (req, res) => {
+router.post("/create", validateWalletAddress, async (req: express.Request, res: express.Response) => {
   try {
     console.log("Received agent creation request:", req.body);
     
@@ -55,7 +55,7 @@ router.post("/create", validateWalletAddress, async (req, res) => {
     
     console.log(`✅ Agent created and deployed successfully: ${deployedAgent.name}`);
     
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Agent created and deployed successfully",
       agent: deployedAgent
@@ -88,7 +88,7 @@ router.get("/:id", async (req, res) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       agent: agent
     });
@@ -125,7 +125,7 @@ router.get("/", async (req, res) => {
       agents = agents.filter(agent => agent.agentType === type);
     }
 
-    res.json({
+    return res.json({
       success: true,
       count: agents.length,
       agents: agents
@@ -189,7 +189,7 @@ router.put("/:id", validateWalletAddress, async (req, res) => {
     
     console.log(`✅ Agent ${id} updated successfully`);
     
-    res.json({
+    return res.json({
       success: true,
       message: "Agent updated successfully",
       agent: updatedAgent
@@ -216,7 +216,7 @@ router.delete("/:id", async (req, res) => {
     
     console.log(`✅ Agent ${id} deleted successfully`);
     
-    res.json({
+    return res.json({
       success: true,
       message: "Agent deleted successfully"
     });
@@ -233,7 +233,7 @@ router.delete("/:id", async (req, res) => {
  * POST /api/agents/:id/execute-task
  * Executes a task for a specific agent
  */
-router.post("/:id/execute-task", async (req, res) => {
+router.post("/:id/execute-task", async (req: express.Request, res: express.Response) => {
   try {
     const { id } = req.params;
     const taskPayload = req.body;
@@ -243,7 +243,7 @@ router.post("/:id/execute-task", async (req, res) => {
     
     console.log(`✅ Task executed successfully for agent ${id}`);
     
-    res.json({
+    return res.json({
       success: true,
       message: "Task executed successfully",
       result: result
@@ -261,7 +261,7 @@ router.post("/:id/execute-task", async (req, res) => {
  * POST /api/agents/:id/activate
  * Activates a deployed agent
  */
-router.post("/:id/activate", async (req, res) => {
+router.post("/:id/activate", async (req: express.Request, res: express.Response) => {
   try {
     const { id } = req.params;
     console.log(`Activating agent ${id}`);
@@ -270,7 +270,7 @@ router.post("/:id/activate", async (req, res) => {
     
     console.log(`✅ Agent ${id} activated successfully`);
     
-    res.json({
+    return res.json({
       success: true,
       message: "Agent activated successfully",
       agent: activatedAgent
@@ -288,7 +288,7 @@ router.post("/:id/activate", async (req, res) => {
  * POST /api/agents/:id/pause
  * Pauses an active agent
  */
-router.post("/:id/pause", async (req, res) => {
+router.post("/:id/pause", async (req: express.Request, res: express.Response) => {
   try {
     const { id } = req.params;
     console.log(`Pausing agent ${id}`);
@@ -297,7 +297,7 @@ router.post("/:id/pause", async (req, res) => {
     
     console.log(`✅ Agent ${id} paused successfully`);
     
-    res.json({
+    return res.json({
       success: true,
       message: "Agent paused successfully",
       agent: pausedAgent
@@ -315,13 +315,13 @@ router.post("/:id/pause", async (req, res) => {
  * GET /api/agents/stats/overview
  * Gets overview statistics for all agents
  */
-router.get("/stats/overview", async (req, res) => {
+router.get("/stats/overview", async (req: express.Request, res: express.Response) => {
   try {
     console.log("Fetching agent statistics");
     
     const stats = await AgentService.getAgentStats();
     
-    res.json({
+    return res.json({
       success: true,
       stats: stats
     });
@@ -338,7 +338,7 @@ router.get("/stats/overview", async (req, res) => {
  * POST /api/agents/bulk-deploy
  * Deploys multiple agents in batch
  */
-router.post("/bulk-deploy", validateWalletAddress, async (req, res) => {
+router.post("/bulk-deploy", validateWalletAddress, async (req: express.Request, res: express.Response) => {
   try {
     const { agents } = req.body;
     console.log(`Bulk deploying ${agents?.length || 0} agents`);
@@ -372,7 +372,7 @@ router.post("/bulk-deploy", validateWalletAddress, async (req, res) => {
       }
     }
     
-    res.json({
+    return res.json({
       success: true,
       message: `Bulk deployment completed. ${results.length} successful, ${errors.length} failed.`,
       results: results,
@@ -391,7 +391,7 @@ router.post("/bulk-deploy", validateWalletAddress, async (req, res) => {
  * POST /api/agents/deploy
  * Deploys an agent from the visual builder flow data
  */
-router.post("/deploy", validateWalletAddress, async (req, res) => {
+router.post("/deploy", validateWalletAddress, async (req: express.Request, res: express.Response) => {
   try {
     console.log("Received agent deployment request from visual builder:", req.body);
     

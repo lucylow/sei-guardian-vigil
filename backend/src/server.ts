@@ -8,7 +8,7 @@ import AgentManager from "./AgentManager";
 import BattleEngine from "./BattleEngine";
 import RewardSystem from "./RewardSystem";
 import seiMcpRouter from "./seiMcpIntegration";
-import visualAgentRouter from "../api/visualAgent.js";
+// import visualAgentRouter from "../api/visualAgent.js"; // Commented out until file exists
 import agentRouter from "./agentRoutes"; // Import the new agent router
 
 // Load environment variables
@@ -25,7 +25,7 @@ app.use(cors({
 
 // API Routes
 app.use("/api/sei", seiMcpRouter);
-app.use("/api/visual-agent", visualAgentRouter);
+// app.use("/api/visual-agent", visualAgentRouter); // Commented out until file exists
 app.use("/api/agents", agentRouter); // Add the new agent routes
 
 const server = http.createServer(app);
@@ -34,7 +34,7 @@ const io = new SocketIO(server, { cors: { origin: "*" } });
 // Instantiate modules
 const agentManager = new AgentManager();
 const battleEngine = new BattleEngine(agentManager, io);
-const rewardSystem = new RewardSystem(agentManager, io);
+// const rewardSystem = new RewardSystem(agentManager, io); // Commented out until needed
 
 // Real-time vulnerability battle system
 const activeBattles = new Map();
@@ -67,7 +67,7 @@ Blockchain.initWebSocketListener((txData) => {
 });
 
 // API Endpoints
-app.get("/api/status", (req, res) => {
+app.get("/api/status", (req: express.Request, res: express.Response) => {
   res.json({
     status: "operational",
     mockMode: Blockchain.isMockActive(),
@@ -81,9 +81,9 @@ app.get("/api/status", (req, res) => {
   });
 });
 
-app.post("/api/scan", async (req, res) => {
+app.post("/api/scan", async (req: express.Request, res: express.Response) => {
   // ...simulate scan logic...
-  const { contract, metadata } = req.body;
+      const { metadata } = req.body;
   try {
     const start = Date.now();
     // Replace with your scan logic
@@ -98,23 +98,23 @@ app.post("/api/scan", async (req, res) => {
         attacks: [],
         createdAt: Date.now()
       });
-      result.battleId = battleId;
+      (result as any).battleId = battleId;
     }
     res.json(result);
     io.emit("scan-completed", { metadata, result });
   } catch (error) {
-    res.status(500).json({ error: "Scan failed", details: error.message });
+    res.status(500).json({ error: "Scan failed", details: (error as any).message });
   }
 });
 
-app.post("/api/battle/reward", async (req, res) => {
+app.post("/api/battle/reward", async (req: express.Request, res: express.Response) => {
   const { agentId, vulnerabilityId } = req.body;
   try {
     const reward = await Blockchain.transferSent(agentId, 100);
     res.json({ reward });
     io.emit("reward-distributed", { agentId, vulnerabilityId, reward });
   } catch (error) {
-    res.status(500).json({ error: "Reward failed", details: error.message });
+    res.status(500).json({ error: "Reward failed", details: (error as any).message });
   }
 });
 

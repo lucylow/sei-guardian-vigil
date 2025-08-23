@@ -135,14 +135,15 @@ export class AgentService {
     }
 
     // Update agent
-    agentsDB[agentIndex] = { 
+    const updatedAgent: AgentRecord = { 
       ...agentsDB[agentIndex], 
       ...updates, 
       lastUpdated: Date.now() 
     };
 
+    agentsDB[agentIndex] = updatedAgent;
     console.log(`Agent ${agentId} updated successfully`);
-    return agentsDB[agentIndex];
+    return updatedAgent;
   }
 
   /**
@@ -155,6 +156,10 @@ export class AgentService {
     }
 
     const agentToDelete = agentsDB[agentIndex];
+    if (!agentToDelete) {
+      throw new Error("Agent not found.");
+    }
+    
     console.log(`Deleting agent: ${agentToDelete.name} (ID: ${agentId})`);
 
     // Burn NFT if it exists
@@ -224,7 +229,7 @@ export class AgentService {
         const taskHash = "0x" + Math.random().toString(16).substr(2, 32).padStart(32, "0");
         
         await callSeiTool("write-contract", {
-          contractAddress: process.env.MEMORY_ANCHOR_CONTRACT || "0xYourMemoryAnchorContractAddress",
+          contractAddress: process.env['MEMORY_ANCHOR_CONTRACT'] || "0xYourMemoryAnchorContractAddress",
           abi: JSON.stringify([
             "function recordDecision(bytes32 taskHash, string memory action, string memory rationale) public"
           ]),
