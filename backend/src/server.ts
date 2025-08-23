@@ -67,7 +67,7 @@ Blockchain.initWebSocketListener((txData) => {
 });
 
 // API Endpoints
-app.get("/api/status", (req: express.Request, res: express.Response) => {
+app.get("/api/status", (_req: express.Request, res: express.Response) => {
   res.json({
     status: "operational",
     mockMode: Blockchain.isMockActive(),

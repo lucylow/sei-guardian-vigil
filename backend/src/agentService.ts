@@ -135,10 +135,16 @@ export class AgentService {
     }
 
     // Update agent
+    const existingAgent = agentsDB[agentIndex];
+    if (!existingAgent) {
+      throw new Error("Agent not found.");
+    }
+    
     const updatedAgent: AgentRecord = { 
-      ...agentsDB[agentIndex], 
+      ...existingAgent, 
       ...updates, 
-      lastUpdated: Date.now() 
+      lastUpdated: Date.now(),
+      avatarUrl: existingAgent.avatarUrl || "" // Ensure avatarUrl is always a string
     };
 
     agentsDB[agentIndex] = updatedAgent;

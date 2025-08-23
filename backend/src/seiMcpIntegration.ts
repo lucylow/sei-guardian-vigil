@@ -53,7 +53,7 @@ router.post("/mint-agent-nft", async (req: express.Request, res: express.Respons
 
   } catch (error: any) {
     console.error("Error minting agent NFT:", error.message);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: "Failed to mint agent NFT", 
       details: error.message 
     });
@@ -84,7 +84,7 @@ router.post("/reward-agent", async (req: express.Request, res: express.Response)
 
   } catch (error: any) {
     console.error("Error rewarding agent:", error.message);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: "Failed to reward agent", 
       details: error.message 
     });
@@ -121,7 +121,7 @@ router.get("/agent-nft/:tokenId", async (req: express.Request, res: express.Resp
 
   } catch (error: any) {
     console.error("Error getting agent NFT:", error.message);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: "Failed to get agent NFT", 
       details: error.message 
     });
@@ -129,7 +129,7 @@ router.get("/agent-nft/:tokenId", async (req: express.Request, res: express.Resp
 });
 
 // Get latest block information
-router.get("/block-latest", async (req: express.Request, res: express.Response) => {
+router.get("/block-latest", async (_req: express.Request, res: express.Response) => {
   try {
     const result = await callSeiTool("get-block", {
       network: "sei-testnet",
@@ -144,7 +144,7 @@ router.get("/block-latest", async (req: express.Request, res: express.Response) 
 
   } catch (error: any) {
     console.error("Error getting latest block:", error.message);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       error: "Failed to get latest block", 
       details: error.message 
     });

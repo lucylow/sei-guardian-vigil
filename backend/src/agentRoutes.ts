@@ -5,7 +5,7 @@ import { NoCodeAgentConfig } from "./agentDataModels";
 const router = express.Router();
 
 // Middleware to check required environment variables
-router.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+router.use((_req: express.Request, res: express.Response, next: express.NextFunction) => {
   if (!process.env['SEI_MCP_URL'] || !process.env['AGENT_NFT_CONTRACT']) {
     return res.status(500).json({ 
       error: "Backend configuration incomplete. SEI_MCP_URL and AGENT_NFT_CONTRACT environment variables must be set." 
@@ -62,7 +62,7 @@ router.post("/create", validateWalletAddress, async (req: express.Request, res: 
     });
   } catch (error: any) {
     console.error("❌ Error creating agent:", error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to create agent",
       details: process.env['NODE_ENV'] === 'development' ? error.stack : undefined
@@ -94,7 +94,7 @@ router.get("/:id", async (req, res) => {
     });
   } catch (error: any) {
     console.error(`❌ Error fetching agent ${req.params.id}:`, error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to fetch agent" 
     });
@@ -132,7 +132,7 @@ router.get("/", async (req, res) => {
     });
   } catch (error: any) {
     console.error("❌ Error fetching agents:", error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to fetch agents" 
     });
@@ -143,9 +143,16 @@ router.get("/", async (req, res) => {
  * GET /api/agents/owner/:walletAddress
  * Retrieves all agents owned by a specific wallet address
  */
-router.get("/owner/:walletAddress", async (req, res) => {
+router.get("/owner/:walletAddress", async (req: express.Request, res: express.Response) => {
   try {
     const { walletAddress } = req.params;
+    if (!walletAddress) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Wallet address is required" 
+      });
+    }
+    
     console.log(`Fetching agents for wallet: ${walletAddress}`);
     
     if (!walletAddress.startsWith('sei1')) {
@@ -157,15 +164,15 @@ router.get("/owner/:walletAddress", async (req, res) => {
     
     const agents = await AgentService.getAgentsByOwner(walletAddress);
     
-    res.json({
+    return res.json({
       success: true,
       count: agents.length,
       walletAddress: walletAddress,
       agents: agents
     });
   } catch (error: any) {
-    console.error(`❌ Error fetching agents for wallet ${req.params.walletAddress}:`, error);
-    res.status(500).json({ 
+    console.error(`❌ Error fetching agents for wallet ${req.params['walletAddress']}:`, error);
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to fetch agents for wallet" 
     });
@@ -199,8 +206,8 @@ router.put("/:id", validateWalletAddress, async (req, res) => {
       agent: updatedAgent
     });
   } catch (error: any) {
-    console.error(`❌ Error updating agent ${req.params.id}:`, error);
-    res.status(500).json({ 
+    console.error(`❌ Error updating agent ${req.params['id']}:`, error);
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to update agent" 
     });
@@ -230,7 +237,7 @@ router.delete("/:id", async (req, res) => {
     });
   } catch (error: any) {
     console.error(`❌ Error deleting agent ${req.params.id}:`, error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to delete agent" 
     });
@@ -261,8 +268,8 @@ router.post("/:id/execute-task", async (req: express.Request, res: express.Respo
       result: result
     });
   } catch (error: any) {
-    console.error(`❌ Error executing task for agent ${req.params.id}:`, error);
-    res.status(500).json({ 
+    console.error(`❌ Error executing task for agent ${req.params['id']}:`, error);
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to execute task" 
     });
@@ -292,8 +299,8 @@ router.post("/:id/activate", async (req: express.Request, res: express.Response)
       agent: activatedAgent
     });
   } catch (error: any) {
-    console.error(`❌ Error activating agent ${req.params.id}:`, error);
-    res.status(500).json({ 
+    console.error(`❌ Error activating agent ${req.params['id']}:`, error);
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to activate agent" 
     });
@@ -323,8 +330,8 @@ router.post("/:id/pause", async (req: express.Request, res: express.Response) =>
       agent: pausedAgent
     });
   } catch (error: any) {
-    console.error(`❌ Error pausing agent ${req.params.id}:`, error);
-    res.status(500).json({ 
+    console.error(`❌ Error pausing agent ${req.params['id']}:`, error);
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to pause agent" 
     });
@@ -335,7 +342,7 @@ router.post("/:id/pause", async (req: express.Request, res: express.Response) =>
  * GET /api/agents/stats/overview
  * Gets overview statistics for all agents
  */
-router.get("/stats/overview", async (req: express.Request, res: express.Response) => {
+router.get("/stats/overview", async (_req: express.Request, res: express.Response) => {
   try {
     console.log("Fetching agent statistics");
     
@@ -347,7 +354,7 @@ router.get("/stats/overview", async (req: express.Request, res: express.Response
     });
   } catch (error: any) {
     console.error("❌ Error fetching agent statistics:", error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to fetch agent statistics" 
     });
@@ -400,7 +407,7 @@ router.post("/bulk-deploy", validateWalletAddress, async (req: express.Request, 
     });
   } catch (error: any) {
     console.error("❌ Error in bulk deployment:", error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to execute bulk deployment" 
     });
@@ -460,7 +467,7 @@ router.post("/deploy", validateWalletAddress, async (req: express.Request, res: 
     
     console.log(`✅ Agent deployed successfully from visual builder: ${deployedAgent.name}`);
     
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Agent deployed successfully from visual builder",
       agent: deployedAgent,
@@ -472,7 +479,7 @@ router.post("/deploy", validateWalletAddress, async (req: express.Request, res: 
     });
   } catch (error: any) {
     console.error("❌ Error deploying agent from visual builder:", error);
-    res.status(500).json({ 
+    return res.status(500).json({ 
       success: false,
       error: error.message || "Failed to deploy agent from visual builder",
       details: process.env['NODE_ENV'] === 'development' ? error.stack : undefined
