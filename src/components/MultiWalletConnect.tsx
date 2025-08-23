@@ -67,7 +67,7 @@ export function MultiWalletConnect() {
     keplr: {
       name: 'Keplr Wallet',
       icon: '🔮',
-      description: 'Native Cosmos wallet with Sei Network support',
+      description: 'Native Cosmos wallet with Sei Testnet support',
       installUrl: 'https://www.keplr.app/',
       checkFunction: () => !!window.keplr,
       connectFunction: async () => {
@@ -96,7 +96,7 @@ export function MultiWalletConnect() {
     metamask: {
       name: 'MetaMask',
       icon: '🦊',
-      description: 'Popular Ethereum wallet with SEI EVM support',
+      description: 'Popular Ethereum wallet with SEI Testnet EVM support',
       installUrl: 'https://metamask.io/',
       checkFunction: () => !!window.ethereum?.isMetaMask,
       connectFunction: async () => {
@@ -154,7 +154,7 @@ export function MultiWalletConnect() {
     compass: {
       name: 'Compass Wallet',
       icon: '🧭',
-      description: 'Multi-chain wallet with Sei integration',
+      description: 'Multi-chain wallet with Sei Testnet integration',
       installUrl: 'https://compasswallet.io/',
       checkFunction: () => !!window.compass,
       connectFunction: async () => {
