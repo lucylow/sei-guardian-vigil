@@ -17,14 +17,180 @@ import {
   Crown,
   Sword,
   Brain,
-  Sparkles
+  Sparkles,
+  X,
+  CheckCircle
 } from "lucide-react";
+
+// Deployment Modal Component
+const DeploymentModal = ({ isOpen, onClose, agentType, onDeploy }: {
+  isOpen: boolean;
+  onClose: () => void;
+  agentType?: string;
+  onDeploy: (agentData: any) => void;
+}) => {
+  const [deploymentStep, setDeploymentStep] = useState(1);
+  const [agentName, setAgentName] = useState("");
+  const [selectedType, setSelectedType] = useState(agentType || "SECURITY");
+  const [isDeploying, setIsDeploying] = useState(false);
+
+  const handleDeploy = async () => {
+    setIsDeploying(true);
+    // Simulate deployment process
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    const newAgent = {
+      id: Date.now().toString(),
+      name: agentName || `AGENT-${Date.now()}`,
+      type: selectedType,
+      level: 1,
+      status: "ACTIVE",
+      performance: 85,
+      experience: 0,
+      specializations: getDefaultSpecializations(selectedType),
+      avatar: `/agent-${Math.floor(Math.random() * 3) + 1}.png`
+    };
+    
+    onDeploy(newAgent);
+    setIsDeploying(false);
+    setDeploymentStep(1);
+    setAgentName("");
+    onClose();
+  };
+
+  const getDefaultSpecializations = (type: string) => {
+    const specializations = {
+      SECURITY: ["Smart Contracts", "Vulnerability Detection"],
+      MONITORING: ["Network Analysis", "Threat Intelligence"],
+      RESPONSE: ["Incident Response", "Forensics"],
+      ANALYSIS: ["Data Processing", "Pattern Recognition"]
+    };
+    return specializations[type as keyof typeof specializations] || [];
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-gradient-to-br from-black via-gray-900 to-black border-2 border-red-500/50 rounded-2xl p-6 w-full max-w-md">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-red-300 tracking-wide">DEPLOY AGENT</h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
+
+        {deploymentStep === 1 && (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-red-400 mb-2 tracking-wide">
+                AGENT NAME
+              </label>
+              <input
+                type="text"
+                value={agentName}
+                onChange={(e) => setAgentName(e.target.value)}
+                placeholder="Enter agent name..."
+                className="w-full bg-black/50 border border-red-600/50 rounded-lg px-3 py-2 text-red-300 placeholder-red-600/50 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-red-400 mb-2 tracking-wide">
+                AGENT TYPE
+              </label>
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="w-full bg-black/50 border border-red-600/50 rounded-lg px-3 py-2 text-red-300 focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
+              >
+                <option value="SECURITY">SECURITY</option>
+                <option value="MONITORING">MONITORING</option>
+                <option value="RESPONSE">RESPONSE</option>
+                <option value="ANALYSIS">ANALYSIS</option>
+              </select>
+            </div>
+
+            <Button
+              onClick={() => setDeploymentStep(2)}
+              disabled={!agentName.trim()}
+              className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold py-3 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            >
+              NEXT STEP
+            </Button>
+          </div>
+        )}
+
+        {deploymentStep === 2 && (
+          <div className="space-y-4">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-lg font-bold text-red-300 mb-2">CONFIRM DEPLOYMENT</h3>
+              <p className="text-red-600/70 text-sm">
+                Deploying {agentName} as a {selectedType} agent...
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-red-600/70">Agent Name:</span>
+                <span className="text-red-300 font-medium">{agentName}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-red-600/70">Type:</span>
+                <span className="text-red-300 font-medium">{selectedType}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-red-600/70">Initial Level:</span>
+                <span className="text-red-300 font-medium">1</span>
+              </div>
+            </div>
+
+            <div className="flex space-x-3">
+              <Button
+                variant="outline"
+                onClick={() => setDeploymentStep(1)}
+                className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500"
+              >
+                BACK
+              </Button>
+              <Button
+                onClick={handleDeploy}
+                disabled={isDeploying}
+                className="flex-1 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold py-3 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isDeploying ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    DEPLOYING...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    DEPLOY AGENT
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default function Agents() {
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
-
-  // Mock agent data
-  const agents = [
+  const [isDeploymentModalOpen, setIsDeploymentModalOpen] = useState(false);
+  const [deploymentAgentType, setDeploymentAgentType] = useState<string | undefined>();
+  const [agents, setAgents] = useState([
     {
       id: "1",
       name: "SENTINEL-01",
@@ -58,7 +224,7 @@ export default function Agents() {
       specializations: ["Incident Response", "Forensics"],
       avatar: "/agent-3.png"
     }
-  ];
+  ]);
 
   const agentTypes = [
     { type: "SECURITY", icon: Shield, color: "text-red-400", bgColor: "bg-red-500/10" },
@@ -73,6 +239,15 @@ export default function Agents() {
     MONITORING: "Monitoring agents that track network activity and anomalies",
     RESPONSE: "Response teams that handle incidents and deploy countermeasures",
     ANALYSIS: "Analytical agents that process data and generate insights"
+  };
+
+  const handleDeployAgent = (agentType?: string) => {
+    setDeploymentAgentType(agentType);
+    setIsDeploymentModalOpen(true);
+  };
+
+  const handleAgentDeployed = (newAgent: any) => {
+    setAgents(prev => [...prev, newAgent]);
   };
 
   return (
@@ -91,7 +266,10 @@ export default function Agents() {
                 DEPLOY, TRAIN, AND MANAGE YOUR AI SECURITY AGENTS
               </p>
             </div>
-            <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:-translate-y-1">
+            <Button 
+              onClick={() => handleDeployAgent()}
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:-translate-y-1"
+            >
               <Plus className="w-5 h-5 mr-2" />
               DEPLOY AGENT
             </Button>
@@ -271,6 +449,7 @@ export default function Agents() {
                           {/* Action Buttons */}
                           <div className="flex space-x-2 pt-2">
                             <Button 
+                              onClick={() => handleDeployAgent(agent.type)}
                               variant="outline" 
                               size="sm" 
                               className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
@@ -303,7 +482,10 @@ export default function Agents() {
                       <p className="text-red-600/70 font-medium tracking-wide mb-6 max-w-md mx-auto">
                         NO {type.type} SPECIALISTS ARE CURRENTLY DEPLOYED. DEPLOY A NEW AGENT TO GET STARTED.
                       </p>
-                      <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-8 py-4 transform hover:scale-105 hover:-translate-y-1">
+                      <Button 
+                        onClick={() => handleDeployAgent(type.type)}
+                        className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-8 py-4 transform hover:scale-105 hover:-translate-y-1"
+                      >
                         <Plus className="w-5 h-5 mr-2" />
                         DEPLOY {type.type} AGENT
                       </Button>
@@ -315,6 +497,14 @@ export default function Agents() {
           </Tabs>
         </div>
       </div>
+
+      {/* Deployment Modal */}
+      <DeploymentModal
+        isOpen={isDeploymentModalOpen}
+        onClose={() => setIsDeploymentModalOpen(false)}
+        agentType={deploymentAgentType}
+        onDeploy={handleAgentDeployed}
+      />
     </div>
   );
 }
