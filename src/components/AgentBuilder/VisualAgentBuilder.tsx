@@ -808,7 +808,6 @@ const nodeTypes = {
 const networkOptions = [
   { value: "mainnet", label: "🌐 Sei Mainnet" },
   { value: "testnet", label: "🧪 Sei Testnet" },
-  { value: "demo", label: "🎭 Demo Mode (mock data)" },
 ];
 
 interface VisualAgentBuilderProps {
@@ -821,7 +820,7 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isDeploying, setIsDeploying] = useState(false);
-  const [network, setNetwork] = useState("demo");
+  const [network, setNetwork] = useState("testnet");
   const [currentTemplate, setCurrentTemplate] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [selectedNode, setSelectedNode] = useState<any>(null);
@@ -1243,9 +1242,6 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
         await deployToTestnet(agentContract);
       } else if (network === "mainnet") {
         await deployToMainnet(agentContract);
-      } else {
-        // Demo mode - simulate deployment
-        await simulateDeployment(agentContract);
       }
       
       // Show success message with navigation option
@@ -2172,7 +2168,6 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
               <p className="text-sm text-blue-700">
                 {network === "testnet" && "Deploying to SEI Testnet (atlantic-2)"}
                 {network === "mainnet" && "Deploying to SEI Mainnet (pacific-1)"}
-                {network === "demo" && "Simulating deployment to SEI"}
               </p>
               <div className="mt-2 text-xs text-blue-600">
                 <div>• Generating smart contract code from workflow</div>
