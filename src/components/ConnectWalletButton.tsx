@@ -103,17 +103,15 @@ export default function ConnectWalletButton() {
       // Enable the chain
       await window.keplr.enable(seiConfig.chainId);
       
-      console.log('ConnectWalletButton: Chain enabled, getting offline signer...');
-      // Get offline signer
-      const offlineSigner = window.getOfflineSigner(seiConfig.chainId);
-      const accounts = await offlineSigner.getAccounts();
+      console.log('ConnectWalletButton: Chain enabled, getting account...');
+      // Get account directly from Keplr
+      const key = await window.keplr.getKey(seiConfig.chainId);
       
-      console.log('ConnectWalletButton: Got accounts:', accounts);
+      console.log('ConnectWalletButton: Got key:', key);
       
-      if (accounts.length > 0) {
-        const account = accounts[0];
+      if (key && key.bech32Address) {
         console.log('ConnectWalletButton: Setting wallet state...');
-        setAccount(account.bech32Address);
+        setAccount(key.bech32Address);
         setNetworkInfo({
           chainId: seiConfig.chainId,
           chainName: seiConfig.chainName,
@@ -129,8 +127,8 @@ export default function ConnectWalletButton() {
         
         console.log('ConnectWalletButton: Wallet connection complete');
       } else {
-        console.log('ConnectWalletButton: No accounts found');
-        setError("No accounts found in wallet");
+        console.log('ConnectWalletButton: No account found');
+        setError("No account found in wallet");
       }
     } catch (err: any) {
       console.error('ConnectWalletButton: Error during connection:', err);

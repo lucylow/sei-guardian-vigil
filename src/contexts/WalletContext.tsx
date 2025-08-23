@@ -76,11 +76,8 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   // Add debugging for state changes
   useEffect(() => {
     console.log('WalletProvider: isConnected state changed to:', isConnected);
-  }, [isConnected]);
-
-  useEffect(() => {
-    console.log('WalletProvider: account state changed to:', account);
-  }, [account]);
+    console.log('WalletProvider: Current state:', { isConnected, account, networkInfo });
+  }, [isConnected, account, networkInfo]);
 
   console.log('WalletProvider: Rendering with state:', { isConnected, account: account ? 'connected' : 'not connected' });
 
@@ -90,14 +87,17 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
     networkInfo,
     setIsConnected: (connected: boolean) => {
       console.log('WalletProvider: setIsConnected called with:', connected);
+      console.log('WalletProvider: Previous isConnected:', isConnected);
       setIsConnected(connected);
     },
     setAccount: (account: string | null) => {
       console.log('WalletProvider: setAccount called with:', account);
+      console.log('WalletProvider: Previous account:', account);
       setAccount(account);
     },
     setNetworkInfo: (info: any) => {
       console.log('WalletProvider: setNetworkInfo called with:', info);
+      console.log('WalletProvider: Previous networkInfo:', networkInfo);
       setNetworkInfo(info);
     },
   };
