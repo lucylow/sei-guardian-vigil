@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -403,28 +403,43 @@ export default function Governance() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+          <TabsList variant="governance" className="grid w-full grid-cols-6">
+            <TabsTrigger value="overview" variant="governance" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
               Overview
             </TabsTrigger>
-            <TabsTrigger value="proposals" className="flex items-center gap-2">
+            <TabsTrigger value="proposals" variant="governance" className="flex items-center gap-2">
               <Vote className="w-4 h-4" />
               Proposals
             </TabsTrigger>
-            <TabsTrigger value="create" className="flex items-center gap-2">
+            <TabsTrigger value="create" variant="governance" className="flex items-center gap-2">
               <PlusCircle className="w-4 h-4" />
               Create
             </TabsTrigger>
-            <TabsTrigger value="treasury" className="flex items-center gap-2">
+            <TabsTrigger value="treasury" variant="governance" className="flex items-center gap-2">
               <DollarSign className="w-4 h-4" />
               Treasury
             </TabsTrigger>
-            <TabsTrigger value="roles" className="flex items-center gap-2">
+            <TabsTrigger value="roles" variant="governance" className="flex items-center gap-2">
               <Crown className="w-4 h-4" />
               Roles
             </TabsTrigger>
           </TabsList>
+          
+          {/* Tab Description */}
+          <TabDescription 
+            variant="governance" 
+            descriptions={{
+              overview: "Governance overview with recent activity and quick actions",
+              proposals: "View and interact with active governance proposals",
+              create: "Submit new governance proposals for community voting",
+              treasury: "Monitor treasury allocations and financial activities",
+              roles: "Explore governance roles and permission requirements"
+            }} 
+          />
+          
+          {/* Connection Line */}
+          <TabConnectionLine variant="governance" />
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">

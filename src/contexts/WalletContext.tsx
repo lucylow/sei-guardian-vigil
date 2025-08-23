@@ -15,20 +15,20 @@ interface WalletContextType {
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-export const useWallet = () => {
+function useWallet() {
   const context = useContext(WalletContext);
   if (context === undefined) {
     console.error('useWallet must be used within a WalletProvider');
     throw new Error('useWallet must be used within a WalletProvider');
   }
   return context;
-};
+}
 
 interface WalletProviderProps {
   children: ReactNode;
 }
 
-export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
+function WalletProvider({ children }: WalletProviderProps) {
   const [isConnected, setIsConnected] = useState(false);
   const [account, setAccount] = useState<string | null>(null);
   const [networkInfo, setNetworkInfo] = useState<{
@@ -107,4 +107,6 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       {children}
     </WalletContext.Provider>
   );
-};
+}
+
+export { useWallet, WalletProvider };

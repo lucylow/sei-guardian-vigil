@@ -4,6 +4,9 @@
 /* Matrix Effects Import */
 @import './styles/matrix-effects.css';
 
+/* Enhanced Tab Styles Import */
+@import './styles/tabs.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -98,413 +101,379 @@ body {
   }
   
   .sei-text-primary {
-    @apply text-foreground font-mono tracking-wide;
-  }
-  
-  .sei-text-secondary {
-    @apply text-muted-foreground font-mono tracking-wide;
+    @apply text-primary font-mono tracking-wide font-bold;
   }
   
   .sei-badge {
-    @apply bg-red-900/30 border-red-700/50 text-red-400 font-mono tracking-wide;
-  }
-
-  /* Enhanced Animation Classes */
-  .sei-float {
-    animation: sei-float 6s ease-in-out infinite;
+    @apply bg-primary/20 text-primary border border-primary/30 font-mono tracking-wide font-bold;
   }
   
-  .sei-pulse-glow {
-    animation: sei-pulse-glow 2s ease-in-out infinite alternate;
-  }
-  
-  .sei-slide-in-left {
-    animation: sei-slide-in-left 0.6s ease-out;
-  }
-  
-  .sei-slide-in-right {
-    animation: sei-slide-in-right 0.6s ease-out;
-  }
-  
-  .sei-fade-in {
-    animation: sei-fade-in 0.8s ease-out;
-  }
-  
-  .sei-scale-in {
-    animation: sei-scale-in 0.5s ease-out;
-  }
-  
-  /* Hover Effect Classes */
-  .sei-hover-lift {
-    @apply transition-all duration-300 transform hover:scale-105 hover:-translate-y-1;
-  }
-  
-  .sei-hover-glow {
-    @apply transition-all duration-300 hover:shadow-2xl hover:shadow-red-500/40;
-  }
-  
-  .sei-hover-border {
-    @apply transition-all duration-300 hover:border-red-500/70 hover:bg-red-900/20;
-  }
-  
-  /* Interactive Elements */
-  .sei-interactive {
-    @apply cursor-pointer transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25;
-  }
-  
-  .sei-button-primary {
-    @apply bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:-translate-y-1;
-  }
-  
-  .sei-button-secondary {
-    @apply border-2 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25;
-  }
-  
-  /* Card Enhancements */
-  .sei-card-enhanced {
-    @apply bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/30 transform hover:scale-105 hover:-translate-y-2;
+  .sei-input {
+    @apply bg-background border border-primary/20 text-foreground placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300;
   }
   
   .sei-card-header {
-    @apply group-hover:bg-red-900/20 transition-all duration-300;
+    @apply bg-background/50 border-b border-primary/10;
   }
   
-  /* Status Indicators */
-  .sei-status-online {
-    @apply bg-green-600/20 text-green-400 border-green-600/50;
+  .sei-card-content {
+    @apply bg-background/30;
   }
   
-  .sei-status-warning {
-    @apply bg-yellow-600/20 text-yellow-400 border-yellow-600/50;
+  .sei-tabs-list {
+    @apply bg-background/50 border border-primary/20;
   }
   
-  .sei-status-error {
-    @apply bg-red-600/20 text-red-400 border-red-600/50;
+  .sei-tabs-trigger {
+    @apply data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary;
   }
   
-  .sei-status-info {
-    @apply bg-blue-600/20 text-blue-400 border-blue-600/50;
+  .sei-tabs-content {
+    @apply bg-background/30 border border-primary/10;
   }
   
-  /* Chatbox Specific Styles */
-  .chatbox-pulse {
-    animation: chatbox-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  .sei-dialog {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
   
-  .chatbox-float {
-    animation: chatbox-float 3s ease-in-out infinite;
+  .sei-dialog-header {
+    @apply bg-background/50 border-b border-primary/10;
   }
   
-  .chatbox-glow {
-    animation: chatbox-glow 2s ease-in-out infinite alternate;
+  .sei-dialog-content {
+    @apply bg-background/30;
   }
   
-  .chatbox-slide-in {
-    animation: chatbox-slide-in 0.3s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  .sei-dropdown {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
   
-  .chatbox-scale-in {
-    animation: chatbox-scale-in 0.2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  .sei-dropdown-item {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
   
-  .chatbox-rotate-in {
-    animation: chatbox-rotate-in 0.3s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  .sei-select {
+    @apply bg-background border border-primary/20 text-foreground;
   }
   
-  .chatbox-message-in {
-    animation: chatbox-message-in 0.4s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  .sei-select-item {
+    @apply hover:bg-primary/10 hover:text-primary;
   }
   
-  .chatbox-typing {
-    animation: chatbox-typing 1.4s ease-in-out infinite;
+  .sei-checkbox {
+    @apply border-primary/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary;
   }
   
-  .chatbox-status-pulse {
-    animation: chatbox-status-pulse 2s ease-in-out infinite;
+  .sei-radio {
+    @apply border-primary/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary;
   }
   
-  /* Progress Bars */
+  .sei-switch {
+    @apply bg-primary/20 data-[state=checked]:bg-primary;
+  }
+  
+  .sei-slider {
+    @apply bg-primary/20;
+  }
+  
   .sei-progress {
-    @apply bg-red-900/30 rounded-full overflow-hidden;
+    @apply bg-primary/20;
   }
   
-  .sei-progress-bar {
-    @apply bg-gradient-to-r from-red-600 to-red-700 h-full rounded-full transition-all duration-500;
+  .sei-accordion {
+    @apply bg-background/50 border border-primary/10;
   }
   
-  .sei-progress-bar:hover {
-    @apply shadow-lg shadow-red-500/50;
+  .sei-accordion-item {
+    @apply border-b border-primary/10;
   }
   
-  /* Navigation Enhancements */
-  .sei-nav-item {
-    @apply group flex items-center space-x-4 px-4 py-4 rounded-xl text-sm font-medium transition-all duration-300 hover:bg-red-900/20 hover:text-red-300 border-l-4 border-transparent hover:border-l-red-500 hover:shadow-lg hover:shadow-red-500/20 transform hover:translate-x-1;
+  .sei-accordion-trigger {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
   
-  .sei-nav-item-active {
-    @apply bg-gradient-to-r from-red-900/40 to-red-800/20 text-red-300 border-l-red-500 shadow-xl shadow-red-500/30 transform translate-x-1;
+  .sei-accordion-content {
+    @apply bg-background/30;
   }
   
-  .sei-nav-icon {
-    @apply p-2 rounded-lg transition-all duration-300;
+  .sei-alert {
+    @apply bg-background/50 border border-primary/20;
   }
   
-  .sei-nav-icon-active {
-    @apply bg-red-500/20 text-red-400 shadow-lg shadow-red-500/20;
+  .sei-alert-destructive {
+    @apply bg-destructive/20 border-destructive/20 text-destructive-foreground;
   }
   
-  .sei-nav-icon-inactive {
-    @apply bg-red-900/20 text-red-600/70 group-hover:bg-red-500/20 group-hover:text-red-400;
-  }
-}
-
-/* Custom Animations */
-@keyframes sei-float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes sei-pulse-glow {
-  0% {
-    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
-  }
-  100% {
-    box-shadow: 0 0 30px rgba(255, 0, 0, 0.6);
-  }
-}
-
-@keyframes sei-slide-in-left {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes sei-slide-in-right {
-  0% {
-    transform: translateX(100%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-@keyframes sei-fade-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes sei-scale-in {
-  0% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Responsive Enhancements */
-@media (max-width: 768px) {
-  .sei-responsive-hide {
-    @apply hidden;
+  .sei-toast {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
   
-  .sei-mobile-stack {
-    @apply flex-col space-y-4;
+  .sei-tooltip {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
-}
-
-/* Focus States for Accessibility */
-.sei-focus:focus {
-  @apply outline-none ring-2 ring-red-500 ring-offset-2 ring-offset-black;
-}
-
-/* Loading States */
-.sei-loading {
-  @apply animate-pulse bg-red-900/20;
-}
-
-.sei-loading-text {
-  @apply animate-pulse bg-red-900/20 h-4 rounded;
-}
-
-/* Selection Styles */
-::selection {
-  background: rgba(255, 0, 0, 0.3);
-  color: #FF6666;
-}
-
-::-moz-selection {
-  background: rgba(255, 0, 0, 0.3);
-  color: #FF6666;
-}
-
-/* Chatbox Specific Styles */
-.chatbox-pulse {
-  animation: chatbox-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.chatbox-float {
-  animation: chatbox-float 3s ease-in-out infinite;
-}
-
-.chatbox-glow {
-  animation: chatbox-glow 2s ease-in-out infinite alternate;
-}
-
-.chatbox-slide-in {
-  animation: chatbox-slide-in 0.3s cubic-bezier(0.4, 0, 0.6, 1) forwards;
-}
-
-.chatbox-scale-in {
-  animation: chatbox-scale-in 0.2s cubic-bezier(0.4, 0, 0.6, 1) forwards;
-}
-
-.chatbox-rotate-in {
-  animation: chatbox-rotate-in 0.3s cubic-bezier(0.4, 0, 0.6, 1) forwards;
-}
-
-.chatbox-message-in {
-  animation: chatbox-message-in 0.4s cubic-bezier(0.4, 0, 0.6, 1) forwards;
-}
-
-.chatbox-typing {
-  animation: chatbox-typing 1.4s ease-in-out infinite;
-}
-
-.chatbox-status-pulse {
-  animation: chatbox-status-pulse 2s ease-in-out infinite;
-}
-
-/* Chatbox Animations */
-@keyframes chatbox-pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: scale(1);
+  
+  .sei-popover {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
+  
+  .sei-hover-card {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
-}
-
-@keyframes chatbox-float {
-  0%, 100% {
-    transform: translateY(0px);
+  
+  .sei-context-menu {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
-  50% {
-    transform: translateY(-5px);
+  
+  .sei-menubar {
+    @apply bg-background/50 border border-primary/20;
   }
-}
-
-@keyframes chatbox-glow {
-  0% {
-    box-shadow: 0 0 20px rgba(239, 68, 68, 0.3);
+  
+  .sei-menubar-item {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
-  100% {
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+  
+  .sei-navigation-menu {
+    @apply bg-background/50 border border-primary/20;
   }
-}
-
-@keyframes chatbox-slide-in {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
+  
+  .sei-navigation-menu-item {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  
+  .sei-breadcrumb {
+    @apply text-muted-foreground;
   }
-}
-
-@keyframes chatbox-scale-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.8);
+  
+  .sei-breadcrumb-item {
+    @apply hover:text-foreground transition-all duration-300;
   }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+  
+  .sei-pagination {
+    @apply bg-background/50 border border-primary/20;
   }
-}
-
-@keyframes chatbox-rotate-in {
-  0% {
-    opacity: 0;
-    transform: rotate(-5deg) scale(0.9);
+  
+  .sei-pagination-item {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
-  100% {
-    opacity: 1;
-    transform: rotate(0deg) scale(1);
+  
+  .sei-pagination-prev,
+  .sei-pagination-next {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
-}
-
-@keyframes chatbox-message-in {
-  0% {
-    opacity: 0;
-    transform: translateY(10px) scale(0.95);
+  
+  .sei-calendar {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+  
+  .sei-calendar-day {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
   }
-}
-
-@keyframes chatbox-typing {
-  0%, 60%, 100% {
-    transform: translateY(0);
+  
+  .sei-calendar-day-selected {
+    @apply bg-primary text-primary-foreground;
   }
-  30% {
-    transform: translateY(-10px);
+  
+  .sei-date-picker {
+    @apply bg-background border border-primary/20;
   }
-}
-
-@keyframes chatbox-status-pulse {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
+  
+  .sei-time-picker {
+    @apply bg-background border border-primary/20;
   }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
+  
+  .sei-color-picker {
+    @apply bg-background border border-primary/20;
   }
-}
-
-/* Enhanced Scrollbar for Chatbox */
-.chatbox-scrollbar::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chatbox-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-}
-
-.chatbox-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #ef4444, #dc2626);
-  border-radius: 3px;
-  transition: all 0.3s ease;
-}
-
-.chatbox-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #f87171, #ef4444);
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  
+  .sei-file-upload {
+    @apply bg-background border border-primary/20 hover:border-primary transition-all duration-300;
+  }
+  
+  .sei-drag-and-drop {
+    @apply bg-background/50 border-2 border-dashed border-primary/20 hover:border-primary transition-all duration-300;
+  }
+  
+  .sei-code-block {
+    @apply bg-background/50 border border-primary/20 font-mono;
+  }
+  
+  .sei-inline-code {
+    @apply bg-background/50 border border-primary/20 font-mono px-1 py-0.5 rounded;
+  }
+  
+  .sei-blockquote {
+    @apply border-l-4 border-primary/20 pl-4 italic;
+  }
+  
+  .sei-table {
+    @apply bg-background/50 border border-primary/20;
+  }
+  
+  .sei-table-header {
+    @apply bg-background/70 border-b border-primary/20;
+  }
+  
+  .sei-table-row {
+    @apply border-b border-primary/10 hover:bg-primary/5 transition-all duration-300;
+  }
+  
+  .sei-table-cell {
+    @apply p-3;
+  }
+  
+  .sei-carousel {
+    @apply bg-background/50 border border-primary/20;
+  }
+  
+  .sei-carousel-item {
+    @apply bg-background/30;
+  }
+  
+  .sei-carousel-control {
+    @apply bg-primary/20 hover:bg-primary/30 transition-all duration-300;
+  }
+  
+  .sei-scroll-area {
+    @apply bg-background/30 border border-primary/20;
+  }
+  
+  .sei-separator {
+    @apply bg-primary/20;
+  }
+  
+  .sei-aspect-ratio {
+    @apply bg-background/30 border border-primary/20;
+  }
+  
+  .sei-collapsible {
+    @apply bg-background/50 border border-primary/20;
+  }
+  
+  .sei-collapsible-trigger {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
+  }
+  
+  .sei-collapsible-content {
+    @apply bg-background/30;
+  }
+  
+  .sei-command {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
+  }
+  
+  .sei-command-input {
+    @apply bg-background border border-primary/20 text-foreground placeholder:text-muted-foreground;
+  }
+  
+  .sei-command-list {
+    @apply bg-background/95;
+  }
+  
+  .sei-command-item {
+    @apply hover:bg-primary/10 hover:text-primary transition-all duration-300;
+  }
+  
+  .sei-command-group {
+    @apply border-b border-primary/10;
+  }
+  
+  .sei-command-separator {
+    @apply bg-primary/10;
+  }
+  
+  .sei-command-empty {
+    @apply text-muted-foreground;
+  }
+  
+  .sei-resizable {
+    @apply bg-background/50 border border-primary/20;
+  }
+  
+  .sei-resizable-handle {
+    @apply bg-primary/20 hover:bg-primary/30 transition-all duration-300;
+  }
+  
+  .sei-sheet {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
+  }
+  
+  .sei-sheet-header {
+    @apply bg-background/50 border-b border-primary/10;
+  }
+  
+  .sei-sheet-content {
+    @apply bg-background/30;
+  }
+  
+  .sei-drawer {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
+  }
+  
+  .sei-drawer-header {
+    @apply bg-background/50 border-b border-primary/10;
+  }
+  
+  .sei-drawer-content {
+    @apply bg-background/30;
+  }
+  
+  .sei-vaul {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
+  }
+  
+  .sei-vaul-header {
+    @apply bg-background/50 border-b border-primary/10;
+  }
+  
+  .sei-vaul-content {
+    @apply bg-background/30;
+  }
+  
+  .sei-sonner {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
+  }
+  
+  .sei-sonner-toast {
+    @apply bg-background/95 border border-primary/20 backdrop-blur-xl;
+  }
+  
+  .sei-sonner-action {
+    @apply bg-primary/20 hover:bg-primary/30 transition-all duration-300;
+  }
+  
+  .sei-sonner-close {
+    @apply bg-primary/20 hover:bg-primary/30 transition-all duration-300;
+  }
+  
+  .sei-sonner-progress {
+    @apply bg-primary/20;
+  }
+  
+  .sei-sonner-icon {
+    @apply text-primary;
+  }
+  
+  .sei-sonner-title {
+    @apply text-foreground font-semibold;
+  }
+  
+  .sei-sonner-description {
+    @apply text-muted-foreground;
+  }
+  
+  .sei-sonner-success {
+    @apply bg-green-500/20 border-green-500/20 text-green-600;
+  }
+  
+  .sei-sonner-error {
+    @apply bg-red-500/20 border-red-500/20 text-red-600;
+  }
+  
+  .sei-sonner-warning {
+    @apply bg-yellow-500/20 border-yellow-500/20 text-yellow-600;
+  }
+  
+  .sei-sonner-info {
+    @apply bg-blue-500/20 border-blue-500/20 text-blue-600;
+  }
 }

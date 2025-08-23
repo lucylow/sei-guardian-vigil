@@ -35,7 +35,8 @@ export function Layout({ children }: LayoutProps) {
   console.log('Layout: useWallet successful, isConnected:', isConnected);
 
   const navItems = [
-    { to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" },
+    // Only show Home when not connected
+    ...(isConnected ? [] : [{ to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" }]),
     { to: "/dashboard", label: "Dashboard", icon: BarChart3, description: "System overview & metrics" },
     { to: "/governance", label: "Governance", icon: Gavel, description: "DAO governance & voting" },
     { to: "/agents", label: "Agents", icon: Users, description: "AI agent management" },

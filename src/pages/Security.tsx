@@ -112,25 +112,28 @@ export default function Security() {
         <div className="mb-8">
           <h3 className="text-xl font-bold text-foreground mb-4">Security Functions</h3>
           <Tabs defaultValue="OVERVIEW" className="w-full">
-            <TabsList variant="default" className="w-full">
-              <TabsTrigger value="OVERVIEW" icon={<Shield className="w-4 h-4" />}>
+            <TabsList variant="security" className="w-full">
+              <TabsTrigger value="OVERVIEW" variant="security" icon={<Shield className="w-4 h-4" />}>
                 OVERVIEW
               </TabsTrigger>
-              <TabsTrigger value="MONITORING" icon={<Eye className="w-4 h-4" />}>
+              <TabsTrigger value="MONITORING" variant="security" icon={<Eye className="w-4 h-4" />}>
                 MONITORING
               </TabsTrigger>
-              <TabsTrigger value="RESPONSE" icon={<Zap className="w-4 h-4" />}>
+              <TabsTrigger value="RESPONSE" variant="security" icon={<Zap className="w-4 h-4" />}>
                 RESPONSE
               </TabsTrigger>
-              <TabsTrigger value="ANALYSIS" icon={<Brain className="w-4 h-4" />}>
+              <TabsTrigger value="ANALYSIS" variant="security" icon={<Brain className="w-4 h-4" />}>
                 ANALYSIS
               </TabsTrigger>
             </TabsList>
             
-            <TabDescription variant="default" descriptions={tabDescriptions} />
+            <TabDescription variant="security" descriptions={tabDescriptions} />
+            
+            {/* Connection Line */}
+            <TabConnectionLine variant="security" />
             
             {/* Overview Tab */}
-            <TabsContent value="OVERVIEW" variant="default">
+            <TabsContent value="OVERVIEW" variant="security">
               {/* Security Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {securityMetrics.map((metric, index) => {
@@ -242,7 +245,7 @@ export default function Security() {
             </TabsContent>
 
             {/* Monitoring Tab */}
-            <TabsContent value="MONITORING" variant="default">
+            <TabsContent value="MONITORING" variant="security">
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
@@ -274,7 +277,7 @@ export default function Security() {
             </TabsContent>
 
             {/* Response Tab */}
-            <TabsContent value="RESPONSE" variant="default">
+            <TabsContent value="RESPONSE" variant="security">
               <div className="space-y-6">
                 <Card>
                   <CardHeader>
@@ -305,7 +308,7 @@ export default function Security() {
             </TabsContent>
 
             {/* Analysis Tab */}
-            <TabsContent value="ANALYSIS" variant="default">
+            <TabsContent value="ANALYSIS" variant="security">
               <div className="space-y-6">
                 <AIExploitSimulator />
                 <GasOptimizationEngine />
