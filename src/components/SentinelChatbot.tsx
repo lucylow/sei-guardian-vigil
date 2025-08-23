@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, Send, X, Bot, User, Shield } from 'lucide-react';
+import { MessageCircle, Send, X, Bot, User, Shield, Zap } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card } from './ui/card';
@@ -13,6 +13,7 @@ interface Message {
 
 export const SentinelChatbot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -85,45 +86,62 @@ export const SentinelChatbot = () => {
 
   if (!isOpen) {
     return (
-      <Button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-600 hover:to-cyan-500 shadow-lg hover:shadow-xl transition-all duration-200 z-50"
-        size="icon"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
+      <div className="fixed bottom-6 right-6 z-50">
+        {/* Pulse ring effect */}
+        <div className={`absolute inset-0 rounded-full bg-red-500/20 chatbox-pulse ${isHovered ? 'scale-110' : 'scale-100'} transition-transform duration-300`}></div>
+        
+        {/* Main button */}
+        <Button
+          onClick={() => setIsOpen(true)}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className={`relative h-16 w-16 rounded-full bg-gradient-to-br from-red-600 via-red-500 to-red-400 hover:from-red-700 hover:via-red-600 hover:to-red-500 shadow-2xl hover:shadow-red-500/25 transition-all duration-300 transform chatbox-float ${isHovered ? 'scale-110 rotate-3 chatbox-glow' : 'scale-100 rotate-0'}`}
+          size="icon"
+        >
+          <MessageCircle className="h-7 w-7 text-white drop-shadow-lg" />
+          
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-full bg-red-400/30 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </Button>
+        
+        {/* Floating indicator */}
+        <div className={`absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg transition-all duration-300 chatbox-status-pulse ${isHovered ? 'scale-125' : 'scale-100'}`}>
+          <Zap className="w-3 h-3" />
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="fixed bottom-6 right-6 w-96 h-[500px] bg-card border-border shadow-2xl z-50 flex flex-col">
+    <Card className="fixed bottom-6 right-6 w-96 h-[500px] bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-red-500/20 shadow-2xl shadow-red-500/10 z-50 flex flex-col backdrop-blur-sm transition-all duration-300 chatbox-slide-in">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-gradient-to-r from-teal-500/10 to-cyan-400/10 rounded-t-lg">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-cyan-400 rounded-full flex items-center justify-center">
-            <Shield className="w-4 h-4 text-white" />
+      <div className="flex items-center justify-between p-4 border-b border-red-500/20 bg-gradient-to-r from-red-600/10 via-red-500/5 to-red-600/10 rounded-t-lg backdrop-blur-sm">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-red-400 rounded-full flex items-center justify-center shadow-lg shadow-red-500/25 chatbox-pulse">
+            <Shield className="w-5 h-5 text-white drop-shadow-sm" />
           </div>
           <div>
-            <h3 className="font-semibold text-sm">Sentinel AI</h3>
-            <p className="text-xs text-muted-foreground">Security Assistant</p>
+            <h3 className="font-bold text-sm text-white tracking-wide">Sentinel AI</h3>
+            <p className="text-xs text-red-300/80 font-medium">Security Assistant</p>
           </div>
         </div>
         <Button
           variant="ghost"
           size="icon"
           onClick={() => setIsOpen(false)}
-          className="h-6 w-6"
+          className="h-8 w-8 hover:bg-red-500/20 hover:text-red-400 transition-colors duration-200"
         >
           <X className="h-4 w-4" />
         </Button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => (
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 chatbox-scrollbar">
+        {messages.map((message, index) => (
           <div
             key={message.id}
-            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} chatbox-message-in`}
+            style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div
               className={`flex max-w-[80%] ${
@@ -131,10 +149,10 @@ export const SentinelChatbot = () => {
               } items-start space-x-2`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 shadow-lg ${
                   message.type === 'user'
-                    ? 'bg-primary text-primary-foreground ml-2'
-                    : 'bg-gradient-to-br from-teal-500 to-cyan-400 text-white mr-2'
+                    ? 'bg-gradient-to-br from-red-600 to-red-500 text-white ml-2'
+                    : 'bg-gradient-to-br from-gray-700 to-gray-600 text-red-300 mr-2'
                 }`}
               >
                 {message.type === 'user' ? (
@@ -144,14 +162,14 @@ export const SentinelChatbot = () => {
                 )}
               </div>
               <div
-                className={`rounded-lg p-3 ${
+                className={`rounded-lg p-3 shadow-lg ${
                   message.type === 'user'
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'
+                    ? 'bg-gradient-to-r from-red-600 to-red-500 text-white'
+                    : 'bg-gradient-to-r from-gray-800/80 to-gray-700/80 text-gray-100 border border-red-500/10'
                 }`}
               >
-                <p className="text-sm whitespace-pre-line">{message.content}</p>
-                <p className="text-xs opacity-70 mt-1">
+                <p className="text-sm whitespace-pre-line leading-relaxed">{message.content}</p>
+                <p className={`text-xs mt-2 ${message.type === 'user' ? 'text-red-100/80' : 'text-red-400/60'}`}>
                   {message.timestamp.toLocaleTimeString([], { 
                     hour: '2-digit', 
                     minute: '2-digit' 
@@ -163,16 +181,16 @@ export const SentinelChatbot = () => {
         ))}
         
         {isTyping && (
-          <div className="flex justify-start">
+          <div className="flex justify-start chatbox-message-in">
             <div className="flex items-start space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-cyan-400 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-red-600 to-red-500 rounded-full flex items-center justify-center shadow-lg">
                 <Bot className="w-4 h-4 text-white" />
               </div>
-              <div className="bg-muted rounded-lg p-3">
+              <div className="bg-gradient-to-r from-gray-800/80 to-gray-700/80 rounded-lg p-3 border border-red-500/10">
                 <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full chatbox-typing"></div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full chatbox-typing" style={{ animationDelay: '0.1s' }}></div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full chatbox-typing" style={{ animationDelay: '0.2s' }}></div>
                 </div>
               </div>
             </div>
@@ -183,23 +201,32 @@ export const SentinelChatbot = () => {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-border">
-        <div className="flex space-x-2">
+      <div className="p-4 border-t border-red-500/20 bg-gradient-to-r from-gray-800/50 to-gray-900/50 backdrop-blur-sm">
+        <div className="flex space-x-3">
           <Input
             placeholder="Ask about smart contract security..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            className="flex-1"
+            className="flex-1 bg-gray-800/80 border-red-500/20 text-white placeholder:text-red-300/50 focus:border-red-500/50 focus:ring-red-500/20 transition-all duration-200"
           />
           <Button
             onClick={handleSendMessage}
             disabled={!inputValue.trim() || isTyping}
             size="icon"
-            className="bg-gradient-to-r from-teal-500 to-cyan-400 hover:from-teal-600 hover:to-cyan-500"
+            className="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 shadow-lg shadow-red-500/25 hover:shadow-red-500/40 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send className="h-4 w-4" />
           </Button>
+        </div>
+        
+        {/* Status indicator */}
+        <div className="flex items-center justify-between mt-2 text-xs">
+          <span className="text-red-400/60">SEI Network Security</span>
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-red-500 rounded-full chatbox-status-pulse"></div>
+            <span className="text-red-400/60">AI Active</span>
+          </div>
         </div>
       </div>
     </Card>
