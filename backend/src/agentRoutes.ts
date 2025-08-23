@@ -387,4 +387,77 @@ router.post("/bulk-deploy", validateWalletAddress, async (req, res) => {
   }
 });
 
+/**
+ * POST /api/agents/deploy
+ * Deploys an agent from the visual builder flow data
+ */
+router.post("/deploy", validateWalletAddress, async (req, res) => {
+  try {
+    console.log("Received agent deployment request from visual builder:", req.body);
+    
+    const { flow, seiConfig, ownerWalletAddress } = req.body;
+    
+    // Validate required fields
+    if (!flow || !flow.nodes || !flow.edges) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Missing required flow data: nodes and edges are required" 
+      });
+    }
+
+    if (!ownerWalletAddress) {
+      return res.status(400).json({ 
+        success: false,
+        error: "Missing required field: ownerWalletAddress" 
+      });
+    }
+
+    // Extract agent configuration from flow
+    const agentName = flow.config?.name || `Agent_${Date.now()}`;
+    const agentDescription = flow.config?.description || `AI Agent created via No-Code Studio`;
+    const agentType = flow.config?.type || 'Custom';
+    
+    // Create agent configuration
+    const agentConfig: NoCodeAgentConfig = {
+      name: agentName,
+      description: agentDescription,
+      agentType: agentType as any,
+      ownerWalletAddress: ownerWalletAddress,
+      configuration: {
+        flow: flow,
+        seiConfig: seiConfig || {},
+        nodeCount: flow.nodes.length,
+        edgeCount: flow.edges.length,
+        createdAt: Date.now()
+      },
+      avatarUrl: flow.config?.avatarUrl
+    };
+
+    console.log("Created agent config from flow:", agentConfig);
+
+    // Create and deploy the agent
+    const deployedAgent = await AgentService.createAndDeployAgent(agentConfig);
+    
+    console.log(`✅ Agent deployed successfully from visual builder: ${deployedAgent.name}`);
+    
+    res.status(201).json({
+      success: true,
+      message: "Agent deployed successfully from visual builder",
+      agent: deployedAgent,
+      deploymentDetails: {
+        nftTokenId: deployedAgent.nftTokenId,
+        seiTxHash: deployedAgent.seiTxHash,
+        status: deployedAgent.status
+      }
+    });
+  } catch (error: any) {
+    console.error("❌ Error deploying agent from visual builder:", error);
+    res.status(500).json({ 
+      success: false,
+      error: error.message || "Failed to deploy agent from visual builder",
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
+  }
+});
+
 export default router;

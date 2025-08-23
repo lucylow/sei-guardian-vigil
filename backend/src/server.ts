@@ -1,6 +1,8 @@
 import express from "express";
 import http from "http";
 import { Server as SocketIO } from "socket.io";
+import cors from "cors";
+import dotenv from "dotenv";
 import { Blockchain } from "./SeiBlockchain";
 import AgentManager from "./AgentManager";
 import BattleEngine from "./BattleEngine";
@@ -9,8 +11,17 @@ import seiMcpRouter from "./seiMcpIntegration";
 import visualAgentRouter from "../api/visualAgent.js";
 import agentRouter from "./agentRoutes"; // Import the new agent router
 
+// Load environment variables
+dotenv.config();
+
 const app = express();
 app.use(express.json()); // <-- Ensure body parser is enabled
+
+// Enable CORS for frontend
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  credentials: true
+}));
 
 // API Routes
 app.use("/api/sei", seiMcpRouter);
