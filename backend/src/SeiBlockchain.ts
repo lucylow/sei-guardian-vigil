@@ -1,5 +1,24 @@
 import axios from "axios";
 
+// WebSocket type for Node.js environment
+declare global {
+  interface WebSocket {
+    readyState: number;
+    OPEN: number;
+    send(data: string): void;
+    close(): void;
+    onopen: ((event: any) => void) | null;
+    onmessage: ((event: any) => void) | null;
+    onerror: ((event: any) => void) | null;
+    onclose: ((event: any) => void) | null;
+  }
+  
+  var WebSocket: {
+    new(url: string): WebSocket;
+    readonly OPEN: number;
+  };
+}
+
 // Configuration
 const MCP_SERVER = process.env['SEI_MCP_URL'] || "http://localhost:3001";
 const SEI_WS_URL = process.env['SEI_WS_URL'] || "wss://sei-testnet-rpc.polkachu.com/websocket";

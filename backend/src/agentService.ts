@@ -6,11 +6,11 @@ import axios from "axios";
 const agentsDB: AgentRecord[] = [];
 
 // Configuration
-const MCP_SERVER = process.env.SEI_MCP_URL || "http://localhost:3001";
-const AGENT_NFT_CONTRACT = process.env.AGENT_NFT_CONTRACT || "0xYourAgentNFTContractAddress";
+const MCP_SERVER = process.env['SEI_MCP_URL'] || "http://localhost:3001";
+const AGENT_NFT_CONTRACT = process.env['AGENT_NFT_CONTRACT'] || "0xYourAgentNFTContractAddress";
 const GOAT_CONFIG = {
-  network: process.env.SEI_NETWORK || "sei-testnet",
-  rpcUrl: process.env.SEI_RPC_URL || "https://rpc-testnet.sei.io"
+  network: process.env['SEI_NETWORK'] || "sei-testnet",
+  rpcUrl: process.env['SEI_RPC_URL'] || "https://rpc-testnet.sei.io"
 };
 
 // Helper function to interact with Sei MCP Server
@@ -49,7 +49,7 @@ export class AgentService {
       status: "Pending",
       createdAt: Date.now(),
       lastUpdated: Date.now(),
-      avatarUrl: config.avatarUrl,
+      avatarUrl: config.avatarUrl || "",
     };
 
     // Add to database

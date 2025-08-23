@@ -5,13 +5,13 @@ import { NoCodeAgentConfig } from "./agentDataModels";
 const router = express.Router();
 
 // Middleware to check required environment variables
-router.use((req, res, next) => {
-  if (!process.env.SEI_MCP_URL || !process.env.AGENT_NFT_CONTRACT) {
+router.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (!process.env['SEI_MCP_URL'] || !process.env['AGENT_NFT_CONTRACT']) {
     return res.status(500).json({ 
       error: "Backend configuration incomplete. SEI_MCP_URL and AGENT_NFT_CONTRACT environment variables must be set." 
     });
   }
-  next();
+  return next();
 });
 
 // Middleware to validate wallet addresses
@@ -22,7 +22,7 @@ const validateWalletAddress = (req: express.Request, res: express.Response, next
       error: "Invalid wallet address. Must be a valid Sei address starting with 'sei1'" 
     });
   }
-  next();
+  return next();
 };
 
 /**
@@ -65,7 +65,7 @@ router.post("/create", validateWalletAddress, async (req, res) => {
     res.status(500).json({ 
       success: false,
       error: error.message || "Failed to create agent",
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      details: process.env['NODE_ENV'] === 'development' ? error.stack : undefined
     });
   }
 });
@@ -455,7 +455,7 @@ router.post("/deploy", validateWalletAddress, async (req, res) => {
     res.status(500).json({ 
       success: false,
       error: error.message || "Failed to deploy agent from visual builder",
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      details: process.env['NODE_ENV'] === 'development' ? error.stack : undefined
     });
   }
 });

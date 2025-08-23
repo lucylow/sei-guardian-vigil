@@ -19,7 +19,7 @@ app.use(express.json()); // <-- Ensure body parser is enabled
 
 // Enable CORS for frontend
 app.use(cors({
-  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  origin: process.env['FRONTEND_URL'] || "http://localhost:5173",
   credentials: true
 }));
 
@@ -118,7 +118,7 @@ app.post("/api/battle/reward", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env['PORT'] || 4000;
 server.listen(PORT, () => {
   console.log(`🚀 SEI SENTINEL API running on port ${PORT}`);
   console.log(`Mode: ${Blockchain.isMockActive() ? "MOCK" : "LIVE"}`);
