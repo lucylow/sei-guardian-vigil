@@ -494,7 +494,10 @@ export default function NoCodeStudio() {
               
               {/* Visual Agent Builder Component */}
               <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <VisualAgentBuilder />
+                <VisualAgentBuilder 
+                  selectedTemplate={selectedTemplate}
+                  onNavigateToDeploy={() => setActiveTab('deploy')}
+                />
               </div>
             </div>
           </TabsContent>
