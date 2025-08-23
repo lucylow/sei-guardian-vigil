@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
-import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2, Sparkles, Zap, TrendingUp, Globe, Lock, Code, Trophy } from "lucide-react";
+import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2, Sparkles, Zap, TrendingUp, Globe, Lock, Code, Trophy, BookOpen, Github, Play, Rocket, Terminal, Network, FileText } from "lucide-react";
 import ConnectWalletButton from "./ConnectWalletButton";
 import { useWallet } from "@/contexts/WalletContext";
 import { Link } from "react-router-dom";
@@ -412,6 +412,390 @@ export default function LandingPage() {
           </Card>
         </div>
       </div>
+
+      {/* Documentation Section */}
+      <section className="py-16 px-4 border-t border-red-900/50">
+        <div className="container mx-auto">
+          {/* Hero Section */}
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <BookOpen className="h-8 w-8 text-red-500" />
+              <h2 className="text-3xl md:text-4xl font-bold text-transparent bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text tracking-wider">
+                SEI SENTINEL DOCUMENTATION
+              </h2>
+            </div>
+            <p className="text-lg text-red-300/90 max-w-4xl mx-auto tracking-wide leading-relaxed">
+              Comprehensive guide to building AI agents on Sei Network. Learn how to leverage 
+              parallelized EVM, fast finality, and native order matching for next-generation security.
+            </p>
+            <div className="flex items-center justify-center space-x-4 mt-6">
+              <Button variant="outline" className="border-red-600/50 text-red-400 hover:bg-red-600/20">
+                <Github className="w-4 h-4 mr-2" />
+                View on GitHub
+              </Button>
+              <Button variant="outline" className="border-red-600/50 text-red-400 hover:bg-red-600/20">
+                <Play className="w-4 h-4 mr-2" />
+                Try Demo
+              </Button>
+            </div>
+          </div>
+
+          {/* Quick Start Guide */}
+          <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-300">
+                <Rocket className="h-5 w-5 text-green-400" />
+                Quick Start Guide
+              </CardTitle>
+              <CardDescription className="text-red-400/70">
+                Get up and running with SEI Sentinel in minutes
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {[
+                  {
+                    step: 1,
+                    title: "Install Dependencies",
+                    description: "Install the required packages for your project",
+                    code: "npm install @sei-guardian-vigil/sdk",
+                    language: "bash"
+                  },
+                  {
+                    step: 2,
+                    title: "Initialize SDK",
+                    description: "Create an instance of the SeiAgentSDK",
+                    code: `import { SeiAgentSDK } from '@sei-guardian-vigil/sdk';
+
+const sdk = new SeiAgentSDK('https://rpc.sei.io');`,
+                    language: "typescript"
+                  },
+                  {
+                    step: 3,
+                    title: "Register Agent",
+                    description: "Register your AI agent on the Sei Network",
+                    code: `const agentAddress = await sdk.registerAgent(
+  'MySecurityAgent',
+  'ipfs://QmMyAgentMetadata',
+  '0xYourWalletAddress'
+);`,
+                    language: "typescript"
+                  },
+                  {
+                    step: 4,
+                    title: "Submit Audit",
+                    description: "Submit a contract for security audit",
+                    code: `const auditId = await sdk.submitContractForAudit(
+  agentAddress,
+  '0xContractAddress',
+  'high'
+);`,
+                    language: "typescript"
+                  }
+                ].map((step) => (
+                  <div key={step.step} className="flex items-start space-x-4">
+                    <div className="w-8 h-8 bg-red-600 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                      {step.step}
+                    </div>
+                    <div className="flex-1 space-y-2">
+                      <h3 className="font-semibold text-red-300">{step.title}</h3>
+                      <p className="text-sm text-red-400/70">{step.description}</p>
+                      <div className="bg-red-900/20 p-3 rounded-lg border border-red-800/30">
+                        <code className="text-sm text-red-300 font-mono">{step.code}</code>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            {[
+              {
+                icon: Shield,
+                title: "AI-Powered Security",
+                description: "Advanced vulnerability detection using machine learning algorithms",
+                benefits: ["Real-time threat detection", "Automated response", "Continuous monitoring"]
+              },
+              {
+                icon: Zap,
+                title: "Parallel Execution",
+                description: "Leverage Sei's parallelized EVM for simultaneous contract audits",
+                benefits: ["Massive scalability", "Faster processing", "Cost efficiency"]
+              },
+              {
+                icon: Network,
+                title: "Fast Finality",
+                description: "400ms finality enables near-instant security operations",
+                benefits: ["Quick response times", "Real-time updates", "Enhanced user experience"]
+              },
+              {
+                icon: Users,
+                title: "Agent Coordination",
+                description: "Multi-agent systems working together for comprehensive security",
+                benefits: ["Collaborative analysis", "Specialized expertise", "Redundancy"]
+              }
+            ].map((feature) => (
+              <Card key={feature.title} className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transition-all duration-300 hover:shadow-xl hover:shadow-red-500/20">
+                <CardHeader>
+                  <div className="flex items-center space-x-2">
+                    <feature.icon className="h-5 w-5 text-red-500" />
+                    <CardTitle className="text-lg text-red-300">{feature.title}</CardTitle>
+                  </div>
+                  <CardDescription className="text-red-400/70">{feature.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-1">
+                    {feature.benefits.map((benefit) => (
+                      <li key={benefit} className="flex items-center space-x-2 text-sm">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                        <span className="text-red-300">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* API Documentation */}
+          <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-300">
+                <Terminal className="h-5 w-5 text-purple-400" />
+                API Reference
+              </CardTitle>
+              <CardDescription className="text-red-400/70">
+                Complete API documentation for integrating with SEI Sentinel
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {[
+                  {
+                    method: "POST",
+                    endpoint: "/api/agents/register",
+                    description: "Register a new AI agent",
+                    parameters: ["name", "description", "capabilities", "metadataURI"]
+                  },
+                  {
+                    method: "POST",
+                    endpoint: "/api/audits/submit",
+                    description: "Submit contract for audit",
+                    parameters: ["agentId", "contractAddress", "priority"]
+                  },
+                  {
+                    method: "GET",
+                    endpoint: "/api/audits/{auditId}",
+                    description: "Get audit results",
+                    parameters: ["auditId"]
+                  },
+                  {
+                    method: "GET",
+                    endpoint: "/api/network/metrics",
+                    description: "Get Sei Network metrics",
+                    parameters: []
+                  },
+                  {
+                    method: "GET",
+                    endpoint: "/api/agents/discover",
+                    description: "Discover active agents",
+                    parameters: []
+                  }
+                ].map((endpoint) => (
+                  <div key={endpoint.endpoint} className="border border-red-800/30 rounded-lg p-4 bg-red-900/20">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <Badge variant={endpoint.method === "GET" ? "secondary" : "default"} className="bg-red-600/20 text-red-300 border-red-600/30">
+                        {endpoint.method}
+                      </Badge>
+                      <code className="font-mono text-sm text-red-300">{endpoint.endpoint}</code>
+                    </div>
+                    <p className="text-sm text-red-400/70 mb-2">{endpoint.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {endpoint.parameters.map((param) => (
+                        <Badge key={param} variant="outline" className="text-xs border-red-600/30 text-red-400">
+                          {param}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Code Examples */}
+          <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-300">
+                <Code className="h-5 w-5 text-blue-400" />
+                Code Examples
+              </CardTitle>
+              <CardDescription className="text-red-400/70">
+                Get started with our SDKs and examples
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card className="bg-red-900/20 border-red-800/30">
+                  <CardHeader>
+                    <CardTitle className="text-sm text-red-300">TypeScript SDK</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="text-xs bg-red-900/30 p-3 rounded overflow-x-auto text-red-300 border border-red-800/30">
+{`import { SeiAgentSDK } from '@sei-guardian-vigil/sdk';
+
+const sdk = new SeiAgentSDK('https://rpc.sei.io');
+const metrics = await sdk.getSeiNetworkMetrics();
+console.log('Current TPS:', metrics.currentTPS);`}
+                    </pre>
+                  </CardContent>
+                </Card>
+                
+                <Card className="bg-red-900/20 border-red-800/30">
+                  <CardHeader>
+                    <CardTitle className="text-sm text-red-300">Python SDK</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <pre className="text-xs bg-red-900/30 p-3 rounded overflow-x-auto text-red-300 border border-red-800/30">
+{`from sei_guardian_vigil import SeiAgentSDK
+
+sdk = SeiAgentSDK('https://rpc.sei.io')
+metrics = await sdk.get_network_metrics()
+print(f"Current TPS: {metrics['current_tps']}")`}
+                    </pre>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Integrations */}
+          <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-300">
+                <Globe className="h-5 w-5 text-orange-400" />
+                Integrations & Frameworks
+              </CardTitle>
+              <CardDescription className="text-red-400/70">
+                Connect SEI Sentinel with popular AI frameworks and tools
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  {
+                    name: "LangChain",
+                    description: "Integrate with LangChain for advanced AI workflows",
+                    icon: Code,
+                    examples: ["Agent chains", "Memory systems", "Tool integration"]
+                  },
+                  {
+                    name: "CrewAI",
+                    description: "Build autonomous AI crews for complex security tasks",
+                    icon: Users,
+                    examples: ["Role-based agents", "Task delegation", "Collaborative workflows"]
+                  },
+                  {
+                    name: "Auto-GPT",
+                    description: "Create autonomous agents with goal-oriented behavior",
+                    icon: Rocket,
+                    examples: ["Goal setting", "Autonomous execution", "Learning capabilities"]
+                  }
+                ].map((integration) => (
+                  <Card key={integration.name} className="border-2 border-red-800/30 hover:border-red-600/50 transition-colors bg-red-900/20">
+                    <CardHeader>
+                      <div className="flex items-center space-x-2">
+                        <integration.icon className="h-5 w-5 text-red-500" />
+                        <CardTitle className="text-lg text-red-300">{integration.name}</CardTitle>
+                      </div>
+                      <CardDescription className="text-red-400/70">{integration.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-3">
+                        <div className="space-y-2">
+                          <h4 className="font-medium text-sm text-red-300">Examples:</h4>
+                          <ul className="space-y-1">
+                            {integration.examples.map((example) => (
+                              <li key={example} className="text-xs text-red-400/70 flex items-center space-x-1">
+                                <div className="w-1 h-1 bg-red-500 rounded-full"></div>
+                                <span>{example}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Resources & Community */}
+          <Card className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-300">
+                <FileText className="h-5 w-5 text-green-400" />
+                Additional Resources & Community
+              </CardTitle>
+              <CardDescription className="text-red-400/70">
+                Explore more resources to master SEI Sentinel
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <h4 className="font-medium text-red-300">Documentation</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li>
+                      <a href="/" className="text-red-400 hover:text-red-300 transition-colors flex items-center">
+                        <Play className="w-3 h-3 mr-2" />
+                        Interactive Demo
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://github.com/sei-network" className="text-red-400 hover:text-red-300 transition-colors flex items-center">
+                        <Github className="w-3 h-3 mr-2" />
+                        Source Code
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://sei.io" className="text-red-400 hover:text-red-300 transition-colors flex items-center">
+                        <Globe className="w-3 h-3 mr-2" />
+                        Sei Network
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="space-y-3">
+                  <h4 className="font-medium text-red-300">Community</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li>
+                      <a href="https://discord.gg/sei" className="text-red-400 hover:text-red-300 transition-colors">
+                        Discord Community
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://twitter.com/SeiNetwork" className="text-red-400 hover:text-red-300 transition-colors">
+                        Twitter Updates
+                      </a>
+                    </li>
+                    <li>
+                      <a href="https://forum.sei.io" className="text-red-400 hover:text-red-300 transition-colors">
+                        Developer Forum
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="border-t-2 border-red-900/50 bg-gradient-to-r from-black/80 via-black/60 to-black/80 backdrop-blur-xl supports-[backdrop-filter]:bg-black/60 shadow-2xl shadow-red-500/10">

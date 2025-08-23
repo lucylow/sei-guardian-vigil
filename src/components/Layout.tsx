@@ -37,13 +37,12 @@ export function Layout({ children }: LayoutProps) {
     // Only show Home when not connected
     ...(isConnected ? [] : [{ to: "/", label: "Home", icon: Home, description: "Welcome to SEI Sentinel" }]),
     { to: "/dashboard", label: "Dashboard", icon: BarChart3, description: "System overview & metrics" },
-    { to: "/governance", label: "Governance", icon: Gavel, description: "DAO governance & voting" },
     { to: "/agents", label: "Agents", icon: Users, description: "AI agent management" },
-    { to: "/audits", label: "Audits", icon: FileSearch, description: "Security audit queue" },
-    { to: "/security", label: "Security", icon: ShieldCheck, description: "Threat detection & response" },
     { to: "/agent-arena", label: "Agent Arena", icon: Sword, description: "Agent battles & training" },
     { to: "/no-code-studio", label: "No-Code Studio", icon: Code, description: "Visual agent builder" },
-
+    { to: "/security", label: "Security", icon: ShieldCheck, description: "Threat detection & response" },
+    { to: "/audits", label: "Audits", icon: FileSearch, description: "Security audit queue" },
+    { to: "/governance", label: "Governance", icon: Gavel, description: "DAO governance & voting" },
     { to: "/settings", label: "Settings", icon: Settings, description: "Configuration & preferences" },
   ];
 
