@@ -723,9 +723,10 @@ const networkOptions = [
 interface VisualAgentBuilderProps {
   selectedTemplate: string | null;
   onNavigateToDeploy?: () => void;
+  disableAutoNavigation?: boolean;
 }
 
-export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeploy }: VisualAgentBuilderProps) {
+export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeploy, disableAutoNavigation = true }: VisualAgentBuilderProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -804,11 +805,6 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
       setEdges(processedEdges);
       setCurrentTemplate(templateId);
       
-      toast({
-        title: `📋 Template Loaded: ${template.name}`,
-        description: `${template.description} - ${processedNodes.length} nodes, ${processedEdges.length} connections`,
-      });
-      
       console.log('VisualAgentBuilder: Template loaded successfully:', {
         template: template.name,
         nodes: processedNodes.length,
@@ -816,12 +812,14 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
         nodeTypes: processedNodes.map(n => n.type)
       });
       
-      // Notify parent component that template is ready
-      if (onNavigateToDeploy) {
-        setTimeout(() => {
-          onNavigateToDeploy();
-        }, 1000); // Small delay to show the success message
-      }
+      // Template is now loaded and ready
+      console.log('VisualAgentBuilder: Template loaded successfully, ready for user interaction');
+      
+      // Show success message and let user decide when to proceed
+      toast({
+        title: `🎉 Template Ready!`,
+        description: `"${template.name}" loaded successfully. You can now customize your agent or click Deploy when ready.`,
+      });
     } else {
       console.error('VisualAgentBuilder: Template not found for ID:', templateId);
       toast({
@@ -1878,6 +1876,21 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         >
           🔍 Fit View
         </Button>
+        
+        {/* Deploy Button - Only show when template is loaded */}
+        {currentTemplate && nodes.length > 0 && (
+          <Button
+            size="sm"
+            onClick={() => {
+              if (onNavigateToDeploy) {
+                onNavigateToDeploy();
+              }
+            }}
+            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white"
+          >
+            🚀 Deploy Agent
+          </Button>
+        )}
       </div>
       
       {/* Connection Status Display */}
@@ -2142,6 +2155,35 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         }
         return null;
       })()}
+
+      {/* Template Loaded Success Message */}
+      {currentTemplate && nodes.length > 0 && (
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">🎉</div>
+              <div>
+                <h4 className="font-semibold text-green-900">Template Loaded Successfully!</h4>
+                <p className="text-sm text-green-700">
+                  Your "{currentTemplate}" agent template is ready. You can now customize the nodes, 
+                  add connections, or click the "🚀 Deploy Agent" button above when you're ready to deploy.
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => {
+                if (onNavigateToDeploy) {
+                  onNavigateToDeploy();
+                }
+              }}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Deploy Now
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
