@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Shield, BarChart3, Users, FileSearch, ShieldCheck, Sword } from "lucide-react";
+import { Shield, BarChart3, Users, FileSearch, ShieldCheck, Sword, Vote } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navigation() {
@@ -9,6 +9,7 @@ export function Navigation() {
   const navItems = [
     { to: "/", label: "Home", icon: Shield },
     { to: "/dashboard", label: "Dashboard", icon: BarChart3 },
+    { to: "/governance", label: "Governance", icon: Vote },
     { to: "/no-code-studio", label: "No-Code Studio", icon: FileSearch },
     { to: "/agents", label: "Agents", icon: Users },
     { to: "/audits", label: "Audits", icon: FileSearch },

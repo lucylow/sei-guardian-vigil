@@ -102,12 +102,7 @@ export function SeiWalletIntegration() {
     }
   }, []);
 
-  // Disconnect wallets
-  const disconnectWallets = useCallback(() => {
-    setCosmosWallet(null);
-    setEvmWallet(null);
-    setNetworkStatus("Disconnected");
-  }, []);
+
 
   // WebSocket connection for live blockchain events
   useEffect(() => {
