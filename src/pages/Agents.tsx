@@ -5,6 +5,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsList, TabsTrigger, TabsContent, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
+import { useNavigate } from 'react-router-dom';
+import { useToast } from "@/hooks/use-toast";
 import { 
   Users, 
   Plus, 
@@ -19,7 +21,11 @@ import {
   Brain,
   Sparkles,
   X,
-  CheckCircle
+  CheckCircle,
+  Play,
+  Settings,
+  Eye,
+  BarChart3
 } from "lucide-react";
 
 // Deployment Modal Component
@@ -187,6 +193,8 @@ const DeploymentModal = ({ isOpen, onClose, agentType, onDeploy }: {
 };
 
 export default function Agents() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [isDeploymentModalOpen, setIsDeploymentModalOpen] = useState(false);
   const [deploymentAgentType, setDeploymentAgentType] = useState<string | undefined>();
@@ -248,6 +256,50 @@ export default function Agents() {
 
   const handleAgentDeployed = (newAgent: any) => {
     setAgents(prev => [...prev, newAgent]);
+    toast({
+      title: "Agent Deployed!",
+      description: `${newAgent.name} has been successfully deployed as a ${newAgent.type} agent`,
+    });
+  };
+
+  const handleAgentAction = (action: string, agentId: string) => {
+    const agent = agents.find(a => a.id === agentId);
+    if (!agent) return;
+
+    switch (action) {
+      case 'view':
+        setSelectedAgent(agentId);
+        toast({
+          title: "Agent Selected",
+          description: `Viewing details for ${agent.name}`,
+        });
+        break;
+      case 'train':
+        toast({
+          title: "Training Started",
+          description: `${agent.name} is now training to improve performance`,
+        });
+        break;
+      case 'deploy':
+        navigate('/agent-arena');
+        toast({
+          title: "Deploying to Arena",
+          description: `${agent.name} is being deployed to the Agent Arena`,
+        });
+        break;
+      case 'configure':
+        toast({
+          title: "Configuration",
+          description: `Opening configuration panel for ${agent.name}`,
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleQuickDeploy = (type: string) => {
+    handleDeployAgent(type);
   };
 
   return (
@@ -298,31 +350,15 @@ export default function Agents() {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
-                <Activity className="w-5 h-5 text-blue-400" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-300 mb-2">18</div>
-              <div className="text-sm text-red-600/70 font-medium tracking-wide">ACTIVE AGENTS</div>
-              <div className="text-xs text-blue-400 mt-2">75% deployment</div>
-            </CardContent>
-          </Card>
-
-          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
                   <Target className="w-6 h-6 text-white" />
                 </div>
-                <Star className="w-5 h-5 text-yellow-400" />
+                <TrendingUp className="w-5 h-5 text-blue-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-300 mb-2">92%</div>
-              <div className="text-sm text-red-600/70 font-medium tracking-wide">AVG PERFORMANCE</div>
-              <div className="text-xs text-yellow-400 mt-2">+5% improvement</div>
+              <div className="text-3xl font-bold text-blue-300 mb-2">18</div>
+              <div className="text-sm text-blue-600/70 font-medium tracking-wide">ACTIVE MISSIONS</div>
+              <div className="text-xs text-blue-400 mt-2">+5 this week</div>
             </CardContent>
           </Card>
 
@@ -332,179 +368,194 @@ export default function Agents() {
                 <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
                   <Crown className="w-6 h-6 text-white" />
                 </div>
-                <Sparkles className="w-5 h-5 text-purple-400" />
+                <TrendingUp className="w-5 h-5 text-purple-400" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-red-300 mb-2">3</div>
-              <div className="text-sm text-red-600/70 font-medium tracking-wide">ELITE AGENTS</div>
-              <div className="text-xs text-purple-400 mt-2">Level 9+</div>
+              <div className="text-3xl font-bold text-purple-300 mb-2">156</div>
+              <div className="text-sm text-purple-600/70 font-medium tracking-wide">TOTAL EXPERIENCE</div>
+              <div className="text-xs text-purple-400 mt-2">+23 this week</div>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center group-hover:shadow-lg group-hover:shadow-red-500/30 transition-all duration-300">
+                  <Sword className="w-6 h-6 text-white" />
+                </div>
+                <TrendingUp className="w-5 h-5 text-yellow-400" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-yellow-300 mb-2">89</div>
+              <div className="text-sm text-yellow-600/70 font-medium tracking-wide">THREATS NEUTRALIZED</div>
+              <div className="text-xs text-yellow-400 mt-2">+12 this week</div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Tab Navigation */}
+        {/* Quick Deploy Section */}
         <div className="mb-8">
-          <h3 className="text-xl font-bold text-red-300 mb-4 tracking-wide">AGENT CATEGORIES</h3>
-          <Tabs defaultValue="SECURITY" className="w-full">
-            <TabsList variant="security" className="w-full">
-              {agentTypes.map((type) => (
-                <TabsTrigger
-                  key={type.type}
-                  value={type.type}
-                  variant="security"
-                  icon={<type.icon className="w-5 h-5" />}
-                >
-                  {type.type}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            <TabConnectionLine variant="security" />
-            <TabDescription variant="security" descriptions={tabDescriptions} />
-            
-            {/* Tab Content for each category */}
-            {agentTypes.map((type) => (
-              <TabsContent key={type.type} value={type.type} variant="security">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  {agents
-                    .filter(agent => agent.type === type.type)
-                    .map((agent) => (
-                      <Card 
-                        key={agent.id}
-                        className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-2 hover:border-red-500/50 transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/30 ${
-                          selectedAgent === agent.id 
-                            ? 'border-red-500/70 bg-red-900/20 shadow-xl shadow-red-500/30' 
-                            : 'border-red-900/50'
-                        }`}
-                        onClick={() => setSelectedAgent(agent.id)}
-                      >
-                        <CardHeader className="pb-4">
-                          <div className="flex items-start justify-between mb-4">
-                            <Avatar className="w-16 h-16 border-2 border-red-600/50 group-hover:border-red-500 transition-all duration-300">
-                              <AvatarImage src={agent.avatar} alt={agent.name} />
-                              <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-800 text-white font-bold text-lg">
-                                {agent.name.split('-')[1]}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="text-right">
-                              <Badge 
-                                variant="secondary" 
-                                className={`text-xs font-bold tracking-wide px-3 py-1 ${
-                                  agent.status === 'ACTIVE' 
-                                    ? 'bg-green-600/20 text-green-400 border-green-600/50' 
-                                    : 'bg-red-600/20 text-red-400 border-red-600/50'
-                                }`}
-                              >
-                                {agent.status}
-                              </Badge>
-                              <div className="text-xs text-red-600/70 mt-1 font-medium">LEVEL {agent.level}</div>
-                            </div>
-                          </div>
-                          <CardTitle className="text-red-300 font-mono tracking-wide text-xl group-hover:text-red-200 transition-colors duration-300">
-                            {agent.name}
-                          </CardTitle>
-                          <CardDescription className="text-red-600/70 font-mono tracking-wide font-medium">
-                            {agent.type} SPECIALIST
-                          </CardDescription>
-                        </CardHeader>
-                        
-                        <CardContent className="space-y-4">
-                          {/* Performance Bar */}
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="text-red-600/70 font-medium">PERFORMANCE</span>
-                              <span className="text-red-300 font-bold">{agent.performance}%</span>
-                            </div>
-                            <div className="w-full bg-red-900/30 rounded-full h-2">
-                              <div 
-                                className="bg-gradient-to-r from-red-600 to-red-700 h-2 rounded-full transition-all duration-500 group-hover:shadow-lg group-hover:shadow-red-500/50"
-                                style={{ width: `${agent.performance}%` }}
-                              ></div>
-                            </div>
-                          </div>
-
-                          {/* Experience */}
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-red-600/70 font-medium">EXPERIENCE</span>
-                            <span className="text-red-300 font-bold">{agent.experience.toLocaleString()} XP</span>
-                          </div>
-
-                          {/* Specializations */}
-                          <div className="space-y-2">
-                            <span className="text-xs text-red-600/70 font-medium tracking-wide">SPECIALIZATIONS</span>
-                            <div className="flex flex-wrap gap-2">
-                              {agent.specializations.map((spec, index) => (
-                                <Badge 
-                                  key={index}
-                                  variant="outline" 
-                                  className="text-xs bg-red-900/20 border-red-700/50 text-red-400 font-mono tracking-wide"
-                                >
-                                  {spec}
-                                </Badge>
-                              ))}
-                            </div>
-                          </div>
-
-                          {/* Action Buttons */}
-                          <div className="flex space-x-2 pt-2">
-                            <Button 
-                              onClick={() => handleDeployAgent(agent.type)}
-                              variant="outline" 
-                              size="sm" 
-                              className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
-                            >
-                              <Sword className="w-3 h-3 mr-1" />
-                              DEPLOY
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
-                            >
-                              <Brain className="w-3 h-3 mr-1" />
-                              TRAIN
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                </div>
-                
-                {/* Empty State for this category */}
-                {agents.filter(agent => agent.type === type.type).length === 0 && (
-                  <Card className="text-center py-16 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50">
-                    <CardContent>
-                      <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                        <Users className="w-10 h-10 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-red-300 mb-4 tracking-wide">NO {type.type} AGENTS</h3>
-                      <p className="text-red-600/70 font-medium tracking-wide mb-6 max-w-md mx-auto">
-                        NO {type.type} SPECIALISTS ARE CURRENTLY DEPLOYED. DEPLOY A NEW AGENT TO GET STARTED.
-                      </p>
-                      <Button 
-                        onClick={() => handleDeployAgent(type.type)}
-                        className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-8 py-4 transform hover:scale-105 hover:-translate-y-1"
-                      >
-                        <Plus className="w-5 h-5 mr-2" />
-                        DEPLOY {type.type} AGENT
-                      </Button>
-                    </CardContent>
-                  </Card>
-                )}
-              </TabsContent>
-            ))}
-          </Tabs>
+          <Card className="bg-black/40 border-red-900/50">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-red-300">
+                <Zap className="w-5 h-5" />
+                Quick Deploy
+              </CardTitle>
+              <CardDescription className="text-red-400/70">
+                Deploy specialized agents for specific security tasks
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {agentTypes.map(({ type, icon: Icon, color, bgColor }) => (
+                  <Button
+                    key={type}
+                    variant="outline"
+                    onClick={() => handleQuickDeploy(type)}
+                    className={`h-24 flex flex-col items-center justify-center gap-3 border-red-600/50 text-red-400 hover:bg-red-600/20 ${bgColor}`}
+                  >
+                    <Icon className={`w-6 h-6 ${color}`} />
+                    <span className="text-sm font-medium">{type}</span>
+                  </Button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
-      </div>
 
-      {/* Deployment Modal */}
-      <DeploymentModal
-        isOpen={isDeploymentModalOpen}
-        onClose={() => setIsDeploymentModalOpen(false)}
-        agentType={deploymentAgentType}
-        onDeploy={handleAgentDeployed}
-      />
+        {/* Agent Management Tabs */}
+        <Tabs defaultValue="SECURITY" className="space-y-6">
+          <TabsList variant="security" className="w-full">
+            {agentTypes.map(({ type, icon: Icon }) => (
+              <TabsTrigger key={type} value={type} variant="security" icon={<Icon className="w-4 h-4" />}>
+                {type}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          <TabDescription 
+            variant="security" 
+            descriptions={tabDescriptions} 
+          />
+
+          <TabConnectionLine variant="security" />
+
+          {agentTypes.map(({ type }) => (
+            <TabsContent key={type} value={type} variant="security" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {agents
+                  .filter(agent => agent.type === type)
+                  .map((agent) => (
+                    <Card key={agent.id} className="group hover:shadow-2xl hover:shadow-red-500/30 transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 hover:border-red-700/50 transform hover:scale-105 hover:-translate-y-1">
+                      <CardHeader className="text-center pb-4">
+                        <div className="relative mx-auto mb-4">
+                          <Avatar className="w-20 h-20 border-4 border-red-600/50 group-hover:border-red-500 transition-colors duration-300">
+                            <AvatarImage src={agent.avatar} alt={agent.name} />
+                            <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-800 text-white text-2xl font-bold">
+                              {agent.name.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center border-2 border-black">
+                            <span className="text-xs font-bold text-white">{agent.level}</span>
+                          </div>
+                        </div>
+                        <CardTitle className="text-xl font-bold text-red-300 group-hover:text-red-200 transition-colors">
+                          {agent.name}
+                        </CardTitle>
+                        <CardDescription className="text-red-600/70">
+                          {agent.type} Agent • Level {agent.level}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        {/* Performance Bar */}
+                        <div className="space-y-2">
+                          <div className="flex justify-between text-sm">
+                            <span className="text-red-400/70">Performance</span>
+                            <span className="text-red-300 font-medium">{agent.performance}%</span>
+                          </div>
+                          <div className="w-full bg-red-900/30 rounded-full h-2">
+                            <div 
+                              className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${agent.performance}%` }}
+                            ></div>
+                          </div>
+                        </div>
+
+                        {/* Specializations */}
+                        <div className="space-y-2">
+                          <div className="text-sm text-red-400/70 font-medium">Specializations</div>
+                          <div className="flex flex-wrap gap-2">
+                            {agent.specializations.map((spec, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs bg-red-900/40 text-red-300 border-red-700/50">
+                                {spec}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Experience */}
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-red-400/70">Experience</span>
+                          <span className="text-red-300 font-medium">{agent.experience} XP</span>
+                        </div>
+
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-2 gap-2 pt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleAgentAction('view', agent.id)}
+                            className="border-red-600/50 text-red-400 hover:bg-red-600/20 hover:border-red-500 text-xs"
+                          >
+                            <Eye className="w-3 h-3 mr-1" />
+                            View
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleAgentAction('train', agent.id)}
+                            className="border-blue-600/50 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500 text-xs"
+                          >
+                            <Sparkles className="w-3 h-3 mr-1" />
+                            Train
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleAgentAction('deploy', agent.id)}
+                            className="border-green-600/50 text-green-400 hover:bg-green-600/20 hover:border-green-500 text-xs"
+                          >
+                            <Play className="w-3 h-3 mr-1" />
+                            Deploy
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleAgentAction('configure', agent.id)}
+                            className="border-purple-600/50 text-purple-400 hover:bg-purple-600/20 hover:border-purple-500 text-xs"
+                          >
+                            <Settings className="w-3 h-3 mr-1" />
+                            Config
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </TabsContent>
+          ))}
+        </Tabs>
+
+        {/* Deployment Modal */}
+        <DeploymentModal
+          isOpen={isDeploymentModalOpen}
+          onClose={() => setIsDeploymentModalOpen(false)}
+          agentType={deploymentAgentType}
+          onDeploy={handleAgentDeployed}
+        />
+      </div>
     </div>
   );
 }

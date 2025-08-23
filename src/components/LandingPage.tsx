@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
-import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2, Sparkles, Zap, TrendingUp, Globe, Lock, Code, Trophy, BookOpen, Github, Play, Rocket, Terminal, Network, FileText, Brain, Eye, Sword } from "lucide-react";
+import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2, Sparkles, Zap, TrendingUp, Globe, Lock, Code, Trophy, BookOpen, Github, Play, Rocket, Terminal, Network, FileText, Brain, Eye, Sword, BarChart3 } from "lucide-react";
 import ConnectWalletButton from "./ConnectWalletButton";
 import { useWallet } from "@/contexts/WalletContext";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,11 +12,14 @@ import PerformanceChart from "@/components/PerformanceChart";
 import AgentLeaderboard from "@/components/AgentLeaderboard";
 import DeveloperSDK from "@/components/DeveloperSDK";
 import ParallelAuditDemo from "@/components/ParallelAuditDemo";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function LandingPage() {
   const { isConnected } = useWallet();
   const navigate = useNavigate();
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [activeDemo, setActiveDemo] = useState<string | null>(null);
+  const { toast } = useToast();
   
   // Auto-redirect to dashboard when wallet connects
   useEffect(() => {
@@ -50,6 +53,84 @@ export default function LandingPage() {
 
     'sdk': "Integrate SEI Sentinel's security capabilities into your Sei applications with our comprehensive SDK"
 
+  };
+  
+  // Handle button clicks
+  const handleStartAudit = () => {
+    if (isConnected) {
+      navigate('/audits');
+    } else {
+      // Show toast or modal to connect wallet first
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet to start a security audit",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleWatchDemo = () => {
+    setActiveDemo('playground');
+    // Scroll to demo section
+    document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleEnterArena = () => {
+    if (isConnected) {
+      navigate('/agent-arena');
+    } else {
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet to enter the Agent Arena",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleTryDemo = () => {
+    setActiveDemo('playground');
+    document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleViewGitHub = () => {
+    window.open('https://github.com/sei-network', '_blank');
+  };
+
+  const handleInteractiveDemo = () => {
+    setActiveDemo('playground');
+    document.getElementById('demo-section')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleSourceCode = () => {
+    window.open('https://github.com/sei-network', '_blank');
+  };
+
+  const handleSeiNetwork = () => {
+    window.open('https://sei.io', '_blank');
+  };
+
+  const handleDiscordCommunity = () => {
+    window.open('https://discord.gg/sei', '_blank');
+  };
+
+  const handleTwitterUpdates = () => {
+    window.open('https://twitter.com/SeiNetwork', '_blank');
+  };
+
+  const handleDeveloperForum = () => {
+    window.open('https://forum.sei.io', '_blank');
+  };
+
+  const handleDashboard = () => {
+    if (isConnected) {
+      navigate('/dashboard');
+    } else {
+      toast({
+        title: "Wallet Required",
+        description: "Please connect your wallet to access the dashboard",
+        variant: "destructive",
+      });
+    }
   };
   
   return (
@@ -130,11 +211,20 @@ export default function LandingPage() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button size="lg" className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 text-lg font-semibold shadow-xl shadow-red-500/25 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300 transform hover:scale-105">
+              <Button 
+                size="lg" 
+                onClick={handleStartAudit}
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 text-lg font-semibold shadow-xl shadow-red-500/25 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300 transform hover:scale-105"
+              >
                 <Shield className="w-5 h-5 mr-2" />
                 Start Security Audit
               </Button>
-              <Button variant="outline" size="lg" className="border-2 border-gray-600 hover:border-red-500 text-gray-300 hover:text-red-400 px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={handleWatchDemo}
+                className="border-2 border-gray-600 hover:border-red-500 text-gray-300 hover:text-red-400 px-8 py-4 text-lg font-semibold transition-all duration-300 transform hover:scale-105"
+              >
                 <Play className="w-5 h-5 mr-2" />
                 Watch Demo
               </Button>
@@ -346,7 +436,11 @@ export default function LandingPage() {
                 </div>
               </div>
               
-              <Button size="lg" className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 text-lg font-semibold shadow-xl shadow-red-500/25 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300 transform hover:scale-105">
+              <Button 
+                size="lg" 
+                onClick={handleEnterArena}
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 text-lg font-semibold shadow-xl shadow-red-500/25 hover:shadow-2xl hover:shadow-red-500/40 transition-all duration-300 transform hover:scale-105"
+              >
                 <Gamepad2 className="w-5 h-5 mr-2" />
                 Enter the Arena
               </Button>
@@ -397,11 +491,21 @@ export default function LandingPage() {
               parallelized EVM, fast finality, and native order matching for next-generation security.
             </p>
             <div className="flex items-center justify-center space-x-4 mt-8">
-              <Button variant="outline" size="lg" className="border-2 border-blue-600/50 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500 px-6 py-3">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={handleViewGitHub}
+                className="border-2 border-blue-600/50 text-blue-400 hover:bg-blue-600/20 hover:border-blue-500 px-6 py-3"
+              >
                 <Github className="w-5 h-5 mr-2" />
                 View on GitHub
               </Button>
-              <Button variant="outline" size="lg" className="border-2 border-gray-600 text-gray-300 hover:border-red-500 hover:text-red-400 px-6 py-3">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={handleTryDemo}
+                className="border-2 border-gray-600 text-gray-300 hover:border-red-500 hover:text-red-400 px-6 py-3"
+              >
                 <Play className="w-5 h-5 mr-2" />
                 Try Demo
               </Button>
@@ -744,19 +848,31 @@ print(f"Current TPS: {metrics['current_tps']}")`}
                   <h4 className="font-bold text-lg text-white">Documentation</h4>
                   <ul className="space-y-3">
                     <li>
-                      <a href="/" className="text-blue-400 hover:text-blue-300 transition-colors flex items-center text-lg hover:underline">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleInteractiveDemo(); }}
+                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center text-lg hover:underline cursor-pointer"
+                      >
                         <Play className="w-4 h-4 mr-3" />
                         Interactive Demo
                       </a>
                     </li>
                     <li>
-                      <a href="https://github.com/sei-network" className="text-blue-400 hover:text-blue-300 transition-colors flex items-center text-lg hover:underline">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleSourceCode(); }}
+                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center text-lg hover:underline cursor-pointer"
+                      >
                         <Github className="w-4 h-4 mr-3" />
                         Source Code
                       </a>
                     </li>
                     <li>
-                      <a href="https://sei.io" className="text-blue-400 hover:text-blue-300 transition-colors flex items-center text-lg hover:underline">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleSeiNetwork(); }}
+                        className="text-blue-400 hover:text-blue-300 transition-colors flex items-center text-lg hover:underline cursor-pointer"
+                      >
                         <Globe className="w-4 h-4 mr-3" />
                         Sei Network
                       </a>
@@ -768,17 +884,29 @@ print(f"Current TPS: {metrics['current_tps']}")`}
                   <h4 className="font-bold text-lg text-white">Community</h4>
                   <ul className="space-y-3">
                     <li>
-                      <a href="https://discord.gg/sei" className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleDiscordCommunity(); }}
+                        className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline cursor-pointer"
+                      >
                         Discord Community
                       </a>
                     </li>
                     <li>
-                      <a href="https://twitter.com/SeiNetwork" className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleTwitterUpdates(); }}
+                        className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline cursor-pointer"
+                      >
                         Twitter Updates
                       </a>
                     </li>
                     <li>
-                      <a href="https://forum.sei.io" className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline">
+                      <a 
+                        href="#" 
+                        onClick={(e) => { e.preventDefault(); handleDeveloperForum(); }}
+                        className="text-blue-400 hover:text-blue-300 transition-colors text-lg hover:underline cursor-pointer"
+                      >
                         Developer Forum
                       </a>
                     </li>
@@ -787,6 +915,63 @@ print(f"Current TPS: {metrics['current_tps']}")`}
               </div>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      {/* Demo Section */}
+      <section id="demo-section" className="py-20 px-4 bg-gradient-to-br from-gray-900 via-black to-gray-900">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+              <span className="text-transparent bg-gradient-to-r from-red-400 to-red-500 bg-clip-text">LIVE DEMOS</span>
+            </h2>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto leading-relaxed">
+              Experience SEI Sentinel's capabilities in action
+            </p>
+          </div>
+
+          <Tabs value={activeDemo || "playground"} onValueChange={setActiveDemo} className="space-y-6">
+            <TabsList variant="security" className="w-full">
+              <TabsTrigger value="playground" variant="security" icon={<Play className="w-4 h-4" />}>
+                INTERACTIVE PLAYGROUND
+              </TabsTrigger>
+              <TabsTrigger value="parallel" variant="security" icon={<Zap className="w-4 h-4" />}>
+                PARALLEL AUDIT
+              </TabsTrigger>
+              <TabsTrigger value="performance" variant="security" icon={<BarChart3 className="w-4 h-4" />}>
+                PERFORMANCE
+              </TabsTrigger>
+              <TabsTrigger value="leaderboard" variant="security" icon={<Trophy className="w-4 h-4" />}>
+                LEADERBOARD
+              </TabsTrigger>
+              <TabsTrigger value="sdk" variant="security" icon={<Code className="w-4 h-4" />}>
+                SDK
+              </TabsTrigger>
+            </TabsList>
+
+            <TabDescription 
+              variant="security" 
+              descriptions={tabDescriptions} 
+            />
+
+            <TabConnectionLine variant="security" />
+
+            <TabsContent value="playground" variant="security">
+              <DemoPlayground />
+            </TabsContent>
+            <TabsContent value="parallel" variant="security">
+              <ParallelAuditDemo />
+            </TabsContent>
+            <TabsContent value="performance" variant="security">
+              <PerformanceChart />
+            </TabsContent>
+            <TabsContent value="leaderboard" variant="security">
+              <AgentLeaderboard />
+            </TabsContent>
+            <TabsContent value="sdk" variant="security">
+              <DeveloperSDK />
+            </TabsContent>
+          </Tabs>
         </div>
       </section>
 
@@ -805,10 +990,18 @@ print(f"Current TPS: {metrics['current_tps']}")`}
               </div>
             </div>
             <div className="flex items-center space-x-8">
-              <Link to="/dashboard" className="text-lg text-gray-400 hover:text-white transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
+              <button 
+                onClick={handleDashboard}
+                className="text-lg text-gray-400 hover:text-white transition-all duration-300 tracking-wide font-medium hover:scale-105 transform cursor-pointer"
+              >
                 DASHBOARD
-              </Link>
-              <a href="https://github.com/sei-network" target="_blank" rel="noopener noreferrer" className="text-lg text-gray-400 hover:text-white transition-all duration-300 tracking-wide font-medium hover:scale-105 transform">
+              </button>
+              <a 
+                href="https://github.com/sei-network" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-lg text-gray-400 hover:text-white transition-all duration-300 tracking-wide font-medium hover:scale-105 transform"
+              >
                 GITHUB
               </a>
             </div>

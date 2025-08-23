@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsList, TabsTrigger, TabsContent, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
+import { useNavigate } from 'react-router-dom';
+import { useToast } from "@/hooks/use-toast";
 import { 
   Shield, 
   Activity, 
@@ -45,6 +47,8 @@ import {
 } from "lucide-react";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
   const [systemMetrics, setSystemMetrics] = useState({
     networkStatus: "ONLINE",
@@ -171,6 +175,59 @@ export default function Dashboard() {
     }
   };
 
+  // Button click handlers
+  const handleRefresh = () => {
+    toast({
+      title: "Refreshing...",
+      description: "Dashboard data is being refreshed",
+    });
+    
+    // Simulate refresh
+    setTimeout(() => {
+      setSystemMetrics(prev => ({
+        ...prev,
+        avgResponse: Math.floor(Math.random() * 100) + 350,
+        securityScore: Math.floor(Math.random() * 5) + 92
+      }));
+      toast({
+        title: "Refresh Complete",
+        description: "Dashboard data has been updated",
+      });
+    }, 1000);
+  };
+
+  const handleSecurityScan = () => {
+    navigate('/security');
+    toast({
+      title: "Security Scan",
+      description: "Navigating to security scanning tools",
+    });
+  };
+
+  const handleAgentStatus = () => {
+    navigate('/agents');
+    toast({
+      title: "Agent Status",
+      description: "Navigating to agent management",
+    });
+  };
+
+  const handleMonitor = () => {
+    navigate('/audits');
+    toast({
+      title: "Monitoring",
+      description: "Navigating to audit monitoring",
+    });
+  };
+
+  const handleAnalytics = () => {
+    setActiveTab('performance');
+    toast({
+      title: "Analytics",
+      description: "Switching to performance analytics",
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black font-mono text-red-400">
       <div className="container mx-auto px-4 py-6">
@@ -190,7 +247,11 @@ export default function Dashboard() {
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
                 SYSTEM HEALTHY
               </Badge>
-              <Button variant="outline" className="border-red-600/50 text-red-400 hover:bg-red-600/20">
+              <Button 
+                variant="outline" 
+                className="border-red-600/50 text-red-400 hover:bg-red-600/20"
+                onClick={handleRefresh}
+              >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh
               </Button>
@@ -359,19 +420,35 @@ export default function Dashboard() {
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-2 gap-3">
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20">
+                    <Button 
+                      variant="outline" 
+                      className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20"
+                      onClick={handleSecurityScan}
+                    >
                       <Shield className="w-6 h-6" />
                       <span className="text-sm">Security Scan</span>
                     </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20">
+                    <Button 
+                      variant="outline" 
+                      className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20"
+                      onClick={handleAgentStatus}
+                    >
                       <Bot className="w-6 h-6" />
                       <span className="text-sm">Agent Status</span>
                     </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20">
+                    <Button 
+                      variant="outline" 
+                      className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20"
+                      onClick={handleMonitor}
+                    >
                       <Eye className="w-6 h-6" />
                       <span className="text-sm">Monitor</span>
                     </Button>
-                    <Button variant="outline" className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20">
+                    <Button 
+                      variant="outline" 
+                      className="h-20 flex flex-col items-center justify-center gap-2 border-red-600/50 text-red-400 hover:bg-red-600/20"
+                      onClick={handleAnalytics}
+                    >
                       <BarChart3 className="w-6 h-6" />
                       <span className="text-sm">Analytics</span>
                     </Button>
