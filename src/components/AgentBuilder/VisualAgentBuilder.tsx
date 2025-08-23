@@ -669,6 +669,49 @@ const nodeTypes = {
       <div className="text-sm">{data.label}</div>
     </div>
   ),
+  
+  // Additional node types used in templates
+  seiOracle: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-pink-700 text-white rounded-lg border-2 border-pink-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Oracle</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiMempool: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-teal-700 text-white rounded-lg border-2 border-teal-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Mempool</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiSwap: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-green-700 text-white rounded-lg border-2 border-green-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Swap</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiStaking: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-yellow-700 text-white rounded-lg border-2 border-yellow-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Staking</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+  seiAlert: ({ data }: { data: any }) => (
+    <div className="px-4 py-2 bg-rose-700 text-white rounded-lg border-2 border-rose-500 relative min-w-[120px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-blue-500 border-2 border-white" />
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-green-500 border-2 border-white" />
+      <div className="font-semibold text-xs">SEI Alert</div>
+      <div className="text-xs opacity-90">{data.label}</div>
+    </div>
+  ),
+
 };
 
 const networkOptions = [
@@ -680,9 +723,10 @@ const networkOptions = [
 interface VisualAgentBuilderProps {
   selectedTemplate: string | null;
   onNavigateToDeploy?: () => void;
+  disableAutoNavigation?: boolean;
 }
 
-export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeploy }: VisualAgentBuilderProps) {
+export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeploy, disableAutoNavigation = true }: VisualAgentBuilderProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isDeploying, setIsDeploying] = useState(false);
@@ -701,9 +745,14 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
   // Load template when selectedTemplate prop changes
   useEffect(() => {
     console.log('VisualAgentBuilder: selectedTemplate changed to:', selectedTemplate);
+    console.log('VisualAgentBuilder: Available templates:', Object.keys(agentTemplates));
+    
     if (selectedTemplate && agentTemplates[selectedTemplate]) {
       console.log('VisualAgentBuilder: Loading template:', agentTemplates[selectedTemplate]);
       loadTemplate(selectedTemplate);
+    } else if (selectedTemplate) {
+      console.error('VisualAgentBuilder: Template not found:', selectedTemplate);
+      console.log('VisualAgentBuilder: Available templates:', Object.keys(agentTemplates));
     }
   }, [selectedTemplate]);
 
@@ -713,26 +762,71 @@ export default function VisualAgentBuilder({ selectedTemplate, onNavigateToDeplo
     if (template) {
       console.log('VisualAgentBuilder: Setting nodes and edges for template:', template.name);
       
-      // Ensure all nodes have proper data structure
-      const processedNodes = template.nodes.map(node => ({
+      // Ensure all nodes have proper data structure and unique IDs
+      const processedNodes = template.nodes.map((node, index) => ({
         ...node,
+        id: `${templateId}-${node.id}-${index}`, // Ensure unique IDs
         data: {
           ...node.data,
           label: node.data.label || node.type,
-          config: node.data.config || {}
+          config: node.data.config || {},
+          description: node.data.description || `Node for ${template.name}`
+        },
+        position: {
+          x: node.position.x + (index * 50), // Spread nodes slightly
+          y: node.position.y + (index * 30)
         }
       }));
       
+      // Update edge IDs and source/target to match new node IDs
+      const processedEdges = template.edges.map((edge, index) => {
+        const sourceNode = processedNodes.find(n => n.id.includes(edge.source));
+        const targetNode = processedNodes.find(n => n.id.includes(edge.target));
+        
+        if (sourceNode && targetNode) {
+          return {
+            ...edge,
+            id: `${templateId}-edge-${index}`,
+            source: sourceNode.id,
+            target: targetNode.id,
+            style: { 
+              stroke: '#3b82f6', 
+              strokeWidth: 3,
+              strokeDasharray: '5,5',
+              filter: 'drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3))'
+            },
+            animated: true
+          };
+        }
+        return edge;
+      }).filter(edge => edge.source && edge.target); // Only include valid edges
+      
       setNodes(processedNodes);
-      setEdges(template.edges);
+      setEdges(processedEdges);
       setCurrentTemplate(templateId);
       
+      console.log('VisualAgentBuilder: Template loaded successfully:', {
+        template: template.name,
+        nodes: processedNodes.length,
+        edges: processedEdges.length,
+        nodeTypes: processedNodes.map(n => n.type)
+      });
+      
+      // Template is now loaded and ready
+      console.log('VisualAgentBuilder: Template loaded successfully, ready for user interaction');
+      
+      // Show success message and let user decide when to proceed
       toast({
-        title: `📋 Template Loaded: ${template.name}`,
-        description: template.description,
+        title: `🎉 Template Ready!`,
+        description: `"${template.name}" loaded successfully. You can now customize your agent or click Deploy when ready.`,
       });
     } else {
       console.error('VisualAgentBuilder: Template not found for ID:', templateId);
+      toast({
+        title: "❌ Template Not Found",
+        description: `Template "${templateId}" could not be loaded. Please try another template.`,
+        variant: "destructive",
+      });
     }
   }, [setNodes, setEdges, toast]);
 
@@ -1782,6 +1876,21 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         >
           🔍 Fit View
         </Button>
+        
+        {/* Deploy Button - Only show when template is loaded */}
+        {currentTemplate && nodes.length > 0 && (
+          <Button
+            size="sm"
+            onClick={() => {
+              if (onNavigateToDeploy) {
+                onNavigateToDeploy();
+              }
+            }}
+            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white"
+          >
+            🚀 Deploy Agent
+          </Button>
+        )}
       </div>
       
       {/* Connection Status Display */}
@@ -2046,6 +2155,35 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
         }
         return null;
       })()}
+
+      {/* Template Loaded Success Message */}
+      {currentTemplate && nodes.length > 0 && (
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="text-2xl">🎉</div>
+              <div>
+                <h4 className="font-semibold text-green-900">Template Loaded Successfully!</h4>
+                <p className="text-sm text-green-700">
+                  Your "{currentTemplate}" agent template is ready. You can now customize the nodes, 
+                  add connections, or click the "🚀 Deploy Agent" button above when you're ready to deploy.
+                </p>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              onClick={() => {
+                if (onNavigateToDeploy) {
+                  onNavigateToDeploy();
+                }
+              }}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              Deploy Now
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
