@@ -93,7 +93,18 @@ export const useSeiBlockchain = () => {
     try {
       setState(prev => ({ ...prev, isLoading: true, error: null }));
       
+      // Check if MetaMask is installed
+      if (typeof window !== 'undefined' && !(window as any).ethereum) {
+        throw new Error('MetaMask is not installed. Please install MetaMask extension first.');
+      }
+      
       const connection = await seiEVM.connectWallet();
+      
+      // Verify we're connected to Sei network
+      const isOnSei = await seiEVM.isConnectedToSei();
+      if (!isOnSei) {
+        throw new Error('Failed to switch to Sei network. Please manually switch to Sei EVM in MetaMask.');
+      }
       
       setState(prev => ({ 
         ...prev, 
@@ -102,13 +113,27 @@ export const useSeiBlockchain = () => {
       }));
 
       return connection;
-    } catch (error) {
+    } catch (error: any) {
+      let errorMessage = 'Failed to connect EVM wallet';
+      
+      if (error.message.includes('MetaMask is not installed')) {
+        errorMessage = 'MetaMask is not installed. Please install the MetaMask extension first.';
+      } else if (error.message.includes('user rejected')) {
+        errorMessage = 'Connection was rejected by user. Please try again.';
+      } else if (error.message.includes('Failed to switch to Sei network')) {
+        errorMessage = 'Failed to switch to Sei network. Please manually add Sei EVM network to MetaMask.';
+      } else if (error.message.includes('already pending')) {
+        errorMessage = 'MetaMask connection is already pending. Please check your MetaMask extension.';
+      } else {
+        errorMessage = error.message || 'Unknown error occurred while connecting wallet.';
+      }
+      
       setState(prev => ({ 
         ...prev, 
-        error: error.message, 
+        error: errorMessage, 
         isLoading: false 
       }));
-      throw error;
+      throw new Error(errorMessage);
     }
   }, []);
 

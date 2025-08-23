@@ -364,6 +364,15 @@ export class SeiEVMService {
         const signer = provider.getSigner();
         const address = await signer.getAddress();
         
+        // Check if we're on the correct network
+        const network = await provider.getNetwork();
+        const seiChainId = SEI_NETWORKS.evm.chainId;
+        
+        if (network.chainId !== BigInt(seiChainId)) {
+          // Try to switch to Sei network
+          await this.switchToSeiNetwork();
+        }
+        
         this.provider = provider;
         this.signer = signer;
         
@@ -374,6 +383,47 @@ export class SeiEVMService {
     } catch (error) {
       console.error('Failed to connect EVM wallet:', error);
       throw error;
+    }
+  }
+
+  async switchToSeiNetwork() {
+    try {
+      if (typeof window !== 'undefined' && (window as any).ethereum) {
+        const ethereum = (window as any).ethereum;
+        
+        // Try to switch to existing network first
+        try {
+          await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: `0x${SEI_NETWORKS.evm.chainId.toString(16)}` }],
+          });
+        } catch (switchError: any) {
+          // This error code indicates that the chain has not been added to MetaMask
+          if (switchError.code === 4902) {
+            // Add the Sei network to MetaMask
+            await ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: `0x${SEI_NETWORKS.evm.chainId.toString(16)}`,
+                chainName: 'Sei EVM',
+                nativeCurrency: {
+                  name: 'SEI',
+                  symbol: 'SEI',
+                  decimals: 18
+                },
+                rpcUrls: [SEI_NETWORKS.evm.rpc],
+                blockExplorerUrls: ['https://sei.evmscan.io/'],
+                iconUrls: ['https://sei.io/favicon.ico']
+              }],
+            });
+          } else {
+            throw switchError;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Failed to switch to Sei network:', error);
+      throw new Error(`Failed to switch to Sei network: ${error.message}`);
     }
   }
 
@@ -406,6 +456,31 @@ export class SeiEVMService {
     } catch (error) {
       console.error('Failed to send EVM transaction:', error);
       throw error;
+    }
+  }
+
+  async getCurrentNetwork() {
+    try {
+      if (this.provider) {
+        const network = await this.provider.getNetwork();
+        return {
+          chainId: network.chainId.toString(),
+          name: network.name || 'Unknown'
+        };
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to get current network:', error);
+      return null;
+    }
+  }
+
+  async isConnectedToSei() {
+    try {
+      const network = await this.getCurrentNetwork();
+      return network && network.chainId === SEI_NETWORKS.evm.chainId.toString();
+    } catch (error) {
+      return false;
     }
   }
 }

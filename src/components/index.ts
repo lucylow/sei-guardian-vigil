@@ -9,6 +9,7 @@ export { VulnerabilityRadar } from './VulnerabilityRadar';
 export { RealTimeMonitor } from './RealTimeMonitor';
 export { SentinelChatbot } from './SentinelChatbot';
 export { ContractHealthGrid } from './ContractHealthGrid';
+export { default as MetaMaskConnector } from './MetaMaskConnector';
 
 // Matrix NFT Gamification Components
 export { AgentCard } from './AgentCard';
