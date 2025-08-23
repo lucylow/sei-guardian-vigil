@@ -75,11 +75,11 @@ export function MultiWalletConnect() {
           throw new Error('Keplr wallet not found');
         }
         
-        // Enable Keplr for Sei Network
-        await window.keplr.enable('sei-devnet-1');
+        // Enable Keplr for Sei Testnet (updated chain ID)
+        await window.keplr.enable('sei-testnet-1');
         
         // Get account info
-        const offlineSigner = window.keplr.getOfflineSigner('sei-devnet-1');
+        const offlineSigner = window.keplr.getOfflineSigner('sei-testnet-1');
         const accounts = await offlineSigner.getAccounts();
         
         // Get balance (mock for demo)
@@ -88,7 +88,7 @@ export function MultiWalletConnect() {
         return {
           address: accounts[0].address,
           balance: mockBalance,
-          network: 'Sei Devnet',
+          network: 'Sei Testnet',
           type: 'keplr' as WalletType
         };
       }
@@ -113,7 +113,7 @@ export function MultiWalletConnect() {
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x531' }], // Sei Devnet chain ID
+            params: [{ chainId: '0xAE516' }], // Sei Testnet chain ID (713710)
           });
         } catch (switchError: any) {
           // If network doesn't exist, add it
@@ -121,15 +121,15 @@ export function MultiWalletConnect() {
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
               params: [{
-                chainId: '0x531',
-                chainName: 'Sei Devnet',
+                chainId: '0xAE516', // Sei Testnet chain ID (713710)
+                chainName: 'Sei Testnet',
                 nativeCurrency: {
                   name: 'SEI',
                   symbol: 'SEI',
                   decimals: 18
                 },
-                rpcUrls: ['https://evm-rpc-testnet.sei-apis.com'],
-                blockExplorerUrls: ['https://seitrace.com']
+                rpcUrls: ['https://testnet-rpc.sei.juno.deuslabs.fi'],
+                blockExplorerUrls: ['https://testnet.seitrace.com']
               }]
             });
           }
@@ -162,16 +162,16 @@ export function MultiWalletConnect() {
           throw new Error('Compass wallet not found');
         }
         
-        // Enable Compass for Sei
-        await window.compass.enable('sei-devnet-1');
+        // Enable Compass for Sei Testnet
+        await window.compass.enable('sei-testnet-1');
         
-        const accounts = await window.compass.getAccounts('sei-devnet-1');
+        const accounts = await window.compass.getAccounts('sei-testnet-1');
         const mockBalance = '987.65 SEI';
         
         return {
           address: accounts[0].address,
           balance: mockBalance,
-          network: 'Sei Devnet',
+          network: 'Sei Testnet',
           type: 'compass' as WalletType
         };
       }
@@ -243,7 +243,7 @@ export function MultiWalletConnect() {
       // Check Keplr
       if (window.keplr) {
         try {
-          const offlineSigner = window.keplr.getOfflineSigner('sei-devnet-1');
+          const offlineSigner = window.keplr.getOfflineSigner('sei-testnet-1');
           const accounts = await offlineSigner.getAccounts();
           if (accounts.length > 0) {
             const info = await walletConfigs.keplr.connectFunction();
@@ -357,7 +357,7 @@ export function MultiWalletConnect() {
             <span>Connect Your Wallet</span>
           </DialogTitle>
           <DialogDescription>
-            Choose a wallet to connect to SEI Guardian Vigil. All wallets support Sei Network.
+            Choose a wallet to connect to SEI Guardian Vigil. All wallets support Sei Testnet for development and testing.
           </DialogDescription>
         </DialogHeader>
         
@@ -412,8 +412,8 @@ export function MultiWalletConnect() {
           <div className="flex items-start space-x-2">
             <AlertCircle className="w-4 h-4 text-muted-foreground mt-0.5" />
             <div className="text-sm text-muted-foreground">
-              <strong>Note:</strong> Make sure your wallet is connected to Sei Network. 
-              MetaMask users will be prompted to add/switch to Sei automatically.
+              <strong>Note:</strong> Make sure your wallet is connected to Sei Testnet. 
+              MetaMask users will be prompted to add/switch to Sei Testnet automatically.
             </div>
           </div>
         </div>
