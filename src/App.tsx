@@ -11,6 +11,7 @@ import Audits from "./pages/Audits";
 import Security from "./pages/Security";
 import NoCodeStudio from "./pages/NoCodeStudio";
 import AgentArena from "./pages/AgentArena";
+import Governance from "./pages/Governance";
 import NotFound from "./pages/NotFound";
 import Demo from "./pages/Demo";
 import Docs from "./pages/Docs";
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/security" element={<Security />} />
             <Route path="/no-code-studio" element={<NoCodeStudio />} />
             <Route path="/agent-arena" element={<AgentArena />} />
+            <Route path="/governance" element={<Governance />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/docs" element={<Docs />} />
             <Route path="/settings" element={<Settings />} />
