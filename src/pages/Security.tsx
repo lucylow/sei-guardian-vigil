@@ -1,4 +1,5 @@
 /* Navigation is now handled by the Layout component */
+import { useState } from "react";
 import { HumanInterventionPanel } from "@/components/HumanInterventionPanel";
 import { ThreatIntelFeed } from "@/components/ThreatIntelFeed";
 import { SeiMCPPlugin } from "@/components/SeiMCPPlugin";
@@ -11,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Tabs, TabsList, TabsTrigger, TabsContent, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
 import { 
   Shield, 
   AlertTriangle, 
@@ -19,10 +21,15 @@ import {
   Activity,
   TrendingUp,
   Lock,
-  Eye
+  Eye,
+  Brain,
+  Zap,
+  Target
 } from "lucide-react";
 
 export default function Security() {
+  const [activeTab, setActiveTab] = useState("OVERVIEW");
+
   const securityMetrics = [
     { label: "Threat Level", value: "Medium", icon: Shield, color: "secondary" },
     { label: "Active Threats", value: "7", icon: AlertTriangle, color: "destructive" },
@@ -75,9 +82,17 @@ export default function Security() {
     }
   };
 
+  // Tab descriptions for each security function
+  const tabDescriptions = {
+    OVERVIEW: "Comprehensive security dashboard with real-time threat monitoring and system status",
+    MONITORING: "Active threat detection and network analysis tools",
+    RESPONSE: "Incident response and automated threat mitigation systems",
+    ANALYSIS: "AI-powered security analysis and vulnerability assessment tools"
+  };
+
   return (
     <div className="min-h-screen bg-background">
-              {/* Navigation is now handled by the Layout component */}
+      {/* Navigation is now handled by the Layout component */}
       
       <div className="container mx-auto px-4 py-6">
         <div className="mb-6">
@@ -93,159 +108,212 @@ export default function Security() {
           </AlertDescription>
         </Alert>
 
-        {/* Security Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {securityMetrics.map((metric, index) => {
-            const IconComponent = metric.icon;
-            return (
-              <Card key={index}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{metric.label}</CardTitle>
-                  <IconComponent className="h-4 w-4 text-muted-foreground" />
+        {/* Tab Navigation */}
+        <div className="mb-8">
+          <h3 className="text-xl font-bold text-foreground mb-4">Security Functions</h3>
+          <Tabs defaultValue="OVERVIEW" className="w-full">
+            <TabsList variant="default" className="w-full">
+              <TabsTrigger value="OVERVIEW" icon={<Shield className="w-4 h-4" />}>
+                OVERVIEW
+              </TabsTrigger>
+              <TabsTrigger value="MONITORING" icon={<Eye className="w-4 h-4" />}>
+                MONITORING
+              </TabsTrigger>
+              <TabsTrigger value="RESPONSE" icon={<Zap className="w-4 h-4" />}>
+                RESPONSE
+              </TabsTrigger>
+              <TabsTrigger value="ANALYSIS" icon={<Brain className="w-4 h-4" />}>
+                ANALYSIS
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabDescription variant="default" descriptions={tabDescriptions} />
+            
+            {/* Overview Tab */}
+            <TabsContent value="OVERVIEW" variant="default">
+              {/* Security Metrics */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                {securityMetrics.map((metric, index) => {
+                  const IconComponent = metric.icon;
+                  return (
+                    <Card key={index}>
+                      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                        <CardTitle className="text-sm font-medium">{metric.label}</CardTitle>
+                        <IconComponent className="h-4 w-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">{metric.value}</div>
+                        <Badge variant={metric.color as any} className="mt-2">
+                          Active
+                        </Badge>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Security Events */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Recent Security Events</CardTitle>
+                    <CardDescription>Latest threats and security incidents</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {securityEvents.map((event) => (
+                      <div key={event.id} className="p-4 border rounded-lg space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <Badge variant={getSeverityColor(event.severity)}>
+                              {event.severity}
+                            </Badge>
+                            <span className="font-medium">{event.type}</span>
+                          </div>
+                          <span className="text-sm text-muted-foreground">{event.timestamp}</span>
+                        </div>
+                        
+                        <p className="text-sm text-muted-foreground">{event.description}</p>
+                        
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2 text-sm">
+                            {getStatusIcon(event.status)}
+                            <span className="capitalize">{event.status}</span>
+                          </div>
+                          <Button variant="outline" size="sm">
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                {/* Threat Intelligence & Human Intervention */}
+                <div className="space-y-6">
+                  <ThreatIntelFeed />
+                  <HumanInterventionPanel />
+                </div>
+              </div>
+
+              {/* Security Health Score */}
+              <Card className="mt-6">
+                <CardHeader>
+                  <CardTitle>Security Health Score</CardTitle>
+                  <CardDescription>Overall system security assessment</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{metric.value}</div>
-                  <Badge variant={metric.color as any} className="mt-2">
-                    Active
-                  </Badge>
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-sm">
+                      <span>Vulnerability Detection</span>
+                      <span className="font-medium">94%</span>
+                    </div>
+                    <Progress value={94} className="h-2" />
+                    
+                    <div className="flex justify-between text-sm">
+                      <span>Threat Response</span>
+                      <span className="font-medium">89%</span>
+                    </div>
+                    <Progress value={89} className="h-2" />
+                    
+                    <div className="flex justify-between text-sm">
+                      <span>System Hardening</span>
+                      <span className="font-medium">96%</span>
+                    </div>
+                    <Progress value={96} className="h-2" />
+                    
+                    <div className="flex justify-between text-sm">
+                      <span>Monitoring Coverage</span>
+                      <span className="font-medium">98%</span>
+                    </div>
+                    <Progress value={98} className="h-2" />
+                    
+                    <div className="pt-4 border-t">
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-semibold">Overall Score</span>
+                        <div className="flex items-center space-x-2">
+                          <span className="text-2xl font-bold text-green-600">94%</span>
+                          <TrendingUp className="w-5 h-5 text-green-600" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
-            );
-          })}
-        </div>
+            </TabsContent>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Security Events */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Security Events</CardTitle>
-              <CardDescription>Latest threats and security incidents</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {securityEvents.map((event) => (
-                <div key={event.id} className="p-4 border rounded-lg space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Badge variant={getSeverityColor(event.severity)}>
-                        {event.severity}
-                      </Badge>
-                      <span className="font-medium">{event.type}</span>
+            {/* Monitoring Tab */}
+            <TabsContent value="MONITORING" variant="default">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Network Monitoring</CardTitle>
+                    <CardDescription>Real-time network activity and anomaly detection</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <span>Network Status: Normal</span>
+                        </div>
+                        <Badge variant="default">Active</Badge>
+                      </div>
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+                          <span>Traffic Analysis: Monitoring</span>
+                        </div>
+                        <Badge variant="secondary">Analyzing</Badge>
+                      </div>
                     </div>
-                    <span className="text-sm text-muted-foreground">{event.timestamp}</span>
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground">{event.description}</p>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2 text-sm">
-                      {getStatusIcon(event.status)}
-                      <span className="capitalize">{event.status}</span>
+                  </CardContent>
+                </Card>
+
+                <WebCrawlerAgent />
+              </div>
+            </TabsContent>
+
+            {/* Response Tab */}
+            <TabsContent value="RESPONSE" variant="default">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Incident Response</CardTitle>
+                    <CardDescription>Active security incidents and response actions</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="p-4 border rounded-lg bg-yellow-50">
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="font-semibold">Suspicious Transaction Detected</h4>
+                          <Badge variant="destructive">High Priority</Badge>
+                        </div>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          Large value transfer detected from unknown address
+                        </p>
+                        <div className="flex space-x-2">
+                          <Button size="sm">Investigate</Button>
+                          <Button size="sm" variant="outline">Block Address</Button>
+                        </div>
+                      </div>
                     </div>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                  </CardContent>
+                </Card>
 
-          {/* Threat Intelligence & Human Intervention */}
-          <div className="space-y-6">
-            <ThreatIntelFeed />
-            <HumanInterventionPanel />
-          </div>
-        </div>
-
-        {/* Web Crawler Threat Intelligence Section */}
-        <div className="mt-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Threat Intelligence Crawler</h2>
-            <p className="text-muted-foreground">Multi-source threat monitoring including dark web, GitHub, forums, and news feeds</p>
-          </div>
-          <WebCrawlerAgent />
-        </div>
-
-        {/* Sei MCP Plugin Section */}
-        <div className="mt-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Sei MCP Integration</h2>
-            <p className="text-muted-foreground">Live deployment monitoring with anomaly detection</p>
-          </div>
-          <SeiMCPPlugin />
-        </div>
-
-        {/* AI Exploit Simulator Section */}
-        <div className="mt-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">AI Exploit Simulator</h2>
-            <p className="text-muted-foreground">Test contracts against 10K+ attack vectors including flash loan surges</p>
-          </div>
-          <AIExploitSimulator />
-        </div>
-
-        {/* Gas Optimization Engine Section */}
-        <div className="mt-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">Gas Optimization Engine</h2>
-            <p className="text-muted-foreground">Auto-refactors code to cut gas fees by 15-30% with Sei-specific optimizations</p>
-          </div>
-          <GasOptimizationEngine />
-        </div>
-
-        {/* AIDN Natural Language Reports Section */}
-        <div className="mt-8">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground mb-2">AIDN Natural Language Reports</h2>
-            <p className="text-muted-foreground">AI-powered vulnerability reports in natural language for stakeholders</p>
-          </div>
-          <AIDNReporter />
-        </div>
-
-        {/* Security Health Score */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Security Health Score</CardTitle>
-            <CardDescription>Overall system security assessment</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span>Vulnerability Detection</span>
-                <span className="font-medium">94%</span>
+                <SeiMCPPlugin />
               </div>
-              <Progress value={94} className="h-2" />
-              
-              <div className="flex justify-between text-sm">
-                <span>Threat Response</span>
-                <span className="font-medium">89%</span>
+            </TabsContent>
+
+            {/* Analysis Tab */}
+            <TabsContent value="ANALYSIS" variant="default">
+              <div className="space-y-6">
+                <AIExploitSimulator />
+                <GasOptimizationEngine />
+                <AIDNReporter />
               </div>
-              <Progress value={89} className="h-2" />
-              
-              <div className="flex justify-between text-sm">
-                <span>System Hardening</span>
-                <span className="font-medium">96%</span>
-              </div>
-              <Progress value={96} className="h-2" />
-              
-              <div className="flex justify-between text-sm">
-                <span>Monitoring Coverage</span>
-                <span className="font-medium">98%</span>
-              </div>
-              <Progress value={98} className="h-2" />
-              
-              <div className="pt-4 border-t">
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">Overall Score</span>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-green-600">94%</span>
-                    <TrendingUp className="w-5 h-5 text-green-600" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </div>
   );

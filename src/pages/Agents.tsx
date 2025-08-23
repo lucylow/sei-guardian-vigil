@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsList, TabsTrigger, TabsContent, TabDescription, TabConnectionLine } from "@/components/ui/tabs";
 import { 
   Users, 
   Plus, 
@@ -65,6 +66,14 @@ export default function Agents() {
     { type: "RESPONSE", icon: Zap, color: "text-green-400", bgColor: "bg-green-500/10" },
     { type: "ANALYSIS", icon: Brain, color: "text-purple-400", bgColor: "bg-purple-500/10" }
   ];
+
+  // Tab descriptions for each category
+  const tabDescriptions = {
+    SECURITY: "Security specialists focused on threat detection and prevention",
+    MONITORING: "Monitoring agents that track network activity and anomalies",
+    RESPONSE: "Response teams that handle incidents and deploy countermeasures",
+    ANALYSIS: "Analytical agents that process data and generate insights"
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-black via-gray-900/10 to-black font-mono text-red-400">
@@ -156,144 +165,155 @@ export default function Agents() {
           </Card>
         </div>
 
-        {/* Agent Type Filter */}
+        {/* Tab Navigation */}
         <div className="mb-8">
-          <h3 className="text-xl font-bold text-red-300 mb-4 tracking-wide">AGENT TYPES</h3>
-          <div className="flex flex-wrap gap-4">
+          <h3 className="text-xl font-bold text-red-300 mb-4 tracking-wide">AGENT CATEGORIES</h3>
+          <Tabs defaultValue="SECURITY" className="w-full">
+            <TabsList variant="security" className="w-full">
+              {agentTypes.map((type) => (
+                <TabsTrigger
+                  key={type.type}
+                  value={type.type}
+                  variant="security"
+                  icon={<type.icon className="w-5 h-5" />}
+                >
+                  {type.type}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+            
+            <TabConnectionLine variant="security" />
+            <TabDescription variant="security" descriptions={tabDescriptions} />
+            
+            {/* Tab Content for each category */}
             {agentTypes.map((type) => (
-              <Button
-                key={type.type}
-                variant="outline"
-                className={`border-2 border-red-700/50 text-red-600/70 hover:border-red-600 hover:text-red-400 hover:bg-red-900/20 transition-all duration-300 font-mono tracking-wide font-bold px-6 py-3 transform hover:scale-105 hover:shadow-lg hover:shadow-red-500/25 ${type.bgColor}`}
-              >
-                <type.icon className="w-4 h-4 mr-2" />
-                {type.type}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {/* Agents Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {agents.map((agent) => (
-            <Card 
-              key={agent.id}
-              className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-2 hover:border-red-500/50 transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/30 ${
-                selectedAgent === agent.id 
-                  ? 'border-red-500/70 bg-red-900/20 shadow-xl shadow-red-500/30' 
-                  : 'border-red-900/50'
-              }`}
-              onClick={() => setSelectedAgent(agent.id)}
-            >
-              <CardHeader className="pb-4">
-                <div className="flex items-start justify-between mb-4">
-                  <Avatar className="w-16 h-16 border-2 border-red-600/50 group-hover:border-red-500 transition-all duration-300">
-                    <AvatarImage src={agent.avatar} alt={agent.name} />
-                    <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-800 text-white font-bold text-lg">
-                      {agent.name.split('-')[1]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-right">
-                    <Badge 
-                      variant="secondary" 
-                      className={`text-xs font-bold tracking-wide px-3 py-1 ${
-                        agent.status === 'ACTIVE' 
-                          ? 'bg-green-600/20 text-green-400 border-green-600/50' 
-                          : 'bg-red-600/20 text-red-400 border-red-600/50'
-                      }`}
-                    >
-                      {agent.status}
-                    </Badge>
-                    <div className="text-xs text-red-600/70 mt-1 font-medium">LEVEL {agent.level}</div>
-                  </div>
-                </div>
-                <CardTitle className="text-red-300 font-mono tracking-wide text-xl group-hover:text-red-200 transition-colors duration-300">
-                  {agent.name}
-                </CardTitle>
-                <CardDescription className="text-red-600/70 font-mono tracking-wide font-medium">
-                  {agent.type} SPECIALIST
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                {/* Performance Bar */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-red-600/70 font-medium">PERFORMANCE</span>
-                    <span className="text-red-300 font-bold">{agent.performance}%</span>
-                  </div>
-                  <div className="w-full bg-red-900/30 rounded-full h-2">
-                    <div 
-                      className="bg-gradient-to-r from-red-600 to-red-700 h-2 rounded-full transition-all duration-500 group-hover:shadow-lg group-hover:shadow-red-500/50"
-                      style={{ width: `${agent.performance}%` }}
-                    ></div>
-                  </div>
-                </div>
-
-                {/* Experience */}
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-red-600/70 font-medium">EXPERIENCE</span>
-                  <span className="text-red-300 font-bold">{agent.experience.toLocaleString()} XP</span>
-                </div>
-
-                {/* Specializations */}
-                <div className="space-y-2">
-                  <span className="text-xs text-red-600/70 font-medium tracking-wide">SPECIALIZATIONS</span>
-                  <div className="flex flex-wrap gap-2">
-                    {agent.specializations.map((spec, index) => (
-                      <Badge 
-                        key={index}
-                        variant="outline" 
-                        className="text-xs bg-red-900/20 border-red-700/50 text-red-400 font-mono tracking-wide"
+              <TabsContent key={type.type} value={type.type} variant="security">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {agents
+                    .filter(agent => agent.type === type.type)
+                    .map((agent) => (
+                      <Card 
+                        key={agent.id}
+                        className={`group cursor-pointer transition-all duration-500 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-2 hover:border-red-500/50 transform hover:scale-105 hover:-translate-y-2 hover:shadow-2xl hover:shadow-red-500/30 ${
+                          selectedAgent === agent.id 
+                            ? 'border-red-500/70 bg-red-900/20 shadow-xl shadow-red-500/30' 
+                            : 'border-red-900/50'
+                        }`}
+                        onClick={() => setSelectedAgent(agent.id)}
                       >
-                        {spec}
-                      </Badge>
+                        <CardHeader className="pb-4">
+                          <div className="flex items-start justify-between mb-4">
+                            <Avatar className="w-16 h-16 border-2 border-red-600/50 group-hover:border-red-500 transition-all duration-300">
+                              <AvatarImage src={agent.avatar} alt={agent.name} />
+                              <AvatarFallback className="bg-gradient-to-br from-red-600 to-red-800 text-white font-bold text-lg">
+                                {agent.name.split('-')[1]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div className="text-right">
+                              <Badge 
+                                variant="secondary" 
+                                className={`text-xs font-bold tracking-wide px-3 py-1 ${
+                                  agent.status === 'ACTIVE' 
+                                    ? 'bg-green-600/20 text-green-400 border-green-600/50' 
+                                    : 'bg-red-600/20 text-red-400 border-red-600/50'
+                                }`}
+                              >
+                                {agent.status}
+                              </Badge>
+                              <div className="text-xs text-red-600/70 mt-1 font-medium">LEVEL {agent.level}</div>
+                            </div>
+                          </div>
+                          <CardTitle className="text-red-300 font-mono tracking-wide text-xl group-hover:text-red-200 transition-colors duration-300">
+                            {agent.name}
+                          </CardTitle>
+                          <CardDescription className="text-red-600/70 font-mono tracking-wide font-medium">
+                            {agent.type} SPECIALIST
+                          </CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="space-y-4">
+                          {/* Performance Bar */}
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between text-sm">
+                              <span className="text-red-600/70 font-medium">PERFORMANCE</span>
+                              <span className="text-red-300 font-bold">{agent.performance}%</span>
+                            </div>
+                            <div className="w-full bg-red-900/30 rounded-full h-2">
+                              <div 
+                                className="bg-gradient-to-r from-red-600 to-red-700 h-2 rounded-full transition-all duration-500 group-hover:shadow-lg group-hover:shadow-red-500/50"
+                                style={{ width: `${agent.performance}%` }}
+                              ></div>
+                            </div>
+                          </div>
+
+                          {/* Experience */}
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-red-600/70 font-medium">EXPERIENCE</span>
+                            <span className="text-red-300 font-bold">{agent.experience.toLocaleString()} XP</span>
+                          </div>
+
+                          {/* Specializations */}
+                          <div className="space-y-2">
+                            <span className="text-xs text-red-600/70 font-medium tracking-wide">SPECIALIZATIONS</span>
+                            <div className="flex flex-wrap gap-2">
+                              {agent.specializations.map((spec, index) => (
+                                <Badge 
+                                  key={index}
+                                  variant="outline" 
+                                  className="text-xs bg-red-900/20 border-red-700/50 text-red-400 font-mono tracking-wide"
+                                >
+                                  {spec}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex space-x-2 pt-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
+                            >
+                              <Sword className="w-3 h-3 mr-1" />
+                              DEPLOY
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
+                            >
+                              <Brain className="w-3 h-3 mr-1" />
+                              TRAIN
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
                     ))}
-                  </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div className="flex space-x-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
-                  >
-                    <Sword className="w-3 h-3 mr-1" />
-                    DEPLOY
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    className="flex-1 border-red-600/50 text-red-400 hover:bg-red-900/20 hover:border-red-500 hover:text-red-300 transition-all duration-300 font-mono tracking-wide font-bold transform hover:scale-105"
-                  >
-                    <Brain className="w-3 h-3 mr-1" />
-                    TRAIN
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                
+                {/* Empty State for this category */}
+                {agents.filter(agent => agent.type === type.type).length === 0 && (
+                  <Card className="text-center py-16 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50">
+                    <CardContent>
+                      <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                        <Users className="w-10 h-10 text-white" />
+                      </div>
+                      <h3 className="text-2xl font-bold text-red-300 mb-4 tracking-wide">NO {type.type} AGENTS</h3>
+                      <p className="text-red-600/70 font-medium tracking-wide mb-6 max-w-md mx-auto">
+                        NO {type.type} SPECIALISTS ARE CURRENTLY DEPLOYED. DEPLOY A NEW AGENT TO GET STARTED.
+                      </p>
+                      <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-8 py-4 transform hover:scale-105 hover:-translate-y-1">
+                        <Plus className="w-5 h-5 mr-2" />
+                        DEPLOY {type.type} AGENT
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </TabsContent>
+            ))}
+          </Tabs>
         </div>
-
-        {/* Empty State */}
-        {agents.length === 0 && (
-          <Card className="text-center py-16 bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50">
-            <CardContent>
-              <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                <Users className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-red-300 mb-4 tracking-wide">NO AGENTS DEPLOYED</h3>
-              <p className="text-red-600/70 font-medium tracking-wide mb-6 max-w-md mx-auto">
-                DEPLOY YOUR FIRST AI SECURITY AGENT TO START PROTECTING THE SEI NETWORK
-              </p>
-              <Button className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white border-2 border-red-500 shadow-2xl hover:shadow-red-500/40 transition-all duration-300 font-mono tracking-wide font-bold px-8 py-4 transform hover:scale-105 hover:-translate-y-1">
-                <Plus className="w-5 h-5 mr-2" />
-                DEPLOY FIRST AGENT
-              </Button>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );
