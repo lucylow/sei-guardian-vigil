@@ -12,6 +12,16 @@ export default function NoCodeStudio() {
   const [isDeploying, setIsDeploying] = useState(false);
   const [deploymentStatus, setDeploymentStatus] = useState<string>('');
 
+  // Template mapping - display names to template IDs
+  const templateMapping = {
+    "Security Sentinel": "security-scanner",
+    "Trading Bot": "defi-arbitrage", 
+    "Data Oracle": "data-oracle",
+    "Compliance Monitor": "compliance-monitor",
+    "Risk Manager": "portfolio-manager",
+    "Market Maker": "market-maker"
+  };
+
   // Tab descriptions for each step
   const tabDescriptions = {
     'get-started': "Welcome to SEI No-Code Studio - Learn how to build AI agents without coding",
@@ -324,7 +334,7 @@ export default function NoCodeStudio() {
                       <p className="text-red-600/70 mb-4">
                         Template: <span className="text-red-300 font-semibold">{selectedTemplate}</span>
                       </p>
-                      <VisualAgentBuilder selectedTemplate={selectedTemplate} />
+                      <VisualAgentBuilder selectedTemplate={templateMapping[selectedTemplate as keyof typeof templateMapping]} />
                     </div>
 
                     <div className="bg-gradient-to-br from-black/50 via-red-900/10 to-black/50 border-red-900/50 rounded-xl p-6">

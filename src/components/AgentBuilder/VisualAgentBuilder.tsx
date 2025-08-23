@@ -332,6 +332,132 @@ const agentTemplates = {
       { id: 'e6', source: 'sei-swap', target: 'sei-staking' },
       { id: 'e7', source: 'sei-swap', target: 'sei-alert' }
     ]
+  },
+  'data-oracle': {
+    name: 'Data Oracle Agent',
+    description: 'Real-time data feed and validation agent',
+    nodes: [
+      {
+        id: 'trigger-data-request',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'Data Request', config: { event: 'DataRequest', interval: '1s' } }
+      },
+      {
+        id: 'fetch-external-data',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Fetch External Data', config: { apis: ['CoinGecko', 'Binance', 'Coinbase'], pairs: ['SEI/USD', 'ATOM/USD'] } }
+      },
+      {
+        id: 'validate-data',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Validate Data', config: { checks: ['Freshness', 'Accuracy', 'Consensus'] } }
+      },
+      {
+        id: 'format-response',
+        type: 'skill',
+        position: { x: 700, y: 100 },
+        data: { label: 'Format Response', config: { format: 'JSON', decimals: 8 } }
+      },
+      {
+        id: 'send-to-blockchain',
+        type: 'action',
+        position: { x: 900, y: 100 },
+        data: { label: 'Send to Blockchain', config: { gasLimit: '200000', priority: 'high' } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-data-request', target: 'fetch-external-data' },
+      { id: 'e2', source: 'fetch-external-data', target: 'validate-data' },
+      { id: 'e3', source: 'validate-data', target: 'format-response' },
+      { id: 'e4', source: 'format-response', target: 'send-to-blockchain' }
+    ]
+  },
+  'compliance-monitor': {
+    name: 'Compliance Monitor Agent',
+    description: 'Regulatory compliance and audit agent',
+    nodes: [
+      {
+        id: 'trigger-transaction',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'Transaction Detected', config: { event: 'Transaction', networks: ['Sei', 'Ethereum'] } }
+      },
+      {
+        id: 'analyze-transaction',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Analyze Transaction', config: { checks: ['KYC', 'AML', 'Sanctions'] } }
+      },
+      {
+        id: 'check-compliance',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Check Compliance', config: { rules: ['GDPR', 'SOX', 'Basel III'] } }
+      },
+      {
+        id: 'generate-report',
+        type: 'skill',
+        position: { x: 700, y: 100 },
+        data: { label: 'Generate Report', config: { format: 'PDF', include: ['Violations', 'Recommendations'] } }
+      },
+      {
+        id: 'notify-compliance',
+        type: 'action',
+        position: { x: 900, y: 100 },
+        data: { label: 'Notify Compliance Team', config: { channels: ['Email', 'Slack', 'Dashboard'] } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-transaction', target: 'analyze-transaction' },
+      { id: 'e2', source: 'analyze-transaction', target: 'check-compliance' },
+      { id: 'e3', source: 'check-compliance', target: 'generate-report' },
+      { id: 'e4', source: 'generate-report', target: 'notify-compliance' }
+    ]
+  },
+  'market-maker': {
+    name: 'Market Maker Agent',
+    description: 'Automated market making and liquidity provision',
+    nodes: [
+      {
+        id: 'trigger-market-data',
+        type: 'trigger',
+        position: { x: 100, y: 100 },
+        data: { label: 'Market Data Update', config: { event: 'MarketData', interval: '100ms' } }
+      },
+      {
+        id: 'calculate-spread',
+        type: 'skill',
+        position: { x: 300, y: 100 },
+        data: { label: 'Calculate Spread', config: { pairs: ['SEI/USDC', 'ATOM/USDC'], minSpread: '0.1%' } }
+      },
+      {
+        id: 'manage-liquidity',
+        type: 'skill',
+        position: { x: 500, y: 100 },
+        data: { label: 'Manage Liquidity', config: { pools: ['SeiSwap', 'Astroport'], rebalance: true } }
+      },
+      {
+        id: 'execute-orders',
+        type: 'action',
+        position: { x: 700, y: 100 },
+        data: { label: 'Execute Orders', config: { slippage: '0.05%', gasOptimization: true } }
+      },
+      {
+        id: 'monitor-performance',
+        type: 'output',
+        position: { x: 900, y: 100 },
+        data: { label: 'Monitor Performance', config: { metrics: ['P&L', 'Volume', 'Fees'] } }
+      }
+    ],
+    edges: [
+      { id: 'e1', source: 'trigger-market-data', target: 'calculate-spread' },
+      { id: 'e2', source: 'calculate-spread', target: 'manage-liquidity' },
+      { id: 'e3', source: 'manage-liquidity', target: 'execute-orders' },
+      { id: 'e4', source: 'execute-orders', target: 'monitor-performance' }
+    ]
   }
 };
 

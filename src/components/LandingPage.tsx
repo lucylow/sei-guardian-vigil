@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger, TabDescription, TabConnection
 import { ArrowRight, Shield, Activity, Users, FileSearch, Gamepad2, Sparkles, Zap, TrendingUp, Globe, Lock, Code, Trophy, BookOpen, Github, Play, Rocket, Terminal, Network, FileText, Brain, Eye, Sword } from "lucide-react";
 import ConnectWalletButton from "./ConnectWalletButton";
 import { useWallet } from "@/contexts/WalletContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DemoPlayground from "@/components/DemoPlayground";
 import PerformanceChart from "@/components/PerformanceChart";
 import AgentLeaderboard from "@/components/AgentLeaderboard";
@@ -15,6 +15,28 @@ import ParallelAuditDemo from "@/components/ParallelAuditDemo";
 
 export default function LandingPage() {
   const { isConnected } = useWallet();
+  const navigate = useNavigate();
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  
+  // Auto-redirect to dashboard when wallet connects
+  useEffect(() => {
+    if (isConnected) {
+      setIsRedirecting(true);
+      // Small delay to ensure wallet state is fully updated
+      const timer = setTimeout(() => {
+        navigate('/dashboard');
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isConnected, navigate]);
+
+  // Also redirect if user is already connected (e.g., page refresh)
+  useEffect(() => {
+    if (isConnected && !isRedirecting) {
+      navigate('/dashboard');
+    }
+  }, [isConnected, isRedirecting, navigate]);
   
   // Tab descriptions for each demo section
   const tabDescriptions = {
@@ -68,6 +90,16 @@ export default function LandingPage() {
           </div>
         </div>
       </header>
+
+      {/* Redirecting Notification */}
+      {isRedirecting && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-gradient-to-r from-green-600 to-blue-600 text-white px-6 py-3 rounded-lg shadow-2xl border-2 border-green-400/50 animate-pulse">
+          <div className="flex items-center space-x-3">
+            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            <span className="font-mono font-bold tracking-wide">REDIRECTING TO DASHBOARD...</span>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       <section className="py-20 px-4 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">

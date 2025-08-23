@@ -122,7 +122,7 @@ export default function ConnectWalletButton() {
         console.log('ConnectWalletButton: Wallet state updated, showing toast...');
         toast({
           title: "Wallet Connected!",
-          description: `Successfully connected to ${seiConfig.chainName}`,
+          description: `Successfully connected to ${seiConfig.chainName}. Redirecting to dashboard...`,
         });
         
         console.log('ConnectWalletButton: Wallet connection complete');
